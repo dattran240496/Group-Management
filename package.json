@@ -1,0 +1,17 @@
+{
+  "name": "app-expo",
+  "version": "0.0.0",
+  "description": "Hello Expo!",
+  "author": null,
+  "private": true,
+  "main": "node_modules/expo/AppEntry.js",
+  "dependencies": {
+    "core-decorators": "^0.20.0",
+    "expo": "^20.0.0",
+    "mobx": "^3.2.2",
+    "mobx-react": "^4.2.2",
+    "react": "16.0.0-alpha.12",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-20.0.0.tar.gz",
+    "react-native-mobx": "^0.3.1"
+  }
+}
