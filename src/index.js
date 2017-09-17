@@ -1,69 +1,134 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  AsyncStorage,
+  Platform
+} from "react-native";
 import Expo from "expo";
-import { Actions } from "react-native-mobx";
+import { Actions, Router, Scene } from "react-native-mobx";
 import { observable } from "mobx";
 import { autobind } from "core-decorators";
 import { observer } from "mobx-react/native";
+import Drawer from "react-native-drawer";
+import SideMenu from "./SideMenu";
+import Login from "./login";
+import Loading from "./loading";
+import CheckAttendance from "./check-attendance"
+import User from "./models/user";
+import Global from "./models/global";
+let config = {
+  apiKey: "AIzaSyCdDN5ToVt0Th7CUEt1Fw0BjWLah6lr_XM",
+  authDomain: "app-expo-56081.firebaseapp.com",
+  databaseURL: "https://app-expo-56081.firebaseio.com",
+  projectId: "app-expo-56081",
+  storageBucket: "app-expo-56081.appspot.com",
+  messagingSenderId: "276292883381"
+};
+
 
 @autobind
 @observer
 export default class App extends Component {
-  @observable email = null;
+  @observable email = "";
+  @observable token = null;
+  @observable isLogin = false;
   constructor(props) {
     super(props);
+    this.state = {
+      drawerOpen: false,
+      drawerDisabled: false
+    };
+    this.User = User;
+    this.Global = Global;
   }
+  componentDidMount() {
+    this.setState({});
+  }
+  closeDrawer = () => {
+    this._drawer.close();
+  };
+  openDrawer = () => {
+    this._drawer.open();
+  };
+
   render() {
     return (
-      <View style={styles.container}>
-        <TouchableOpacity
-          onPress={() => this.signInWithGoogleAsync()}
-          style={{ width: 100, height: 100, backgroundColor: "red" }}
-        />
-        <Text style={{ paddingTop: 10, fontSize: 12 }}>
-          {this.email}
-        </Text>
-      </View>
+      <Drawer
+        ref={ref => (this._drawer = ref)}
+        type="static"
+        content={<SideMenu closeDrawer={this.closeDrawer} />}
+        acceptDoubleTap
+        styles={{
+          main: {}
+        }}
+        onOpen={() => {
+          this.setState({ drawerOpen: true });
+        }}
+        onClose={() => {
+          this.setState({ drawerOpen: false });
+        }}
+        captureGestures={"open"}
+        tweenDuration={100}
+        panThreshold={0.08}
+        disabled={this.state.drawerDisabled}
+        openDrawerOffset={0.2}
+        closedDrawerOffset={0}
+        panOpenMask={0.2}
+        tapToClose={true}
+        negotiatePan
+        tweenHandler={ratio => ({
+          main: {}
+        })}
+      >
+        <Router
+          sceneStyle={{
+            paddingTop: __d(53.33),
+            paddingLeft: 0
+          }}
+          backButtonIcon="angle-left"
+          leftIconStyle={{
+            fontSize: 32,
+            color: "#fff",
+            width: __d(53.33),
+            height: __d(53.33),
+            lineHeight: __d(53.33),
+            paddingLeft: 15
+          }}
+          drawerMenuPress={() => {
+            !this.state.drawerOpen && this.openDrawer();
+            this.state.drawerOpen && this.closeDrawer();
+          }}
+          User={this.User}
+          Global={this.Global}
+        >
+          <Scene
+              key="login"
+              title=""
+              component={Login}
+              hideNavBar={true}
+              sceneStyle={{
+                  paddingTop: 0
+              }}/>
+          <Scene
+              key="loading"
+              title=""
+              component={Loading}
+              hideNavBar={true}
+              sceneStyle={{
+                  paddingTop: 0
+              }}/>
+          <Scene
+              key="checkAttendance"
+              title=""
+              component={CheckAttendance}
+              hideNavBar={false}
+              />
+        </Router>
+      </Drawer>
     );
-  }
-
-  signInWithGoogleAsync() {
-    try {
-      const result = Expo.Google.logInAsync({
-        androidClientId:
-          "796165831117-gvkmjfc8fo2756b3cascvufksetoh0rk.apps.googleusercontent.com",
-        iosClientId:
-          "796165831117-gcqiquek4o7a6mh2pbqovt7tnb1diphb.apps.googleusercontent.com",
-        scopes: ["profile", "email"]
-      });
-
-      if (result.type === "success") {
-        this.getUserInfo(result.accessToken);
-        return result.accessToken;
-      } else {
-        return { cancelled: true };
-      }
-    } catch (e) {
-      return console.log(e);
-    }
-  }
-  getUserInfo(accessToken) {
-    let userInfoResponse = "";
-    console.log(accessToken);
-    fetch("https://www.googleapis.com/userinfo/v2/me", {
-      method: "GET",
-      headers: { Authorization: "Bearer " + accessToken },
-      "Content-Type": "application/json",
-      Accept: "application/json"
-    })
-      .then(response => response.json())
-      .then(responseJS => {
-        this.email = responseJS.email;
-        return;
-      })
-      .catch(error => {
-        console.error(error);
-      });
   }
 }
 
