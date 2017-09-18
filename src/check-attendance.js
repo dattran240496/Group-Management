@@ -12,19 +12,30 @@ import { observable } from "mobx";
 import { autobind } from "core-decorators";
 import { observer } from "mobx-react/native";
 
+
 @autobind
 @observer
 export default class CheckAttendance extends Component {
   constructor(props) {
     super(props);
-    this.User = this.props.User;
-    this.User.user = this.props.user;
-    console.log(this.User.user);
+    this.state={}
+      this.User = this.props.User;
+  }
+  componentWillMount(){
+      this.User.user = this.props.user;
   }
   render() {
     return (
       <View style={styles.container}>
         <Text>CheckAttendance</Text>
+        <TouchableOpacity
+          style={{ width: 100, height: 30, backgroundColor: "#e1e1e1" }}
+          onPress={() => {
+            AsyncStorage.removeItem("@user:key", err => {
+            });
+            Actions.login({ type: "replace" });
+          }}
+        />
       </View>
     );
   }

@@ -41,11 +41,11 @@ export default class App extends Component {
       drawerOpen: false,
       drawerDisabled: false
     };
-    this.User = User;
+    this.User = new User();
     this.Global = Global;
   }
   componentDidMount() {
-    this.setState({});
+    //this.setState({});
   }
   closeDrawer = () => {
     this._drawer.close();
@@ -59,10 +59,10 @@ export default class App extends Component {
       <Drawer
         ref={ref => (this._drawer = ref)}
         type="static"
-        content={<SideMenu closeDrawer={this.closeDrawer} />}
+        content={<SideMenu User={this.User} closeDrawer={this.closeDrawer} />}
         acceptDoubleTap
         styles={{
-          main: {}
+          main: {shadowColor: '#000000', shadowOpacity: 0.8, shadowRadius: 15}
         }}
         onOpen={() => {
           this.setState({ drawerOpen: true });
@@ -80,7 +80,7 @@ export default class App extends Component {
         tapToClose={true}
         negotiatePan
         tweenHandler={ratio => ({
-          main: {}
+          main: {opacity: (2 - ratio) / 2}
         })}
       >
         <Router
@@ -103,6 +103,7 @@ export default class App extends Component {
           }}
           User={this.User}
           Global={this.Global}
+
         >
           <Scene
               key="login"

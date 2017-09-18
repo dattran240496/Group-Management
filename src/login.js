@@ -14,6 +14,12 @@ import { observer } from "mobx-react/native";
 import Loading from "./loading";
 import { _ } from "lodash";
 
+async function setData(item) {
+    try {
+        await AsyncStorage.setItem("@user:key", JSON.stringify(item));
+
+    } catch (error) {console.log(error)}
+}
 async function getUserInfo(accessToken) {
   let _this = this;
   let userInfoResponse = await fetch(
@@ -27,7 +33,9 @@ async function getUserInfo(accessToken) {
   )
     .then(response => response.json())
     .then(responseJS => {
-        return Actions.checkAttendance({user: responseJS, type: 'replace'})
+        console.log(responseJS)
+      setData(responseJS);
+      return Actions.checkAttendance({ user: responseJS, type: "replace" });
     })
     .catch(error => {
       console.error(error);
@@ -35,7 +43,6 @@ async function getUserInfo(accessToken) {
 }
 async function signInWithGoogleAsync() {
   let _this = this;
-  Actions.loading({type:'replace'});
   try {
     const result = await Expo.Google.logInAsync({
       androidClientId:
@@ -53,6 +60,19 @@ async function signInWithGoogleAsync() {
     return console.log(e);
   }
 }
+async function fetchAsync() {
+    Actions.loading({ type: "replace" });
+    try {
+    let value = await AsyncStorage.getItem("@user:key");
+    value = JSON.parse(value);
+    if (value !== null) {
+      return Actions.checkAttendance({ user: value, type: "replace" });
+    }
+    else   return signInWithGoogleAsync();
+    } catch (error) {
+    return false;
+  }
+}
 @autobind
 @observer
 export default class Login extends Component {
@@ -61,6 +81,7 @@ export default class Login extends Component {
     this.User = this.props.User;
     this.Global = this.props.Global;
   }
+
   render() {
     return (
       <View style={styles.container}>
@@ -70,7 +91,7 @@ export default class Login extends Component {
             height: 50,
             backgroundColor: "red"
           }}
-          onPress={signInWithGoogleAsync.bind(this)}
+          onPress={fetchAsync.bind(this)}
         />
       </View>
     );
