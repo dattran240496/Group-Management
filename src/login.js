@@ -13,14 +13,15 @@ import { autobind } from "core-decorators";
 import { observer } from "mobx-react/native";
 import Loading from "./loading";
 import { _ } from "lodash";
-
+import firebase from "./api/api"
 async function setData(item) {
-    try {
-        await AsyncStorage.setItem("@user:key", JSON.stringify(item));
-
-    } catch (error) {console.log(error)}
+  try {
+    await AsyncStorage.setItem("@user:key", JSON.stringify(item));
+  } catch (error) {
+    console.log(error);
+  }
 }
-async function getUserInfo(accessToken) {
+async function getUserInfo(accessToken, itemRefs) {
   let _this = this;
   let userInfoResponse = await fetch(
     "https://www.googleapis.com/userinfo/v2/me",
@@ -33,15 +34,17 @@ async function getUserInfo(accessToken) {
   )
     .then(response => response.json())
     .then(responseJS => {
-        console.log(responseJS)
       setData(responseJS);
+      itemRefs.child("Account").child(responseJS.id).push({
+        email : responseJS.email
+      });
       return Actions.checkAttendance({ user: responseJS, type: "replace" });
     })
     .catch(error => {
       console.error(error);
     });
 }
-async function signInWithGoogleAsync() {
+async function signInWithGoogleAsync(itemRefs) {
   let _this = this;
   try {
     const result = await Expo.Google.logInAsync({
@@ -52,7 +55,7 @@ async function signInWithGoogleAsync() {
       scopes: ["profile", "email"]
     });
     if (result.type === "success") {
-      return getUserInfo(result.accessToken);
+      return getUserInfo(result.accessToken, itemRefs);
     } else {
       return console.log("cancel");
     }
@@ -60,16 +63,15 @@ async function signInWithGoogleAsync() {
     return console.log(e);
   }
 }
-async function fetchAsync() {
-    Actions.loading({ type: "replace" });
-    try {
+async function fetchAsync(itemRefs) {
+  Actions.loading({ type: "replace" });
+  try {
     let value = await AsyncStorage.getItem("@user:key");
     value = JSON.parse(value);
     if (value !== null) {
       return Actions.checkAttendance({ user: value, type: "replace" });
-    }
-    else   return signInWithGoogleAsync();
-    } catch (error) {
+    } else return signInWithGoogleAsync(itemRefs);
+  } catch (error) {
     return false;
   }
 }
@@ -80,6 +82,7 @@ export default class Login extends Component {
     super(props);
     this.User = this.props.User;
     this.Global = this.props.Global;
+    this.itemRefs = firebase.database().ref("app_expo");
   }
 
   render() {
@@ -91,7 +94,7 @@ export default class Login extends Component {
             height: 50,
             backgroundColor: "red"
           }}
-          onPress={fetchAsync.bind(this)}
+          onPress={()=>fetchAsync(this.itemRefs)}
         />
       </View>
     );

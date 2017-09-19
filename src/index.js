@@ -123,7 +123,7 @@ export default class App extends Component {
               }}/>
           <Scene
               key="checkAttendance"
-              title=""
+              title="Check Attendance"
               component={CheckAttendance}
               hideNavBar={false}
               />
