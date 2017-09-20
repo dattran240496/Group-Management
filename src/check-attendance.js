@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   AsyncStorage,
   Dimensions,
-  TextInput
+  TextInput,
+  Alert
 } from "react-native";
 import Expo from "expo";
 import { Actions, Router, Scene } from "react-native-mobx";
@@ -23,10 +24,14 @@ export default class CheckAttendance extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      groupName: ""
+      groupName: "",
+      groupPass: ""
     };
     this.User = this.props.User;
+    this.FirebaseApi = this.props.FirebaseApi;
     this.itemRefs = firebase.database().ref("app_expo");
+    this.getGroupName();
+    __DEV__ && console.log(this.FirebaseApi.groupData)
   }
   componentWillMount() {
     this.User.user = this.props.user;
@@ -46,7 +51,7 @@ export default class CheckAttendance extends Component {
               this._modalBox.open();
             }}
             style={{
-              width: 100,
+              width: 120,
               height: 50,
               borderRadius: 5,
               justifyContent: "center",
@@ -56,6 +61,24 @@ export default class CheckAttendance extends Component {
             }}
           >
             <Text>New Group</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => {
+                Actions.groupList();
+            }}
+            style={{
+              marginTop: 10,
+              width: 120,
+              height: 50,
+              borderRadius: 5,
+              justifyContent: "center",
+              alignItems: "center",
+              borderColor: "#e1e1e1",
+              borderWidth: 1
+            }}
+          >
+            <Text>Find Group</Text>
           </TouchableOpacity>
         </View>
         <View
@@ -92,8 +115,8 @@ export default class CheckAttendance extends Component {
             backgroundColor: "#fff",
             borderRadius: 8,
             justifyContent: "center",
-            alignItems: "center",
-            flexDirection: "row"
+            alignItems: "center"
+            //flexDirection: "row"
           }}
           position={"center"}
           swipeToClose={false}
@@ -112,14 +135,34 @@ export default class CheckAttendance extends Component {
               fontStyle: this.state.groupName !== "" ? "normal" : "italic"
             }}
             onChangeText={txt => {
-                this.setState({groupName: txt})
+              this.setState({ groupName: txt });
+            }}
+          />
+          <TextInput
+            placeholder="Group pass..."
+            placeholderStyle={{ color: "#e1e1e1" }}
+            style={{
+              marginTop: 5,
+              width: 180,
+              height: 30,
+              paddingLeft: 10,
+              borderRadius: 5,
+              borderWidth: 1,
+              borderColor: "#e1e1e1",
+              fontSize: 12,
+              fontStyle: this.state.groupPass !== "" ? "normal" : "italic"
+            }}
+            onChangeText={txt => {
+              this.setState({ groupPass: txt });
             }}
           />
           <TouchableOpacity
-              onPress={()=>{
-                  this.pushGroupName()
-              }}
-              style={{ marginLeft: 10 }}>
+            onPress={() => {
+              this.pushGroupName();
+              this._modalBox.close();
+            }}
+            style={{ marginTop: 5 }}
+          >
             <Icon name="plus" size={20} color="#000" />
           </TouchableOpacity>
         </Modal>
@@ -127,10 +170,30 @@ export default class CheckAttendance extends Component {
     );
   }
 
-  pushGroupName(){
-      this.itemRefs.child("Account").child(this.User.user.id).push({
-          createdGroup: this.state.groupName
-      })
+   pushGroupName() {
+       this.FirebaseApi.groupData.map((v, i) => {
+      if (v._key === this.state.groupName) {
+        Alert.alert("Warning!", "Group name existed!");
+        this._modalBox.close();
+        return;
+      }
+    });
+    this.itemRefs.child("Group").child(this.state.groupName).update({
+      createdGroupBy: this.User.user.id,
+      groupPass: this.state.groupPass
+    });
+  }
+  getGroupName() {
+    let tasks = [];
+    let _this = this;
+    this.itemRefs.child("Group").on("value", dataSnapshot => {
+      dataSnapshot.forEach(child => {
+        _this.FirebaseApi.groupData.push({
+          _key: child.key
+        });
+      });
+    });
+    return this.FirebaseApi.groupData;
   }
 }
 

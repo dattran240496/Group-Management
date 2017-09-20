@@ -13,7 +13,7 @@ import { autobind } from "core-decorators";
 import { observer } from "mobx-react/native";
 import Loading from "./loading";
 import { _ } from "lodash";
-import firebase from "./api/api"
+import firebase from "./api/api";
 async function setData(item) {
   try {
     await AsyncStorage.setItem("@user:key", JSON.stringify(item));
@@ -35,8 +35,8 @@ async function getUserInfo(accessToken, itemRefs) {
     .then(response => response.json())
     .then(responseJS => {
       setData(responseJS);
-      itemRefs.child("Account").child(responseJS.id).push({
-        email : responseJS.email
+      itemRefs.child("Account").child(responseJS.id).update({
+        email: responseJS.email
       });
       return Actions.checkAttendance({ user: responseJS, type: "replace" });
     })
@@ -57,10 +57,10 @@ async function signInWithGoogleAsync(itemRefs) {
     if (result.type === "success") {
       return getUserInfo(result.accessToken, itemRefs);
     } else {
-      return console.log("cancel");
+      return Actions.login({type: 'replace'});
     }
   } catch (e) {
-    return console.log(e);
+    return Actions.login({type: 'replace'});
   }
 }
 async function fetchAsync(itemRefs) {
@@ -69,7 +69,8 @@ async function fetchAsync(itemRefs) {
     let value = await AsyncStorage.getItem("@user:key");
     value = JSON.parse(value);
     if (value !== null) {
-      return Actions.checkAttendance({ user: value, type: "replace" });
+        __DEV__ && console.log("Actions");
+        return Actions.checkAttendance({ user: value, type: "replace"});
     } else return signInWithGoogleAsync(itemRefs);
   } catch (error) {
     return false;
@@ -80,8 +81,8 @@ async function fetchAsync(itemRefs) {
 export default class Login extends Component {
   constructor(props) {
     super(props);
+
     this.User = this.props.User;
-    this.Global = this.props.Global;
     this.itemRefs = firebase.database().ref("app_expo");
   }
 
@@ -90,12 +91,24 @@ export default class Login extends Component {
       <View style={styles.container}>
         <TouchableOpacity
           style={{
-            width: 100,
+            width: 150,
             height: 50,
-            backgroundColor: "red"
+            borderRadius: 5,
+            borderWidth: 1,
+            borderColor: "#e1e1e1",
+            justifyContent: "center",
+            alignItems: "center"
           }}
-          onPress={()=>fetchAsync(this.itemRefs)}
-        />
+          onPress={() => fetchAsync(this.itemRefs)}
+        >
+          <Text
+            style={{
+              fontSize: 15
+            }}
+          >
+            Login
+          </Text>
+        </TouchableOpacity>
       </View>
     );
   }

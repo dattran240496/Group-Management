@@ -16,17 +16,11 @@ import Drawer from "react-native-drawer";
 import SideMenu from "./SideMenu";
 import Login from "./login";
 import Loading from "./loading";
+import GroupList from "./group-list"
 import CheckAttendance from "./check-attendance"
 import User from "./models/user";
 import Global from "./models/global";
-let config = {
-  apiKey: "AIzaSyCdDN5ToVt0Th7CUEt1Fw0BjWLah6lr_XM",
-  authDomain: "app-expo-56081.firebaseapp.com",
-  databaseURL: "https://app-expo-56081.firebaseio.com",
-  projectId: "app-expo-56081",
-  storageBucket: "app-expo-56081.appspot.com",
-  messagingSenderId: "276292883381"
-};
+import FirebaseApi from "./models/firebase"
 
 
 @autobind
@@ -43,6 +37,7 @@ export default class App extends Component {
     };
     this.User = new User();
     this.Global = Global;
+    this.FirebaseApi = FirebaseApi;
   }
   componentDidMount() {
     //this.setState({});
@@ -85,8 +80,7 @@ export default class App extends Component {
       >
         <Router
           sceneStyle={{
-            paddingTop: __d(53.33),
-            paddingLeft: 0
+            paddingTop: 64,
           }}
           backButtonIcon="angle-left"
           leftIconStyle={{
@@ -103,6 +97,7 @@ export default class App extends Component {
           }}
           User={this.User}
           Global={this.Global}
+          FirebaseApi={this.FirebaseApi}
 
         >
           <Scene
@@ -127,6 +122,12 @@ export default class App extends Component {
               component={CheckAttendance}
               hideNavBar={false}
               />
+          <Scene
+              key="groupList"
+              title="Group List"
+              component={GroupList}
+              hideNavBar={false}
+          />
         </Router>
       </Drawer>
     );
