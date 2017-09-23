@@ -7,23 +7,12 @@ import { Actions, Router, Scene } from "react-native-mobx";
 import { observer } from "mobx-react/native";
 
 @autobind
-@observer
-export default class User extends Component {
-  @observable user = {};
+class User{
+  constructor(){}
+  @observable user;
   @observable isAuthenticated = false;
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
+
 }
-async function fetchAsync() {
-  try {
-    let value = await AsyncStorage.getItem("@user:key");
-    if (value !== null) {
-      return value;
-    }
-  } catch (error) {
-    return false;
-  }
-  return {};
-}
+
+const user = new User();
+export default user;

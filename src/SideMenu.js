@@ -22,7 +22,9 @@ export default class SideMenu extends Component {
       this.state={}
   }
   componentWillMount() {
-    console.log(this.User.user)
+  }
+  componentDidMount(){
+    console.log(this.User.user);
   }
   render() {
     return (

@@ -18,6 +18,7 @@ import Login from "./login";
 import Loading from "./loading";
 import GroupList from "./group-list"
 import CheckAttendance from "./check-attendance"
+import MyGroup from "./my-group"
 import User from "./models/user";
 import Global from "./models/global";
 import FirebaseApi from "./models/firebase"
@@ -35,8 +36,7 @@ export default class App extends Component {
       drawerOpen: false,
       drawerDisabled: false
     };
-    this.User = new User();
-    this.Global = Global;
+    this.User = User;
     this.FirebaseApi = FirebaseApi;
   }
   componentDidMount() {
@@ -96,7 +96,6 @@ export default class App extends Component {
             this.state.drawerOpen && this.closeDrawer();
           }}
           User={this.User}
-          Global={this.Global}
           FirebaseApi={this.FirebaseApi}
 
         >
@@ -126,6 +125,12 @@ export default class App extends Component {
               key="groupList"
               title="Group List"
               component={GroupList}
+              hideNavBar={false}
+          />
+          <Scene
+              key="myGroup"
+              title="My Group"
+              component={MyGroup}
               hideNavBar={false}
           />
         </Router>

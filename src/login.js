@@ -38,7 +38,7 @@ async function getUserInfo(accessToken, itemRefs) {
       itemRefs.child("Account").child(responseJS.id).update({
         email: responseJS.email
       });
-      return Actions.checkAttendance({ user: responseJS, type: "replace" });
+        return Actions.checkAttendance({ user: responseJS, type: "replace" });
     })
     .catch(error => {
       console.error(error);
@@ -69,7 +69,6 @@ async function fetchAsync(itemRefs) {
     let value = await AsyncStorage.getItem("@user:key");
     value = JSON.parse(value);
     if (value !== null) {
-        __DEV__ && console.log("Actions");
         return Actions.checkAttendance({ user: value, type: "replace"});
     } else return signInWithGoogleAsync(itemRefs);
   } catch (error) {

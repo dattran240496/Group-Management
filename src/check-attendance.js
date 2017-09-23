@@ -18,6 +18,7 @@ import firebase from "./api/api";
 import Modal from "react-native-modalbox";
 import Icon from "react-native-vector-icons/FontAwesome";
 const { width, height } = Dimensions.get("window");
+
 @autobind
 @observer
 export default class CheckAttendance extends Component {
@@ -30,8 +31,7 @@ export default class CheckAttendance extends Component {
     this.User = this.props.User;
     this.FirebaseApi = this.props.FirebaseApi;
     this.itemRefs = firebase.database().ref("app_expo");
-    this.getGroupName();
-    __DEV__ && console.log(this.FirebaseApi.groupData)
+      console.log(this.getGroupName());
   }
   componentWillMount() {
     this.User.user = this.props.user;
@@ -80,6 +80,24 @@ export default class CheckAttendance extends Component {
           >
             <Text>Find Group</Text>
           </TouchableOpacity>
+
+            <TouchableOpacity
+                onPress={() => {
+                    Actions.myGroup();
+                }}
+                style={{
+                    marginTop: 10,
+                    width: 120,
+                    height: 50,
+                    borderRadius: 5,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderColor: "#e1e1e1",
+                    borderWidth: 1
+                }}
+            >
+                <Text>My Group</Text>
+            </TouchableOpacity>
         </View>
         <View
           style={{
@@ -120,6 +138,7 @@ export default class CheckAttendance extends Component {
           }}
           position={"center"}
           swipeToClose={false}
+          coverScreen={true}
         >
           <TextInput
             placeholder="Group name..."
@@ -170,29 +189,34 @@ export default class CheckAttendance extends Component {
     );
   }
 
-   pushGroupName() {
-       this.FirebaseApi.groupData.map((v, i) => {
+  pushGroupName() {
+    this.FirebaseApi.groupData.map((v, i) => {
       if (v._key === this.state.groupName) {
         Alert.alert("Warning!", "Group name existed!");
-        this._modalBox.close();
-        return;
+        return this._modalBox.close();
       }
     });
     this.itemRefs.child("Group").child(this.state.groupName).update({
       createdGroupBy: this.User.user.id,
       groupPass: this.state.groupPass
     });
+    this.itemRefs.child("Account")
   }
   getGroupName() {
-    let tasks = [];
-    let _this = this;
+    let group = [];
+    let key = {};
     this.itemRefs.child("Group").on("value", dataSnapshot => {
+        this.FirebaseApi.groupData = [];
       dataSnapshot.forEach(child => {
-        _this.FirebaseApi.groupData.push({
-          _key: child.key
-        });
+        key = {};
+        key[child.key] = {
+          _createGroupBy: child.child("createdGroupBy").val(),
+          _groupPass: child.child("groupPass").val()
+        };
+          this.FirebaseApi.groupData.push(key);
       });
     });
+
     return this.FirebaseApi.groupData;
   }
 }
