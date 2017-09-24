@@ -19,6 +19,7 @@ import Loading from "./loading";
 import GroupList from "./group-list"
 import CheckAttendance from "./check-attendance"
 import MyGroup from "./my-group"
+import EnterGroupName from "./enter-group-name"
 import User from "./models/user";
 import Global from "./models/global";
 import FirebaseApi from "./models/firebase"
@@ -131,6 +132,12 @@ export default class App extends Component {
               key="myGroup"
               title="My Group"
               component={MyGroup}
+              hideNavBar={false}
+          />
+          <Scene
+              key="enterGroupName"
+              title="Enter Group Name"
+              component={EnterGroupName}
               hideNavBar={false}
           />
         </Router>

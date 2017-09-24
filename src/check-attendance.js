@@ -31,7 +31,6 @@ export default class CheckAttendance extends Component {
     this.User = this.props.User;
     this.FirebaseApi = this.props.FirebaseApi;
     this.itemRefs = firebase.database().ref("app_expo");
-      console.log(this.getGroupName());
   }
   componentWillMount() {
     this.User.user = this.props.user;
@@ -48,7 +47,7 @@ export default class CheckAttendance extends Component {
         >
           <TouchableOpacity
             onPress={() => {
-              this._modalBox.open();
+              Actions.enterGroupName();
             }}
             style={{
               width: 120,
@@ -65,7 +64,7 @@ export default class CheckAttendance extends Component {
 
           <TouchableOpacity
             onPress={() => {
-                Actions.groupList();
+              Actions.groupList();
             }}
             style={{
               marginTop: 10,
@@ -81,23 +80,23 @@ export default class CheckAttendance extends Component {
             <Text>Find Group</Text>
           </TouchableOpacity>
 
-            <TouchableOpacity
-                onPress={() => {
-                    Actions.myGroup();
-                }}
-                style={{
-                    marginTop: 10,
-                    width: 120,
-                    height: 50,
-                    borderRadius: 5,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    borderColor: "#e1e1e1",
-                    borderWidth: 1
-                }}
-            >
-                <Text>My Group</Text>
-            </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              Actions.myGroup();
+            }}
+            style={{
+              marginTop: 10,
+              width: 120,
+              height: 50,
+              borderRadius: 5,
+              justifyContent: "center",
+              alignItems: "center",
+              borderColor: "#e1e1e1",
+              borderWidth: 1
+            }}
+          >
+            <Text>My Group</Text>
+          </TouchableOpacity>
         </View>
         <View
           style={{
@@ -125,100 +124,11 @@ export default class CheckAttendance extends Component {
             <Text>Sign Out</Text>
           </TouchableOpacity>
         </View>
-        <Modal
-          ref={ref => (this._modalBox = ref)}
-          style={{
-            width: 300,
-            height: 150,
-            backgroundColor: "#fff",
-            borderRadius: 8,
-            justifyContent: "center",
-            alignItems: "center"
-            //flexDirection: "row"
-          }}
-          position={"center"}
-          swipeToClose={false}
-          coverScreen={true}
-        >
-          <TextInput
-            placeholder="Group name..."
-            placeholderStyle={{ color: "#e1e1e1" }}
-            style={{
-              width: 180,
-              height: 30,
-              paddingLeft: 10,
-              borderRadius: 5,
-              borderWidth: 1,
-              borderColor: "#e1e1e1",
-              fontSize: 12,
-              fontStyle: this.state.groupName !== "" ? "normal" : "italic"
-            }}
-            onChangeText={txt => {
-              this.setState({ groupName: txt });
-            }}
-          />
-          <TextInput
-            placeholder="Group pass..."
-            placeholderStyle={{ color: "#e1e1e1" }}
-            style={{
-              marginTop: 5,
-              width: 180,
-              height: 30,
-              paddingLeft: 10,
-              borderRadius: 5,
-              borderWidth: 1,
-              borderColor: "#e1e1e1",
-              fontSize: 12,
-              fontStyle: this.state.groupPass !== "" ? "normal" : "italic"
-            }}
-            onChangeText={txt => {
-              this.setState({ groupPass: txt });
-            }}
-          />
-          <TouchableOpacity
-            onPress={() => {
-              this.pushGroupName();
-              this._modalBox.close();
-            }}
-            style={{ marginTop: 5 }}
-          >
-            <Icon name="plus" size={20} color="#000" />
-          </TouchableOpacity>
-        </Modal>
       </View>
     );
   }
 
-  pushGroupName() {
-    this.FirebaseApi.groupData.map((v, i) => {
-      if (v._key === this.state.groupName) {
-        Alert.alert("Warning!", "Group name existed!");
-        return this._modalBox.close();
-      }
-    });
-    this.itemRefs.child("Group").child(this.state.groupName).update({
-      createdGroupBy: this.User.user.id,
-      groupPass: this.state.groupPass
-    });
-    this.itemRefs.child("Account")
-  }
-  getGroupName() {
-    let group = [];
-    let key = {};
-    this.itemRefs.child("Group").on("value", dataSnapshot => {
-        this.FirebaseApi.groupData = [];
-      dataSnapshot.forEach(child => {
-        key = {};
-        key[child.key] = {
-          _createGroupBy: child.child("createdGroupBy").val(),
-          _groupPass: child.child("groupPass").val()
-        };
-          this.FirebaseApi.groupData.push(key);
-      });
-    });
 
-    return this.FirebaseApi.groupData;
-  }
 }
 
 const styles = StyleSheet.create({

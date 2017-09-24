@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import {
-    StyleSheet,
-    Text,
-    View,
-    TouchableOpacity,
-    AsyncStorage,
-    Dimensions,
-    TextInput,
-    Alert
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  AsyncStorage,
+  Dimensions,
+  TextInput,
+  Alert
 } from "react-native";
 import Expo from "expo";
 import { Actions, Router, Scene } from "react-native-mobx";
@@ -22,11 +22,7 @@ const { width, height } = Dimensions.get("window");
 @autobind
 @observer
 export default class MyGroup extends Component {
-    render(){
-        return(
-          <View style={{flex:1}}>
-
-          </View>
-        );
-    }
+  render() {
+    return <View style={{ flex: 1 }} />;
+  }
 }
