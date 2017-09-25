@@ -10,6 +10,7 @@ class FirebaseApi {
     constructor(){}
   @observable groupData;
   @observable accountData = [];
+  @observable myGroup;
 }
 const firebaseApi = new FirebaseApi();
 export default firebaseApi;

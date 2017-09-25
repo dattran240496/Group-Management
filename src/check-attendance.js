@@ -7,7 +7,8 @@ import {
   AsyncStorage,
   Dimensions,
   TextInput,
-  Alert
+  Alert,
+  FlatList
 } from "react-native";
 import Expo from "expo";
 import { Actions, Router, Scene } from "react-native-mobx";
@@ -24,115 +25,21 @@ const { width, height } = Dimensions.get("window");
 export default class CheckAttendance extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      groupName: "",
-      groupPass: ""
-    };
     this.User = this.props.User;
     this.FirebaseApi = this.props.FirebaseApi;
     this.itemRefs = firebase.database().ref("app_expo");
+    this.state = {};
   }
-  componentWillMount() {
-    this.User.user = this.props.user;
-  }
+  componentWillMount() {}
   render() {
     return (
-      <View style={styles.container}>
-        <View
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center"
-          }}
-        >
-          <TouchableOpacity
-            onPress={() => {
-              Actions.enterGroupName();
-            }}
-            style={{
-              width: 120,
-              height: 50,
-              borderRadius: 5,
-              justifyContent: "center",
-              alignItems: "center",
-              borderColor: "#e1e1e1",
-              borderWidth: 1
-            }}
-          >
-            <Text>New Group</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={() => {
-              Actions.groupList();
-            }}
-            style={{
-              marginTop: 10,
-              width: 120,
-              height: 50,
-              borderRadius: 5,
-              justifyContent: "center",
-              alignItems: "center",
-              borderColor: "#e1e1e1",
-              borderWidth: 1
-            }}
-          >
-            <Text>Find Group</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={() => {
-              Actions.myGroup();
-            }}
-            style={{
-              marginTop: 10,
-              width: 120,
-              height: 50,
-              borderRadius: 5,
-              justifyContent: "center",
-              alignItems: "center",
-              borderColor: "#e1e1e1",
-              borderWidth: 1
-            }}
-          >
-            <Text>My Group</Text>
-          </TouchableOpacity>
-        </View>
-        <View
-          style={{
-            position: "absolute",
-            bottom: 10,
-            justifyContent: "center",
-            alignItems: "center",
-            width: width
-          }}
-        >
-          <TouchableOpacity
-            style={{
-              width: 100,
-              height: 30,
-              backgroundColor: "#e1e1e1",
-              justifyContent: "center",
-              alignItems: "center",
-              borderRadius: 3
-            }}
-            onPress={() => {
-              AsyncStorage.removeItem("@user:key");
-              Actions.login({ type: "replace" });
-            }}
-          >
-            <Text>Sign Out</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center"
+        }}
+      />
     );
   }
-
-
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1
-  }
-});

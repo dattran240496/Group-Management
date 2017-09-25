@@ -7,7 +7,8 @@ import {
   AsyncStorage,
   Dimensions,
   TextInput,
-  Alert
+  Alert,
+  FlatList
 } from "react-native";
 import Expo from "expo";
 import { Actions, Router, Scene } from "react-native-mobx";
@@ -22,7 +23,82 @@ const { width, height } = Dimensions.get("window");
 @autobind
 @observer
 export default class MyGroup extends Component {
+  constructor(props) {
+    super(props);
+    this.User = this.props.User;
+    this.FirebaseApi = this.props.FirebaseApi;
+    this.itemRefs = firebase.database().ref("app_expo");
+    //this.getMyGroup();
+    this.state = {
+      myGroupName: "",
+      myGroupList: this.FirebaseApi.myGroup
+    };
+  }
+  componentWillMount(){
+    __DEV__ && console.log(this.state.myGroupList);
+  }
   render() {
-    return <View style={{ flex: 1 }} />;
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center"
+        }}
+      >
+        <TextInput
+          placeholder="Group name..."
+          placeholderStyle={{ color: "#e1e1e1" }}
+          style={{
+            width: width,
+            height: 50,
+            paddingLeft: 10,
+            borderWidth: 1,
+            borderColor: "#e1e1e1",
+            fontSize: 15,
+            fontStyle: this.state.groupName !== "" ? "normal" : "italic"
+          }}
+          onChangeText={name => {}}
+        />
+        <FlatList
+          ref={ref => (this.flatListMyGroup = ref)}
+          keyExtractor={(item, index) => index}
+          data={this.state.myGroupList}
+          extraData={this.state}
+          renderItem={({ item, index }) => this._renderItem(item, index)}
+        />
+      </View>
+    );
+  }
+
+
+  _renderItem(item, index) {
+    let name = item.replace("%", ".");
+    return (
+      <View key={"_key " + item} style={{}}>
+        <TouchableOpacity
+          onPress={() => {
+            //this.state.groupName = Object.keys(item);
+              Actions.checkAttendance({groupName: name});
+          }}
+          style={{
+            width: width,
+            height: 50,
+            justifyContent: "center",
+            paddingLeft: 10,
+            borderBottomWidth: 1,
+            borderBottomColor: "#e1e1e1"
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 15
+            }}
+          >
+            {name}
+          </Text>
+        </TouchableOpacity>
+      </View>
+    );
   }
 }

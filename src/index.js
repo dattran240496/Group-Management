@@ -17,9 +17,10 @@ import SideMenu from "./SideMenu";
 import Login from "./login";
 import Loading from "./loading";
 import GroupList from "./group-list"
-import CheckAttendance from "./check-attendance"
+import Homepage from "./home-page"
 import MyGroup from "./my-group"
 import EnterGroupName from "./enter-group-name"
+import CheckAttendance from "./check-attendance"
 import User from "./models/user";
 import Global from "./models/global";
 import FirebaseApi from "./models/firebase"
@@ -117,9 +118,9 @@ export default class App extends Component {
                   paddingTop: 0
               }}/>
           <Scene
-              key="checkAttendance"
-              title="Check Attendance"
-              component={CheckAttendance}
+              key="homePage"
+              title="Homepage"
+              component={Homepage}
               hideNavBar={false}
               />
           <Scene
@@ -138,6 +139,12 @@ export default class App extends Component {
               key="enterGroupName"
               title="Enter Group Name"
               component={EnterGroupName}
+              hideNavBar={false}
+          />
+          <Scene
+              key="checkAttendance"
+              title="Check Attendance"
+              component={CheckAttendance}
               hideNavBar={false}
           />
         </Router>

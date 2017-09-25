@@ -133,6 +133,7 @@ export default class CheckAttendance extends Component {
   }
 
   _renderItem(item, index) {
+      let name = Object.keys(item).toString().replace("%", ".");
     return (
       <View key={"_key " + item} style={{}}>
         <TouchableOpacity
@@ -155,7 +156,7 @@ export default class CheckAttendance extends Component {
               fontSize: 15
             }}
           >
-            {Object.keys(item)}
+            {name}
           </Text>
         </TouchableOpacity>
       </View>
@@ -174,6 +175,11 @@ export default class CheckAttendance extends Component {
               .child("groupMember")
               .child(_id)
               .update({ email: this.User.user.email}),
+
+                this.itemRefs.child("Account").child(this.User.user.id).child("MyGroup").child(this.state.groupName.toString()).update({
+                    joined : true
+                }),
+
             this._modalEnterPas.close()
           )
         : Alert.alert("Warning!", "Invalid password!");

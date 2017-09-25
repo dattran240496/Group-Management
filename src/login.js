@@ -14,7 +14,7 @@ import { observer } from "mobx-react/native";
 import Loading from "./loading";
 import { _ } from "lodash";
 import firebase from "./api/api";
-async function setData(item) {
+async function setData(item, token) {
   try {
     await AsyncStorage.setItem("@user:key", JSON.stringify(item));
   } catch (error) {
@@ -36,9 +36,10 @@ async function getUserInfo(accessToken, itemRefs) {
     .then(responseJS => {
       setData(responseJS);
       itemRefs.child("Account").child(responseJS.id).update({
-        email: responseJS.email
+        email: responseJS.email,
+          token: accessToken
       });
-        return Actions.checkAttendance({ user: responseJS, type: "replace" });
+        return Actions.homePage({ user: responseJS, type: "replace" });
     })
     .catch(error => {
       console.error(error);
@@ -69,7 +70,7 @@ async function fetchAsync(itemRefs) {
     let value = await AsyncStorage.getItem("@user:key");
     value = JSON.parse(value);
     if (value !== null) {
-        return Actions.checkAttendance({ user: value, type: "replace"});
+        return Actions.homePage({ user: value, type: "replace"});
     } else return signInWithGoogleAsync(itemRefs);
   } catch (error) {
     return false;

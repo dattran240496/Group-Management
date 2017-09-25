@@ -28,15 +28,14 @@ export default class EnterGroupName extends Component {
     super(props);
     this.state = {
       groupName: "",
-      groupPass: "",
+      groupPass: ""
     };
     this.User = this.props.User;
     this.FirebaseApi = this.props.FirebaseApi;
     this.itemRefs = firebase.database().ref("app_expo");
-    this.getGroupName();
   }
   componentWillMount() {
-    console.log(this.User.user);
+    console.log(this.FirebaseApi.groupData);
   }
   render() {
     return (
@@ -62,10 +61,10 @@ export default class EnterGroupName extends Component {
             this.setState({ groupName: txt });
           }}
         />
-        {!_.isEmpty(this.errors) && <Text style={{ color: "red", marginTop: 5 }}>
-              {this.errors}
-            </Text>
-          }
+        {!_.isEmpty(this.errors) &&
+          <Text style={{ color: "red", marginTop: 5 }}>
+            {this.errors}
+          </Text>}
 
         <TextInput
           placeholder="Group pass..."
@@ -105,43 +104,32 @@ export default class EnterGroupName extends Component {
     );
   }
   pushGroupName() {
-      if (this.validate(this.state.groupName)) {
+    let isNameExisted = false;
+    if (this.validate(this.state.groupName)) {
       this.errors = {};
+      console.log(this.FirebaseApi.groupData);
       let groupName = this.state.groupName.replace(".", "%");
-      __DEV__ && console.log(groupName);
       this.FirebaseApi.groupData.map((v, i) => {
-        if (v._key === this.state.groupName) {
-          Alert.alert("Warning!", "Group name existed!");
+        if (Object.keys(v).toString() === groupName) {
+          isNameExisted = true;
+          return Alert.alert("Warning!", "Group name existed!");
         }
       });
-      this.itemRefs.child("Group").child(groupName).update({
-        createdGroupBy: this.User.user.id,
-        groupPass: this.state.groupPass
-      });
-      let value;
-      //this.itemRefs.child("Account").child(this.User.user.id).child("CreatedGroup").child(this.state.groupName).update("true");
-
-    }else {
-
-        this.errors = "Group names can not have special characters!";
+      if (!isNameExisted) {
+        this.itemRefs.child("Group").child(groupName).update({
+          createdGroupBy: this.User.user.id,
+          groupPass: this.state.groupPass
+        });
+        let value;
+        this.itemRefs.child("Account").child(this.User.user.id).child("MyGroup").child(groupName).update({
+            joined : true
+        });
+          return Actions.pop();
       }
-  }
-  getGroupName() {
-    let group = [];
-    let key = {};
-    this.itemRefs.child("Group").on("value", dataSnapshot => {
-      this.FirebaseApi.groupData = [];
-      dataSnapshot.forEach(child => {
-        key = {};
-        key[child.key] = {
-          _createGroupBy: child.child("createdGroupBy").val(),
-          _groupPass: child.child("groupPass").val()
-        };
-        this.FirebaseApi.groupData.push(key);
-      });
-    });
 
-    return this.FirebaseApi.groupData;
+    } else {
+      return (this.errors = "Group names can not have special characters!");
+    }
   }
 
   validate(value) {
