@@ -21,6 +21,8 @@ import Homepage from "./home-page"
 import MyGroup from "./my-group"
 import EnterGroupName from "./enter-group-name"
 import CheckAttendance from "./check-attendance"
+import Member from "./members"
+import ModalBox from "./components/index"
 import User from "./models/user";
 import Global from "./models/global";
 import FirebaseApi from "./models/firebase"
@@ -40,9 +42,13 @@ export default class App extends Component {
     };
     this.User = User;
     this.FirebaseApi = FirebaseApi;
+    this.Global = Global;
   }
   componentDidMount() {
-    //this.setState({});
+
+  }
+  componentWillMount(){
+
   }
   closeDrawer = () => {
     this._drawer.close();
@@ -88,9 +94,9 @@ export default class App extends Component {
           leftIconStyle={{
             fontSize: 32,
             color: "#fff",
-            width: __d(53.33),
-            height: __d(53.33),
-            lineHeight: __d(53.33),
+            width: 53.33,
+            height: 53.33,
+            lineHeight: 53.33,
             paddingLeft: 15
           }}
           drawerMenuPress={() => {
@@ -99,6 +105,7 @@ export default class App extends Component {
           }}
           User={this.User}
           FirebaseApi={this.FirebaseApi}
+          Global={this.Global}
 
         >
           <Scene
@@ -120,6 +127,8 @@ export default class App extends Component {
           <Scene
               key="homePage"
               title="Homepage"
+              schema="modal"
+              direction="vertical"
               component={Homepage}
               hideNavBar={false}
               />
@@ -147,7 +156,19 @@ export default class App extends Component {
               component={CheckAttendance}
               hideNavBar={false}
           />
+          <Scene
+              key="members"
+              title="Members"
+              component={Member}
+              hideNavBar={false}
+          />
+
         </Router>
+        <ModalBox
+            Global={this.Global}
+            Firebase={this.FirebaseApi}
+            User={this.User}
+        />
       </Drawer>
     );
   }

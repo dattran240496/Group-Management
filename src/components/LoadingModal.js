@@ -5,41 +5,29 @@ import {
   View,
   TouchableOpacity,
   AsyncStorage,
-  Image
+  Dimensions
 } from "react-native";
 import Expo from "expo";
 import { Actions, Router, Scene } from "react-native-mobx";
 import { observable } from "mobx";
 import { autobind } from "core-decorators";
 import { observer } from "mobx-react/native";
+const { width, height } = Dimensions.get("window");
 
 @autobind
 @observer
-export default class SideMenu extends Component {
+export default class LoadingModal extends Component {
+  static defaultProps = {
+    onRefresh: function() {}
+  };
+
   constructor(props) {
     super(props);
-      this.User = this.props.User;
-      this.state={}
-  }
-  componentWillMount() {
-  }
-  componentDidMount(){
   }
   render() {
     return (
       <View style={styles.container}>
-        {this.User.user &&
-          <Image
-            style={{
-              width: 100,
-              height: 100,
-              borderRadius: 50,
-              resizeMode: "contain"
-            }}
-            source={{uri: this.User.user.picture}}
-          />}
-          {this.User.user && <Text style={{color: '#000', paddingTop:10}}>{this.User.user.email}</Text>}
-
+        <Text>Loading...</Text>
       </View>
     );
   }
@@ -48,8 +36,10 @@ export default class SideMenu extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    width: width,
+    height: height,
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    backgroundColor: "#fff"
   }
 });

@@ -35,7 +35,6 @@ export default class EnterGroupName extends Component {
     this.itemRefs = firebase.database().ref("app_expo");
   }
   componentWillMount() {
-    console.log(this.FirebaseApi.groupData);
   }
   render() {
     return (

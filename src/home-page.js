@@ -18,10 +18,12 @@ import firebase from "./api/api";
 import Modal from "react-native-modalbox";
 import Icon from "react-native-vector-icons/FontAwesome";
 const { width, height } = Dimensions.get("window");
+import { _ } from "lodash";
 
 @autobind
 @observer
 export default class Homepage extends Component {
+  @observable isDisable = false;
   constructor(props) {
     super(props);
     this.state = {
@@ -30,13 +32,27 @@ export default class Homepage extends Component {
     };
     this.User = this.props.User;
     this.FirebaseApi = this.props.FirebaseApi;
+    this.Global = this.props.Global;
     this.itemRefs = firebase.database().ref("app_expo");
-    this.getGroupName();
   }
   componentWillMount() {
+    //this.Global.modalType = "loading";
     this.User.user = this.props.user;
-      this.getMyGroup();
+    !this.FirebaseApi.groupData
+      ? this.getGroupName()
+      : (this.Global.modalType = false);
+    !this.FirebaseApi.myGroup
+      ? this.getMyGroup()
+      : (this.Global.modalType = false);
+    !this.FirebaseApi.accessToken
+      ? this.getAccount()
+      : (this.Global.modalType = false);
+    //this.isDisable = !!(this.FirebaseApi.groupData && this.FirebaseApi.myGroup);
+    //this.isDisable ? this.Global.modalType = false : null;
   }
+  componentDidMount() {
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -119,6 +135,9 @@ export default class Homepage extends Component {
               borderRadius: 3
             }}
             onPress={() => {
+                this.Firebase.groupData = null;
+                this.Firebase.accountData = null;
+                this.Firebase.myGroup = null;
               AsyncStorage.removeItem("@user:key");
               Actions.login({ type: "replace" });
             }}
@@ -130,22 +149,24 @@ export default class Homepage extends Component {
     );
   }
   getGroupName() {
-    let group = [];
+    console.log("get group name");
+    let group = {};
     let key = {};
     this.itemRefs.child("Group").on("value", dataSnapshot => {
       this.FirebaseApi.groupData = [];
       dataSnapshot.forEach(child => {
         key = {};
-        key[child.key] = {
+        this.FirebaseApi.groupData[child.key] = {
           _createGroupBy: child.child("createdGroupBy").val(),
           _groupPass: child.child("groupPass").val()
         };
-        this.FirebaseApi.groupData.push(key);
+        //this.FirebaseApi.groupData[];
       });
+      this.FirebaseApi.myGroup && this.FirebaseApi.groupData && this.FirebaseApi.accountData && this.Global.modalType === "loading"
+          ? (this.Global.modalType = false) : null;
     });
-
-    return this.FirebaseApi.groupData;
   }
+
   getMyGroup() {
     this.itemRefs
       .child("Account")
@@ -156,8 +177,25 @@ export default class Homepage extends Component {
         dataSnapshot.forEach(child => {
           this.FirebaseApi.myGroup.push(child.key);
         });
+          this.FirebaseApi.myGroup && this.FirebaseApi.groupData && this.FirebaseApi.accountData && this.Global.modalType === "loading"
+              ? (this.Global.modalType = false) : null;
       });
-    return this.FirebaseApi.myGroup;
+  }
+  getAccount() {
+    this.itemRefs.child("Account").on("value", dataSnapshot => {
+      this.FirebaseApi.accountData = [];
+      dataSnapshot.forEach(child => {
+        this.FirebaseApi.accountData[child.key] = {
+          email: child.child("infoAccount").child("email").val(),
+            family_name: child.child("infoAccount").child("family_name").val(),
+            given_name: child.child("infoAccount").child("given_name").val(),
+            name: child.child("infoAccount").child("name").val(),
+            picture: child.child("infoAccount").child("picture").val(),
+        };
+      });
+        this.FirebaseApi.myGroup && this.FirebaseApi.groupData && this.FirebaseApi.accountData && this.Global.modalType === "loading"
+            ? (this.Global.modalType = false) : null;
+    });
   }
 }
 

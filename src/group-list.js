@@ -24,16 +24,25 @@ import { _ } from "lodash";
 @observer
 export default class CheckAttendance extends Component {
   @observable indexSelected = -1;
+  @observable group = [];
   constructor(props) {
     super(props);
     this.User = this.props.User;
     this.FirebaseApi = this.props.FirebaseApi;
     this.state = {
       groupName: "",
-      groupNameList: this.FirebaseApi.groupData,
+      groupNameList: [],
       groupPass: ""
     };
     this.itemRefs = firebase.database().ref("app_expo");
+  }
+  componentWillMount() {
+    for (let keys in this.FirebaseApi.groupData) {
+      this.group.push(keys);
+    }
+    this.setState({
+      groupNameList: this.group
+    });
   }
   render() {
     return (
@@ -57,6 +66,7 @@ export default class CheckAttendance extends Component {
             fontStyle: this.state.groupName !== "" ? "normal" : "italic"
           }}
           onChangeText={name => {
+            this.setState({ groupName: name });
             this._filterGroupName(name);
           }}
         />
@@ -122,10 +132,11 @@ export default class CheckAttendance extends Component {
   }
   _filterGroupName(name) {
     let _this = this;
-    let groupData = this.FirebaseApi.groupData;
-    groupData = _.filter(this.FirebaseApi.groupData, function(o) {
+    let groupData = this.group;
+    groupData = _.filter(groupData, function(o) {
+      console.log(o);
       let regx = new RegExp(name.toLowerCase());
-      return regx.test(o.key.toString().toLowerCase());
+      return regx.test(o.toString().toLowerCase());
     });
     this.setState({
       groupNameList: groupData
@@ -133,13 +144,14 @@ export default class CheckAttendance extends Component {
   }
 
   _renderItem(item, index) {
-      let name = Object.keys(item).toString().replace("%", ".");
+    //console.log(Object.values(this.state.groupNameList));
+    let name = item.replace("%", ".");
     return (
       <View key={"_key " + item} style={{}}>
         <TouchableOpacity
           onPress={() => {
             this.indexSelected = index;
-            this.state.groupName = Object.keys(item);
+            this.state.groupName = name;
             this._modalEnterPas.open();
           }}
           style={{
@@ -165,23 +177,31 @@ export default class CheckAttendance extends Component {
 
   _joinGroup() {
     let _id = this.User.user.id;
-    this.state.groupPass === ""
-      ? Alert.alert("Warning!", "Password is not empty!")
-      : this.state.groupPass === this.FirebaseApi.groupData[this.indexSelected][this.state.groupName]._groupPass
-        ? (
-            this.itemRefs
-              .child("Group")
-              .child(this.state.groupName.toString())
-              .child("groupMember")
-              .child(_id)
-              .update({ email: this.User.user.email}),
-
-                this.itemRefs.child("Account").child(this.User.user.id).child("MyGroup").child(this.state.groupName.toString()).update({
-                    joined : true
+    console.log(this.FirebaseApi.groupData);
+    // console.log(this.FirebaseApi.groupData[this.state.groupName].createdGroupBy);
+    _id === this.FirebaseApi.groupData[this.state.groupName]._createdGroupBy // if user joined this group
+      ? Alert.alert("Warning!", "You joined this group!")
+      : this.state.groupPass === "" // if password is empty
+        ? Alert.alert("Warning!", "Password is not empty!")
+        : this.state.groupPass ===
+          this.FirebaseApi.groupData[this.state.groupName]._groupPass // if password is true
+          ? (
+              this.itemRefs
+                .child("Group")
+                .child(this.state.groupName.toString())
+                .child("groupMember")
+                .child(_id)
+                .update({ email: this.User.user.email }),
+              this.itemRefs
+                .child("Account")
+                .child(this.User.user.id)
+                .child("MyGroup")
+                .child(this.state.groupName.toString())
+                .update({
+                  joined: true
                 }),
-
-            this._modalEnterPas.close()
-          )
-        : Alert.alert("Warning!", "Invalid password!");
+              this._modalEnterPas.close()
+            )
+          : Alert.alert("Warning!", "Invalid password!");
   }
 }

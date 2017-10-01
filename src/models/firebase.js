@@ -7,10 +7,10 @@ import { observer } from "mobx-react/native";
 
 @autobind
 class FirebaseApi {
-    constructor(){}
   @observable groupData;
-  @observable accountData = [];
+  @observable accountData;
   @observable myGroup;
+  @observable members
 }
 const firebaseApi = new FirebaseApi();
 export default firebaseApi;

@@ -8,7 +8,8 @@ import {
   Dimensions,
   TextInput,
   Alert,
-  FlatList
+  FlatList,
+  Image
 } from "react-native";
 import Expo from "expo";
 import { Actions, Router, Scene } from "react-native-mobx";
@@ -18,37 +19,31 @@ import { observer } from "mobx-react/native";
 import firebase from "./api/api";
 import Modal from "react-native-modalbox";
 import Icon from "react-native-vector-icons/FontAwesome";
+import { _ } from "lodash";
 const { width, height } = Dimensions.get("window");
 
 @autobind
 @observer
-export default class MyGroup extends Component {
+export default class Members extends Component {
+  @observable members = null;
   constructor(props) {
     super(props);
     this.User = this.props.User;
     this.Global = this.props.Global;
     this.FirebaseApi = this.props.FirebaseApi;
     this.itemRefs = firebase.database().ref("app_expo");
-    //this.getMyGroup();
     this.state = {
-      myGroupName: "",
-      myGroupList: this.FirebaseApi.myGroup
+      email: ""
     };
   }
   componentWillMount() {
-    console.log(this.state.myGroupList);
+    this.members = Object.values(this.FirebaseApi.members);
   }
   render() {
     return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center"
-        }}
-      >
+      <View style={{ flex: 1 }}>
         <TextInput
-          placeholder="Group name..."
+          placeholder="Email..."
           placeholderStyle={{ color: "#e1e1e1" }}
           style={{
             width: width,
@@ -57,14 +52,24 @@ export default class MyGroup extends Component {
             borderWidth: 1,
             borderColor: "#e1e1e1",
             fontSize: 15,
-            fontStyle: this.state.groupName !== "" ? "normal" : "italic"
+            fontStyle: this.state.email !== "" ? "normal" : "italic"
           }}
-          onChangeText={name => {}}
+          onChangeText={name => {
+            this.setState({ email: name });
+            this._filterEmail(name);
+          }}
         />
+        <Text
+          style={{
+            padding: 10
+          }}
+        >
+          Total members: {this.members.length}
+        </Text>
         <FlatList
-          ref={ref => (this.flatListMyGroup = ref)}
+          ref={ref => (this.flatListMem = ref)}
           keyExtractor={(item, index) => index}
-          data={this.state.myGroupList}
+          data={this.members}
           extraData={this.state}
           renderItem={({ item, index }) => this._renderItem(item, index)}
         />
@@ -72,17 +77,21 @@ export default class MyGroup extends Component {
     );
   }
 
+  _filterEmail(name) {
+    let groupData = Object.values(this.FirebaseApi.members);
+    groupData = _.filter(groupData, function(o) {
+      o = o.email;
+      let regx = new RegExp(name.toLowerCase());
+      return regx.test(o.toString().toLowerCase());
+    });
+    this.members = groupData;
+  }
+
   _renderItem(item, index) {
-    let name = item.replace("%", ".");
     return (
       <View key={"_key " + item} style={{}}>
         <TouchableOpacity
-          onPress={() => {
-            //this.state.groupName = Object.keys(item);
-            this.Global.modalType = "loading";
-            this.Global.groupName = item;
-            Actions.checkAttendance();
-          }}
+          onPress={() => {}}
           style={{
             width: width,
             height: 50,
@@ -97,7 +106,7 @@ export default class MyGroup extends Component {
               fontSize: 15
             }}
           >
-            {name}
+            {item.email}
           </Text>
         </TouchableOpacity>
       </View>

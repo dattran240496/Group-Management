@@ -14,6 +14,8 @@ import { observer } from "mobx-react/native";
 import Loading from "./loading";
 import { _ } from "lodash";
 import firebase from "./api/api";
+
+
 async function setData(item, token) {
   try {
     await AsyncStorage.setItem("@user:key", JSON.stringify(item));
@@ -35,9 +37,10 @@ async function getUserInfo(accessToken, itemRefs) {
     .then(response => response.json())
     .then(responseJS => {
       setData(responseJS);
+      console.log(accessToken);
       itemRefs.child("Account").child(responseJS.id).update({
-        email: responseJS.email,
-          token: accessToken
+        token: accessToken,
+          infoAccount: responseJS
       });
         return Actions.homePage({ user: responseJS, type: "replace" });
     })
@@ -55,27 +58,30 @@ async function signInWithGoogleAsync(itemRefs) {
         "796165831117-gcqiquek4o7a6mh2pbqovt7tnb1diphb.apps.googleusercontent.com",
       scopes: ["profile", "email"]
     });
-    if (result.type === "success") {
-      return getUserInfo(result.accessToken, itemRefs);
+      if (result.type === "success") {
+          return getUserInfo(result.accessToken, itemRefs);
     } else {
-      return Actions.login({type: 'replace'});
+      return Actions.login({ type: "replace" });
     }
   } catch (e) {
-    return Actions.login({type: 'replace'});
+    return Actions.login({ type: "replace" });
   }
 }
 async function fetchAsync(itemRefs) {
-  Actions.loading({ type: "replace" });
-  try {
+  //Actions.loading({ type: "replace" });
+    try {
     let value = await AsyncStorage.getItem("@user:key");
     value = JSON.parse(value);
     if (value !== null) {
-        return Actions.homePage({ user: value, type: "replace"});
-    } else return signInWithGoogleAsync(itemRefs);
+      return Actions.homePage({ user: value, type: "replace" });
+    } else {
+        return signInWithGoogleAsync(itemRefs);
+    }
   } catch (error) {
     return false;
   }
 }
+
 @autobind
 @observer
 export default class Login extends Component {
@@ -83,9 +89,13 @@ export default class Login extends Component {
     super(props);
 
     this.User = this.props.User;
+    this.Firebase = this.props.Firebase;
+    this.Global = this.props.Global;
     this.itemRefs = firebase.database().ref("app_expo");
   }
+    componentWillMount(){
 
+    }
   render() {
     return (
       <View style={styles.container}>
@@ -99,7 +109,10 @@ export default class Login extends Component {
             justifyContent: "center",
             alignItems: "center"
           }}
-          onPress={() => fetchAsync(this.itemRefs)}
+          onPress={() => {
+              this.Global.modalType = "loading";
+              fetchAsync(this.itemRefs);
+          }}
         >
           <Text
             style={{
