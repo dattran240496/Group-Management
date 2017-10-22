@@ -36,6 +36,7 @@ export default class MyGroup extends Component {
     };
   }
   componentWillMount() {
+      this.setState({});
     console.log(this.state.myGroupList);
   }
   render() {

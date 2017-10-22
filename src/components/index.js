@@ -18,6 +18,7 @@ import { observer } from "mobx-react/native";
 import { Actions } from "react-native-mobx";
 import LoadingModal from "./LoadingModal";
 import CheckAttendanceModal from "./check-attendance-modal";
+import MemberCheckAttendanceModal from "./member-check-attendance";
 const { width, height } = Dimensions.get("window");
 import Modal from "react-native-modalbox";
 
@@ -68,6 +69,18 @@ export default class ModalBox extends Component {
         );
 
         break;
+        case "member-check-attendance":
+            component = (
+                <MemberCheckAttendanceModal
+                    closeModal={() => {
+                        this.Global.modalType = false;
+                        this.closeModal();
+                    }}
+                    Global={this.Global}
+                />
+            );
+
+            break;
     }
     return (
       <View
@@ -94,7 +107,6 @@ export default class ModalBox extends Component {
           }, this.Global.modalType === "loading" ? {width: width, height: height} : null]}
           ref={ref => (this.modal = ref)}
           position={"center"}
-          backdropPressToClose={true}
           onClosed={this._onClose}
           onOpened={this._onOpen}
           onClosingState={this._onClosingState}

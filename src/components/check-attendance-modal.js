@@ -16,6 +16,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 const { width, height } = Dimensions.get("window");
 import firebase from "../api/api";
 import moment from "moment";
+import { Constants, Location, Permissions } from 'expo';
 @autobind
 @observer
 export default class CheckAttendanceModal extends Component {
@@ -28,8 +29,8 @@ export default class CheckAttendanceModal extends Component {
     this.Global = this.props.Global;
   }
 
-  componentWillMout() {
-    console.log(this.Global.modalType);
+  componentWillMount() {
+    this._getLocationAsync();
   }
   render() {
     return (
@@ -64,10 +65,9 @@ export default class CheckAttendanceModal extends Component {
                 let timeMoment = moment(timeDate, "YYYY-MM-DDhh:mm:ss");
 
                 // get admin's location
-                navigator.geolocation.getCurrentPosition(
+                  let location = this.location;
+                  navigator.geolocation.watchPosition(
                   position => {
-                    console.log(position["coords"].longitude);
-                    console.log(position["coords"].latitude);
                     _this.isChecking = true;
                     //update time
                     _this.itemRefs
@@ -96,16 +96,16 @@ export default class CheckAttendanceModal extends Component {
                       .child("checkedAttendance")
                       .child(timeMoment.format("YYYY-MM-DDhh:mm:ss"))
                       .update({
-                        longitude: position["coords"].longitude,
-                        latitude: position["coords"].latitude
+                        latitude: location["coords"].latitude,
+                          longitude: location["coords"].longitude,
+                          accuracy: location["coords"].accuracy
                       });
                   },
                   error => {
                     console.log(error);
                   },
-                  { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+                  {  enableHighAccuracy: true, timeout: 20000, maximumAge: 1000, distanceFilter: 10 }
                 );
-
               }}
               style={{
                 width: 150,
@@ -152,6 +152,18 @@ export default class CheckAttendanceModal extends Component {
       </View>
     );
   }
+    _getLocationAsync = async () => {
+        let { status } = await Permissions.askAsync(Permissions.LOCATION);
+        if (status !== 'granted') {
+            this.setState({
+                errorMessage: 'Permission to access location was denied',
+            });
+        }
+
+        let location = await Location.getCurrentPositionAsync({});
+        this.location = location;
+        return location;
+    };
 }
 
 const styles = StyleSheet.create({

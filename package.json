@@ -9,6 +9,7 @@
     "core-decorators": "^0.20.0",
     "expo": "^20.0.0",
     "firebase": "^4.3.1",
+    "geolib": "^2.0.23",
     "lodash": "^4.17.4",
     "mobx": "^3.2.2",
     "mobx-react": "^4.2.2",
@@ -23,5 +24,6 @@
     "react-native-vector-icons": "^4.3.0",
     "tween-functions": "^1.2.0",
     "xdate": "^0.8.2"
-  }
+  },
+  "devDependencies": {}
 }

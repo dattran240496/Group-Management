@@ -135,9 +135,9 @@ export default class Homepage extends Component {
               borderRadius: 3
             }}
             onPress={() => {
-                this.Firebase.groupData = null;
-                this.Firebase.accountData = null;
-                this.Firebase.myGroup = null;
+                this.FirebaseApi.groupData = null;
+                this.FirebaseApi.accountData = null;
+                this.FirebaseApi.myGroup = null;
               AsyncStorage.removeItem("@user:key");
               Actions.login({ type: "replace" });
             }}

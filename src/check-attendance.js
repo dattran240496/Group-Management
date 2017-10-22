@@ -26,6 +26,7 @@ const { width, height } = Dimensions.get("window");
 export default class CheckAttendance extends Component {
   @observable name = null;
   @observable info = null;
+  @observable isChecking = false;
   constructor(props) {
     super(props);
     this.User = this.props.User;
@@ -37,13 +38,28 @@ export default class CheckAttendance extends Component {
     };
   }
   componentWillMount() {
-      console.log("re-render");
-
-      this.name = this.Global.groupName;
+    this.name = this.Global.groupName;
     this.info = this.FirebaseApi.accountData[
       this.FirebaseApi.groupData[this.name]._createGroupBy
     ];
     this.getMembers();
+  }
+  componentDidMount() {
+    this.itemRefs
+      .child("Group")
+      .child(this.name)
+      .child("checkedAttendance")
+      .child("isChecking")
+      .on("value", dataSnapshot => {
+        dataSnapshot.forEach(child => {
+          this.isChecking = child.val();
+          this.isChecking === "true"
+            ? this.info.email !== this.User.user.email
+              ? (this.Global.modalType = "member-check-attendance")
+              : null
+            : (this.Global.modalType = false);
+        });
+      });
   }
   render() {
     return (
@@ -162,21 +178,21 @@ export default class CheckAttendance extends Component {
             <Text style={{ fontSize: 15 }}>Members</Text>
           </TouchableOpacity>
 
-            {this.info.email === this.User.user.email && <TouchableOpacity
-                style={{
-                    width: 150,
-                    height: 50,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    borderRadius: 5,
-                    borderColor: "#e1e1e1",
-                    borderWidth: 1,
-                    marginTop: 10
-                }}
+          {this.info.email === this.User.user.email &&
+            <TouchableOpacity
+              style={{
+                width: 150,
+                height: 50,
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: 5,
+                borderColor: "#e1e1e1",
+                borderWidth: 1,
+                marginTop: 10
+              }}
             >
-                <Text style={{fontSize: 15}}>Post Message</Text>
-            </TouchableOpacity>
-            }
+              <Text style={{ fontSize: 15 }}>Post Message</Text>
+            </TouchableOpacity>}
         </View>
       </View>
     );
@@ -196,6 +212,8 @@ export default class CheckAttendance extends Component {
           };
         });
       });
-    this.FirebaseApi.members && this.Global.modalType === "loading" ? (this.Global.modalType = false) : null;
+    this.FirebaseApi.members && this.Global.modalType === "loading"
+      ? (this.Global.modalType = false)
+      : null;
   }
 }
