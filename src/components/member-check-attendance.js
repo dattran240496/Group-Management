@@ -5,7 +5,7 @@ import {
   View,
   TouchableOpacity,
   AsyncStorage,
-  Dimensions,
+  Dimensions
 } from "react-native";
 import Expo from "expo";
 import { Actions, Router, Scene } from "react-native-mobx";
@@ -16,44 +16,53 @@ import Icon from "react-native-vector-icons/FontAwesome";
 const { width, height } = Dimensions.get("window");
 import firebase from "../api/api";
 import moment from "moment";
-import geolib from "geolib";
-import { Constants, Location, Permissions } from 'expo';
+let geolib = require("geolib");
+import { Constants, Location, Permissions } from "expo";
 
 @autobind
 @observer
 export default class MemberCheckAttendanceModal extends Component {
-    @observable location = null;
-    @observable admin = null;
-    @observable newUpdate = null;
+  @observable location = null;
+  @observable admin = null;
+  @observable newUpdate = null;
   constructor(props) {
     super(props);
     this.itemRefs = firebase.database().ref("app_expo");
     this.Global = this.props.Global;
   }
-  componentWillMount(){
-      this.itemRefs.child("Group").child(this.Global.groupName).on("value", dataSnapshot =>{
-          dataSnapshot.forEach(child =>{
-              if(child.key === "newUpdate"){
-                  this.newUpdate = child.val();
-              }
-          })
+  componentWillMount() {
+    this.itemRefs
+      .child("Group")
+      .child(this.Global.groupName)
+      .on("value", dataSnapshot => {
+        dataSnapshot.forEach(child => {
+          if (child.key === "newUpdate") {
+            this.newUpdate = child.val();
+          }
+        });
       });
-      this.itemRefs.child("Group").child(this.Global.groupName).child("checkedAttendance").on("value", dataSnapshot =>{
-          dataSnapshot.forEach(child => {
-              if (child.key === this.newUpdate){
-                  this.admin = {
-                      latitude: child.child("latitude").val(), longitude: child.child("longitude").val()
-                  };
-              }
-          })
+    this.itemRefs
+      .child("Group")
+      .child(this.Global.groupName)
+      .child("checkedAttendance")
+      .on("value", dataSnapshot => {
+        dataSnapshot.forEach(child => {
+          if (child.key === this.newUpdate) {
+            this.admin = {
+              latitude: child.child("latitude").val(),
+              longitude: child.child("longitude").val()
+            };
+          }
+        });
       });
   }
   render() {
     return (
       <View style={styles.container}>
         <TouchableOpacity
-            onPress={()=>this.memberCheckedAttendance
-            }
+          onPress={()=>{
+              this.memberCheckedAttendance();
+          }}
           style={{
             width: 150,
             height: 40,
@@ -67,53 +76,68 @@ export default class MemberCheckAttendanceModal extends Component {
         >
           <Text>Attendant</Text>
         </TouchableOpacity>
-          <TouchableOpacity
-              onPress={()=>{
-                  this.Global.modalType = false;
-              }}
-              style={{
-                  width: 150,
-                  height: 40,
-                  borderWidth: 1,
-                  borderRadius: 5,
-                  backgroundColor: "#fff",
-                  borderColor: "#e1e1e1",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginTop: 10
-              }}
-          >
-              <Text>Close</Text>
-          </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            this.Global.modalType = false;
+          }}
+          style={{
+            width: 150,
+            height: 40,
+            borderWidth: 1,
+            borderRadius: 5,
+            backgroundColor: "#fff",
+            borderColor: "#e1e1e1",
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: 10
+          }}
+        >
+          <Text>Close</Text>
+        </TouchableOpacity>
       </View>
     );
   }
-  async memberCheckedAttendance () {
+   memberCheckedAttendance() {
+      this.setState({});
+    let distance = -1;
+    navigator.geolocation.getCurrentPosition(
+      position => {
+          let location = position.coords;
+        console.log("user location: ");
+        console.log(location.latitude);
+        console.log(location.longitude);
 
-      let location = await Location.getCurrentPositionAsync({});
+          console.log("admin location: ");
+          console.log(this.admin.latitude);
+          console.log(this.admin.longitude);
 
-      console.log(this.admin);
-      console.log({latitude: location.coords.latitude, longitude: location.coords.longitude});
-      console.log(geolib.getDistance(
-          {latitude: location.coords.latitude, longitude: location.coords.longitude},
-          this.admin));
-
-
+          let coords = [];
+          coords.push(this.admin);
+          coords.push(location);
+        distance = geolib.getDistance(
+          {
+            latitude: location.latitude,
+            longitude: location.longitude
+          },
+          {
+            latitude: this.admin.latitude,
+            longitude: this.admin.longitude
+          },
+        );
+        //distance = geolib.getPathLength(coords);
+        console.log("distance");
+        console.log(distance);
+      },
+      error => {
+        console.log(error);
+      },
+      {
+          enableHighAccuracy: true,
+          timeout: 20000,
+          maximumAge: 0
+      }
+    );
   }
-    _getLocationAsync = async () => {
-        let { status } = await Permissions.askAsync(Permissions.LOCATION);
-        if (status !== 'granted') {
-            this.setState({
-                errorMessage: 'Permission to access location was denied',
-            });
-        }
-
-        let location = await Location.getCurrentPositionAsync({});
-        this.location = location;
-        return location;
-
-    };
-
 }
 const styles = StyleSheet.create({
   container: {

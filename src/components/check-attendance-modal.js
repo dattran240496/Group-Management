@@ -30,7 +30,6 @@ export default class CheckAttendanceModal extends Component {
   }
 
   componentWillMount() {
-    this._getLocationAsync();
   }
   render() {
     return (
@@ -55,7 +54,7 @@ export default class CheckAttendanceModal extends Component {
         </TouchableOpacity>
         {!this.isChecking
           ? <TouchableOpacity
-              onPress={() => {
+              onPress={async () => {
                 let _this = this;
 
                 // get current time
@@ -64,9 +63,12 @@ export default class CheckAttendanceModal extends Component {
                 // convert to moment
                 let timeMoment = moment(timeDate, "YYYY-MM-DDhh:mm:ss");
 
+                  let location = await Location.getCurrentPositionAsync({});
+                  console.log("location");
+                  console.log(location);
+
                 // get admin's location
-                  let location = this.location;
-                  navigator.geolocation.watchPosition(
+                  navigator.geolocation.getCurrentPosition(
                   position => {
                     _this.isChecking = true;
                     //update time
@@ -88,7 +90,7 @@ export default class CheckAttendanceModal extends Component {
                       .update({
                         value: "true",
                       });
-
+                    console.log(position);
                     // update admin's location to members compare with it
                     _this.itemRefs
                       .child("Group")
@@ -96,15 +98,16 @@ export default class CheckAttendanceModal extends Component {
                       .child("checkedAttendance")
                       .child(timeMoment.format("YYYY-MM-DDhh:mm:ss"))
                       .update({
-                        latitude: location["coords"].latitude,
-                          longitude: location["coords"].longitude,
-                          accuracy: location["coords"].accuracy
+                        latitude: position["coords"].latitude,
+                          longitude: position["coords"].longitude,
                       });
                   },
                   error => {
                     console.log(error);
                   },
-                  {  enableHighAccuracy: true, timeout: 20000, maximumAge: 1000, distanceFilter: 10 }
+                  { enableHighAccuracy: true,
+                      timeout: 20000,
+                      maximumAge: 0 }
                 );
               }}
               style={{
@@ -152,18 +155,6 @@ export default class CheckAttendanceModal extends Component {
       </View>
     );
   }
-    _getLocationAsync = async () => {
-        let { status } = await Permissions.askAsync(Permissions.LOCATION);
-        if (status !== 'granted') {
-            this.setState({
-                errorMessage: 'Permission to access location was denied',
-            });
-        }
-
-        let location = await Location.getCurrentPositionAsync({});
-        this.location = location;
-        return location;
-    };
 }
 
 const styles = StyleSheet.create({
