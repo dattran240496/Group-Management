@@ -60,8 +60,8 @@ export default class MemberCheckAttendanceModal extends Component {
     return (
       <View style={styles.container}>
         <TouchableOpacity
-          onPress={()=>{
-              this.memberCheckedAttendance();
+          onPress={() => {
+            this._getLocationAsync();
           }}
           style={{
             width: 150,
@@ -97,46 +97,65 @@ export default class MemberCheckAttendanceModal extends Component {
       </View>
     );
   }
-   memberCheckedAttendance() {
-      this.setState({});
-    let distance = -1;
-    navigator.geolocation.getCurrentPosition(
-      position => {
-          let location = position.coords;
-        console.log("user location: ");
-        console.log(location.latitude);
-        console.log(location.longitude);
-
-          console.log("admin location: ");
-          console.log(this.admin.latitude);
-          console.log(this.admin.longitude);
-
-          let coords = [];
-          coords.push(this.admin);
-          coords.push(location);
-        distance = geolib.getDistance(
-          {
-            latitude: location.latitude,
-            longitude: location.longitude
-          },
-          {
-            latitude: this.admin.latitude,
-            longitude: this.admin.longitude
-          },
-        );
-        //distance = geolib.getPathLength(coords);
-        console.log("distance");
-        console.log(distance);
-      },
-      error => {
-        console.log(error);
+  async _getLocationAsync() {
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== "granted") {
+      this.setState({
+        errorMessage: "Permission to access location was denied"
+      });
+    }
+    let location = await Location.getCurrentPositionAsync({});
+    let distance = 0;
+    distance = geolib.getDistance(
+      {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude
       },
       {
-          enableHighAccuracy: true,
-          timeout: 20000,
-          maximumAge: 0
+        latitude: this.admin.latitude,
+        longitude: this.admin.longitude
       }
     );
+    console.log("distance: ");
+    console.log(distance);
+  }
+  memberCheckedAttendance() {
+    this._getLocationAsync();
+    this.setState({});
+
+    // navigator.geolocation.getCurrentPosition(
+    //   position => {
+    //       let location = position.coords;
+    //     console.log("user location: ");
+    //     console.log(location.latitude);
+    //     console.log(location.longitude);
+    //
+    //       console.log("admin location: ");
+    //       console.log(this.admin.latitude);
+    //       console.log(this.admin.longitude);
+    //
+    //     distance = geolib.getDistance(
+    //       {
+    //         latitude: position.coords.latitude,
+    //         longitude: position.coords.longitude
+    //       },
+    //       {
+    //         latitude: this.admin.latitude,
+    //         longitude: this.admin.longitude
+    //       }
+    //     );
+    //     console.log("distance");
+    //     console.log(distance);
+    //   },
+    //   error => {
+    //     console.log(error);
+    //   },
+    //   {
+    //       enableHighAccuracy: true,
+    //       timeout: 20000,
+    //       maximumAge: 0
+    //   }
+    // );
   }
 }
 const styles = StyleSheet.create({

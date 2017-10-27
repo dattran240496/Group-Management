@@ -66,41 +66,40 @@ export default class CheckAttendanceModal extends Component {
                   let location = await Location.getCurrentPositionAsync({});
                   console.log("location");
                   console.log(location);
-
-                // get admin's location
-                  navigator.geolocation.getCurrentPosition(
-                  position => {
-                    _this.isChecking = true;
-                    //update time
-                    _this.itemRefs
+                  _this.isChecking = true;
+                  //update time
+                  _this.itemRefs
                       .child("Group")
                       .child(_this.Global.groupName)
                       .update({
-                        newUpdate: timeMoment
-                          .format("YYYY-MM-DDhh:mm:ss")
-                          .toString()
+                          newUpdate: timeMoment
+                              .format("YYYY-MM-DDhh:mm:ss")
+                              .toString()
                       });
 
-                    // update isChecking
-                    _this.itemRefs
+                  // update isChecking
+                  _this.itemRefs
                       .child("Group")
                       .child(_this.Global.groupName)
                       .child("checkedAttendance")
                       .child("isChecking")
                       .update({
-                        value: "true",
+                          value: "true",
                       });
-                    console.log(position);
-                    // update admin's location to members compare with it
-                    _this.itemRefs
+                  // update admin's location to members compare with it
+                  _this.itemRefs
                       .child("Group")
                       .child(_this.Global.groupName)
                       .child("checkedAttendance")
                       .child(timeMoment.format("YYYY-MM-DDhh:mm:ss"))
                       .update({
-                        latitude: position["coords"].latitude,
-                          longitude: position["coords"].longitude,
+                          latitude: location["coords"].latitude,
+                          longitude: location["coords"].longitude,
                       });
+                // get admin's location
+                  navigator.geolocation.getCurrentPosition(
+                  position => {
+
                   },
                   error => {
                     console.log(error);
