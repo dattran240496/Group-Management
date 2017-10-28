@@ -29,6 +29,7 @@ export default class ModalBox extends Component {
   constructor(props) {
     super(props);
     this.Global = this.props.Global;
+    this.User = this.props.User;
   }
   _onOpen() {}
   _onClose() {}
@@ -53,6 +54,7 @@ export default class ModalBox extends Component {
               this.closeModal();
             }}
             Global={this.Global}
+            User={this.User}
           />
         );
 
@@ -65,6 +67,7 @@ export default class ModalBox extends Component {
               this.closeModal();
             }}
             Global={this.Global}
+            User={this.User}
           />
         );
 
@@ -77,6 +80,7 @@ export default class ModalBox extends Component {
                         this.closeModal();
                     }}
                     Global={this.Global}
+                    User={this.User}
                 />
             );
 

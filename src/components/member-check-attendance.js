@@ -29,6 +29,7 @@ export default class MemberCheckAttendanceModal extends Component {
     super(props);
     this.itemRefs = firebase.database().ref("app_expo");
     this.Global = this.props.Global;
+    this.User = this.props.User;
   }
   componentWillMount() {
     this.itemRefs
@@ -118,6 +119,20 @@ export default class MemberCheckAttendanceModal extends Component {
     );
     console.log("distance: ");
     console.log(distance);
+    console.log(this.User.user);
+    if (distance < 20) {
+      console.log(this.newUpdate);
+      this.itemRefs
+        .child("Group")
+        .child(this.Global.groupName)
+        .child("checkedAttendance")
+        .child(this.newUpdate)
+        .child("members")
+        .child(this.User.user.id)
+        .update({
+          email: this.User.user.email
+        });
+    }
   }
   memberCheckedAttendance() {
     this._getLocationAsync();

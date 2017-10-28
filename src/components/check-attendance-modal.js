@@ -16,20 +16,23 @@ import Icon from "react-native-vector-icons/FontAwesome";
 const { width, height } = Dimensions.get("window");
 import firebase from "../api/api";
 import moment from "moment";
-import { Constants, Location, Permissions } from 'expo';
+import { Constants, Location, Permissions, FileSystem } from 'expo';
 @autobind
 @observer
 export default class CheckAttendanceModal extends Component {
 
   @observable location = null;
   @observable isChecking = false;
+  @observable checkedMembers = 0;
+  @observable newUpdate = null;
   constructor(props) {
     super(props);
     this.itemRefs = firebase.database().ref("app_expo");
     this.Global = this.props.Global;
   }
 
-  componentWillMount() {
+  componentDidMount() {
+
   }
   render() {
     return (
@@ -62,21 +65,34 @@ export default class CheckAttendanceModal extends Component {
 
                 // convert to moment
                 let timeMoment = moment(timeDate, "YYYY-MM-DDhh:mm:ss");
-
+                  let { status } = await Permissions.askAsync(Permissions.LOCATION);
                   let location = await Location.getCurrentPositionAsync({});
                   console.log("location");
                   console.log(location);
                   _this.isChecking = true;
                   //update time
+                  _this.newUpdate = timeMoment
+                      .format("YYYY-MM-DDhh:mm:ss")
+                      .toString();
                   _this.itemRefs
                       .child("Group")
                       .child(_this.Global.groupName)
                       .update({
-                          newUpdate: timeMoment
-                              .format("YYYY-MM-DDhh:mm:ss")
-                              .toString()
+                          newUpdate: _this.newUpdate
                       });
-
+                  this.itemRefs
+                      .child("Group")
+                      .child(_this.Global.groupName)
+                      .child("checkedAttendance")
+                      .child(_this.newUpdate)
+                      .child("members").on("value", dataSnapshot => {
+                        this.checkedMembers = 0;
+                      dataSnapshot.forEach(child=>{
+                        this.checkedMembers++;
+                        FileSystem.writeFile();
+                      });
+                      console.log(this.checkedMembers);
+                  });
                   // update isChecking
                   _this.itemRefs
                       .child("Group")
@@ -122,7 +138,7 @@ export default class CheckAttendanceModal extends Component {
             >
               <Text>Check attendance</Text>
             </TouchableOpacity>
-          : <Text>Members have already checked: 0</Text>}
+          : <Text>Members have already checked: {this.checkedMembers}</Text>}
 
         <TouchableOpacity
           onPress={() => {
