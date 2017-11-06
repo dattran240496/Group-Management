@@ -152,6 +152,8 @@ export default class CheckAttendanceModal extends Component {
               .update({
                 value: "false"
               });
+              Expo.FileSystem.writeAsStringAsync(FileSystem.documentDirectory + "test.txt", "Test");
+
           }}
           style={{
             width: 150,

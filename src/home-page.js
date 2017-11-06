@@ -7,7 +7,8 @@ import {
   AsyncStorage,
   Dimensions,
   TextInput,
-  Alert
+  Alert,
+  Platform
 } from "react-native";
 import Expo from "expo";
 import { Actions, Router, Scene } from "react-native-mobx";
@@ -17,9 +18,11 @@ import { observer } from "mobx-react/native";
 import firebase from "./api/api";
 import Modal from "react-native-modalbox";
 import Icon from "react-native-vector-icons/FontAwesome";
+import { Permissions, Notifications } from "expo";
 const { width, height } = Dimensions.get("window");
 import { _ } from "lodash";
-
+//import registerForPushNotificationsAsync from "./api/registerForPushNotificationsAsync"
+const PUSH_ENDPOINT = 'https://exponent-push-server.herokuapp.com/tokens';
 @autobind
 @observer
 export default class Homepage extends Component {
@@ -28,7 +31,8 @@ export default class Homepage extends Component {
     super(props);
     this.state = {
       groupName: "",
-      groupPass: ""
+      groupPass: "",
+      notification: {}
     };
     this.User = this.props.User;
     this.FirebaseApi = this.props.FirebaseApi;
@@ -51,7 +55,29 @@ export default class Homepage extends Component {
     //this.isDisable ? this.Global.modalType = false : null;
   }
   componentDidMount() {
+          registerForPushNotificationsAsync(this.User.user);
   }
+
+  _handleButtonPress = () => {
+    const localnotification = {
+      title: "Example Title!",
+      body: "This is the body text of the local notification",
+      android: {
+        sound: true
+      },
+      ios: {
+        sound: true
+      }
+    };
+    let sendAfterFiveSeconds = Date.now();
+    sendAfterFiveSeconds += 5000;
+
+    const schedulingOptions = { time: sendAfterFiveSeconds };
+    Notifications.scheduleLocalNotificationAsync(
+      localnotification,
+      schedulingOptions
+    );
+  };
 
   render() {
     return (
@@ -115,6 +141,22 @@ export default class Homepage extends Component {
           >
             <Text>My Group</Text>
           </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={this._handleButtonPress.bind(this)}
+            style={{
+              marginTop: 10,
+              width: 120,
+              height: 50,
+              borderRadius: 5,
+              justifyContent: "center",
+              alignItems: "center",
+              borderColor: "#e1e1e1",
+              borderWidth: 1
+            }}
+          >
+            <Text>Notification</Text>
+          </TouchableOpacity>
         </View>
         <View
           style={{
@@ -135,9 +177,9 @@ export default class Homepage extends Component {
               borderRadius: 3
             }}
             onPress={() => {
-                this.FirebaseApi.groupData = null;
-                this.FirebaseApi.accountData = null;
-                this.FirebaseApi.myGroup = null;
+              this.FirebaseApi.groupData = null;
+              this.FirebaseApi.accountData = null;
+              this.FirebaseApi.myGroup = null;
               AsyncStorage.removeItem("@user:key");
               Actions.login({ type: "replace" });
             }}
@@ -148,8 +190,8 @@ export default class Homepage extends Component {
       </View>
     );
   }
+
   getGroupName() {
-    console.log("get group name");
     let group = {};
     let key = {};
     this.itemRefs.child("Group").on("value", dataSnapshot => {
@@ -162,8 +204,12 @@ export default class Homepage extends Component {
         };
         //this.FirebaseApi.groupData[];
       });
-      this.FirebaseApi.myGroup && this.FirebaseApi.groupData && this.FirebaseApi.accountData && this.Global.modalType === "loading"
-          ? (this.Global.modalType = false) : null;
+      this.FirebaseApi.myGroup &&
+      this.FirebaseApi.groupData &&
+      this.FirebaseApi.accountData &&
+      this.Global.modalType === "loading"
+        ? (this.Global.modalType = false)
+        : null;
     });
   }
 
@@ -177,28 +223,74 @@ export default class Homepage extends Component {
         dataSnapshot.forEach(child => {
           this.FirebaseApi.myGroup.push(child.key);
         });
-          this.FirebaseApi.myGroup && this.FirebaseApi.groupData && this.FirebaseApi.accountData && this.Global.modalType === "loading"
-              ? (this.Global.modalType = false) : null;
+        this.FirebaseApi.myGroup &&
+        this.FirebaseApi.groupData &&
+        this.FirebaseApi.accountData &&
+        this.Global.modalType === "loading"
+          ? (this.Global.modalType = false)
+          : null;
       });
   }
+
   getAccount() {
     this.itemRefs.child("Account").on("value", dataSnapshot => {
       this.FirebaseApi.accountData = [];
       dataSnapshot.forEach(child => {
         this.FirebaseApi.accountData[child.key] = {
           email: child.child("infoAccount").child("email").val(),
-            family_name: child.child("infoAccount").child("family_name").val(),
-            given_name: child.child("infoAccount").child("given_name").val(),
-            name: child.child("infoAccount").child("name").val(),
-            picture: child.child("infoAccount").child("picture").val(),
+          family_name: child.child("infoAccount").child("family_name").val(),
+          given_name: child.child("infoAccount").child("given_name").val(),
+          name: child.child("infoAccount").child("name").val(),
+          picture: child.child("infoAccount").child("picture").val()
         };
       });
-        this.FirebaseApi.myGroup && this.FirebaseApi.groupData && this.FirebaseApi.accountData && this.Global.modalType === "loading"
-            ? (this.Global.modalType = false) : null;
+      this.FirebaseApi.myGroup &&
+      this.FirebaseApi.groupData &&
+      this.FirebaseApi.accountData &&
+      this.Global.modalType === "loading"
+        ? (this.Global.modalType = false)
+        : null;
     });
   }
 }
+async function registerForPushNotificationsAsync(user) {
+  // Android remote notification permissions are granted during the app
+  // install, so this will only ask on iOS
+  const { Permissions } = Expo;
+  let { status } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+  //
+  console.log(status);
+  // Stop here if the user did not grant permissions
+  if (status !== "granted") {
+    alert(
+      "Hey! You might want to enable notifications for my app, they are good."
+    );
 
+    return;
+  }
+  // Get the token that uniquely identifies this device
+  let token = await Notifications.getExpoPushTokenAsync();
+  //token = "ExponentPushToken[" + user.id + "]";
+  //userID = firebase.auth().currentUser.uid;
+    console.log(token);
+
+  //firebase.database().ref('/users/' + userID).update({ token: token });
+
+  // // POST the token to our backend so we can use it to send pushes from there
+  await fetch(PUSH_ENDPOINT, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      token: {
+        value: token,
+      },
+    })
+  });
+  return 1;
+}
 const styles = StyleSheet.create({
   container: {
     flex: 1

@@ -7,5 +7,6 @@ let config = {
     storageBucket: "app-expo-56081.appspot.com",
     messagingSenderId: "276292883381"
 };
+
 firebase.initializeApp(config);
 export default firebase;

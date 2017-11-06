@@ -193,6 +193,25 @@ export default class CheckAttendance extends Component {
             >
               <Text style={{ fontSize: 15 }}>Post Message</Text>
             </TouchableOpacity>}
+            <TouchableOpacity
+                onPress={()=>{
+
+                    console.log(Expo.FileSystem.readAsStringAsync(Expo.FileSystem.documentDirectory + "test.txt"));
+
+                }}
+                style={{
+                    width: 150,
+                    height: 50,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderRadius: 5,
+                    borderColor: "#e1e1e1",
+                    borderWidth: 1,
+                    marginTop: 10
+                }}
+            >
+                <Text style={{ fontSize: 15 }}>Test</Text>
+            </TouchableOpacity>
         </View>
       </View>
     );
