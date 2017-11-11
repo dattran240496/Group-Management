@@ -22,6 +22,7 @@ import MyGroup from "./my-group"
 import EnterGroupName from "./enter-group-name"
 import CheckAttendance from "./check-attendance"
 import PostMessage from "./post-messages"
+import DetailMessage from "./detail-message"
 import Member from "./members"
 import ModalBox from "./components/index"
 import User from "./models/user";
@@ -167,6 +168,12 @@ export default class App extends Component {
               key="postMessage"
               title="Post Message"
               component={PostMessage}
+              hideNavBar={false}
+          />
+          <Scene
+              key="detailMessage"
+              title="Detail Message"
+              component={DetailMessage}
               hideNavBar={false}
           />
 

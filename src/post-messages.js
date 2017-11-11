@@ -30,6 +30,7 @@ export default class PostMessage extends Component {
     };
     this.Global = this.props.Global;
     this.FirebaseApi = this.props.FirebaseApi;
+      this.itemRefs = firebase.database().ref("app_expo");
   }
   render() {
     return (
@@ -80,9 +81,8 @@ export default class PostMessage extends Component {
     );
   }
   postMessage() {
-    console.log(this.FirebaseApi.members);
+      // send notification
     Object.values(this.FirebaseApi.members).map((v, i) => {
-      console.log(v.token);
       fetch(this.Global.urlPushNoti, {
         method: "POST",
         headers: {
@@ -100,5 +100,19 @@ export default class PostMessage extends Component {
         .then(response => console.log(response))
         .catch(e => console.log(e));
     });
+    let timeAtPost = new Date(); // get time at post
+    let hours = timeAtPost.getHours().toString().length === 1 ? "0" : ""; // if hour < 10 => add "0" previous
+    let minutes = timeAtPost.getMinutes().toString().length === 1 ? "0"  : ""; // if minute < 10 => add "0" previous
+
+      // format time: dd/mm/yyyy - hh:mm
+    let formatTime = timeAtPost.getDate() + "/" + (timeAtPost.getMonth() + 1) + "/" + timeAtPost.getFullYear() +
+    " - " + hours + timeAtPost.getHours() + ":" + minutes + timeAtPost.getMinutes();
+
+    // post message + time
+    this.itemRefs.child("Group").child(this.Global.groupName).child("postedMessages").push().set({
+        message: this.state.message,
+        timeAtPost: formatTime
+    });
+      Actions.pop();
   }
 }

@@ -34,15 +34,18 @@ export default class CheckAttendance extends Component {
     this.FirebaseApi = this.props.FirebaseApi;
     this.itemRefs = firebase.database().ref("app_expo");
     this.state = {
-      groupName: this.Global.groupName
+      groupName: this.Global.groupName,
+      messages: null
     };
   }
   componentWillMount() {
+      this.setState({});
     this.name = this.Global.groupName;
     this.info = this.FirebaseApi.accountData[
       this.FirebaseApi.groupData[this.name]._createGroupBy
     ];
     this.getMembers();
+    this.getMessage();
   }
   componentDidMount() {
     this.itemRefs
@@ -124,14 +127,28 @@ export default class CheckAttendance extends Component {
             </Text>
           </View>
         </View>
+          <View style={{
+              flex: 3,
+              borderBottomColor: "#e1e1e1",
+              borderBottomWidth: 1,
+          }}>
+              <FlatList
+                  style={{
 
-        <View
-          style={{
-            flex: 3,
-            borderBottomColor: "#e1e1e1",
-            borderBottomWidth: 1
-          }}
-        />
+                      padding: 5,
+                  }}
+                  ref={ref => (this.postMessage = ref)}
+                  keyExtractor={(item, index) => index}
+                  data={this.state.messages}
+                  extraData={this.state}
+                  renderItem={({ item, index }) => this._renderMessages(item, index)}
+              />
+              <View style={{
+                  width: width,
+                  height: 10
+              }}/>
+          </View>
+
 
         <View
           style={{
@@ -190,18 +207,16 @@ export default class CheckAttendance extends Component {
                 borderWidth: 1,
                 marginTop: 10
               }}
-              onPress={()=>{
-                  Actions.postMessage();
+              onPress={() => {
+                Actions.postMessage();
               }}
             >
               <Text style={{ fontSize: 15 }}>Post Message</Text>
             </TouchableOpacity>}
-
         </View>
       </View>
     );
   }
-
   getMembers() {
     let key = {};
     this.itemRefs
@@ -213,13 +228,91 @@ export default class CheckAttendance extends Component {
         dataSnapshot.forEach(child => {
           this.FirebaseApi.members[child.key] = {
             email: child.child("email").val(),
-              token: child.child("token").val()
+            token: child.child("token").val()
           };
         });
       });
-    this.FirebaseApi.members && this.Global.modalType === "loading"
+
+    // if members and messages got, turn off modal loading
+    this.FirebaseApi.members &&
+    this.state.messages &&
+    this.Global.modalType === "loading"
       ? (this.Global.modalType = false)
       : null;
   }
-
+  getMessage() {
+      let arrMessage = [];
+      this.itemRefs
+      .child("Group")
+      .child(this.Global.groupName)
+      .child("postedMessages")
+      .on("value", dataSnapshot => {
+        this.state.messages = [];
+        arrMessage = [];
+        dataSnapshot.forEach(child => {
+          let index = {
+            message: child.child("message").val(),
+            timeAtPost: child.child("timeAtPost").val()
+          };
+          // this.state.messages[child.key] = {
+          //     messages: child.child("message").val(),
+          //     timeAtPost: child.child("timeAtPost").val()
+          // }
+          arrMessage.push(index);
+        });
+        arrMessage.reverse();
+          this.setState({
+              messages: arrMessage
+          });
+      });
+    //console.log(this.state.messages);
+    // if members and messages got, turn off modal loading
+    this.FirebaseApi.members &&
+    this.state.messages &&
+    this.Global.modalType === "loading"
+      ? (this.Global.modalType = false)
+      : null;
+  }
+  _renderMessages(item, index) {
+    return (
+      <View
+        style={{
+          width: width,
+          height: 20,
+          justifyContent: "center",
+          flexDirection: "row"
+        }}
+      >
+        <TouchableOpacity
+            onPress={()=>{
+                Actions.detailMessage({detailMessage: item})
+            }}
+          style={{
+            width: width - 150,
+            height: 20
+          }}
+        >
+          <Text
+              numberOfLines={1}
+            ellipsizeMode="tail"
+            style={{
+              fontSize: 13
+            }}
+          >
+            {item.message}
+          </Text>
+        </TouchableOpacity>
+        <Text
+          style={{
+            width: 130,
+            height: 20,
+            fontSize: 13,
+              paddingLeft:5
+          }}
+        >
+          {item.timeAtPost}
+        </Text>
+      </View>
+    );
+  }
 }
