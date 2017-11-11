@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   AsyncStorage
 } from "react-native";
-import Expo from "expo";
+import Expo, { Notifications, Permissions } from "expo";
 import { Actions, Router, Scene } from "react-native-mobx";
 import { observable } from "mobx";
 import { autobind } from "core-decorators";
@@ -15,13 +15,32 @@ import Loading from "./loading";
 import { _ } from "lodash";
 import firebase from "./api/api";
 
-
 async function setData(item, token) {
   try {
     await AsyncStorage.setItem("@user:key", JSON.stringify(item));
   } catch (error) {
     console.log(error);
   }
+}
+async function registerForPushNotificationsAsync() {
+  // Android remote notification permissions are granted during the app
+  // install, so this will only ask on iOS
+  const { Permissions } = Expo;
+  let { status } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+  //
+
+  // Stop here if the user did not grant permissions
+  if (status !== "granted") {
+    alert(
+      "Hey! You might want to enable notifications for my app, they are good."
+    );
+
+    return;
+  }
+
+  let token = await Notifications.getExpoPushTokenAsync();
+
+  return token;
 }
 async function getUserInfo(accessToken, itemRefs) {
   let _this = this;
@@ -36,12 +55,25 @@ async function getUserInfo(accessToken, itemRefs) {
   )
     .then(response => response.json())
     .then(responseJS => {
-      setData(responseJS);
-      console.log(accessToken);
-      itemRefs.child("Account").child(responseJS.id).update({
-        token: accessToken,
-          infoAccount: responseJS
-      });
+      let register = registerForPushNotificationsAsync();
+      let token = "";
+      token !== "" ?
+      register.then(function(o) {
+          token = o;
+          itemRefs.child("Account").child(responseJS.id).update({
+              token: token,
+              infoAccount: responseJS
+          });
+          responseJS["token"] = token;
+          setData(responseJS);
+          return Actions.homePage({ user: responseJS, type: "replace" });
+
+      }) :
+          setData(responseJS);
+        itemRefs.child("Account").child(responseJS.id).update({
+            token: token,
+            infoAccount: responseJS
+        });
         return Actions.homePage({ user: responseJS, type: "replace" });
     })
     .catch(error => {
@@ -58,8 +90,8 @@ async function signInWithGoogleAsync(itemRefs) {
         "796165831117-gcqiquek4o7a6mh2pbqovt7tnb1diphb.apps.googleusercontent.com",
       scopes: ["profile", "email"]
     });
-      if (result.type === "success") {
-          return getUserInfo(result.accessToken, itemRefs);
+    if (result.type === "success") {
+      return getUserInfo(result.accessToken, itemRefs);
     } else {
       return Actions.login({ type: "replace" });
     }
@@ -69,19 +101,18 @@ async function signInWithGoogleAsync(itemRefs) {
 }
 async function fetchAsync(itemRefs) {
   //Actions.loading({ type: "replace" });
-    try {
+  try {
     let value = await AsyncStorage.getItem("@user:key");
     value = JSON.parse(value);
     if (value !== null) {
       return Actions.homePage({ user: value, type: "replace" });
     } else {
-        return signInWithGoogleAsync(itemRefs);
+      return signInWithGoogleAsync(itemRefs);
     }
   } catch (error) {
     return false;
   }
 }
-
 @autobind
 @observer
 export default class Login extends Component {
@@ -93,9 +124,7 @@ export default class Login extends Component {
     this.Global = this.props.Global;
     this.itemRefs = firebase.database().ref("app_expo");
   }
-    componentWillMount(){
-
-    }
+  componentWillMount() {}
   render() {
     return (
       <View style={styles.container}>
@@ -110,8 +139,8 @@ export default class Login extends Component {
             alignItems: "center"
           }}
           onPress={() => {
-              this.Global.modalType = "loading";
-              fetchAsync(this.itemRefs);
+            this.Global.modalType = "loading";
+            fetchAsync(this.itemRefs);
           }}
         >
           <Text

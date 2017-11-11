@@ -177,7 +177,7 @@ export default class CheckAttendance extends Component {
 
   _joinGroup() {
     let _id = this.User.user.id;
-    console.log(this.FirebaseApi.groupData);
+    console.log(this.User.user);
     // console.log(this.FirebaseApi.groupData[this.state.groupName].createdGroupBy);
     _id === this.FirebaseApi.groupData[this.state.groupName]._createdGroupBy // if user joined this group
       ? Alert.alert("Warning!", "You joined this group!")
@@ -191,7 +191,9 @@ export default class CheckAttendance extends Component {
                 .child(this.state.groupName.toString())
                 .child("groupMember")
                 .child(_id)
-                .update({ email: this.User.user.email }),
+                .update({
+                  email: this.User.user.email
+                }),
               this.itemRefs
                 .child("Account")
                 .child(this.User.user.id)

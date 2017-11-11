@@ -42,6 +42,7 @@ export default class Homepage extends Component {
   componentWillMount() {
     //this.Global.modalType = "loading";
     this.User.user = this.props.user;
+    console.log(this.User.user);
     !this.FirebaseApi.groupData
       ? this.getGroupName()
       : (this.Global.modalType = false);
@@ -55,7 +56,8 @@ export default class Homepage extends Component {
     //this.isDisable ? this.Global.modalType = false : null;
   }
   componentDidMount() {
-          registerForPushNotificationsAsync(this.User.user);
+          //registerForPushNotificationsAsync(this.User.user);
+      //console.log(this.FirebaseApi.accountData);
   }
 
   _handleButtonPress = () => {
@@ -241,7 +243,8 @@ export default class Homepage extends Component {
           family_name: child.child("infoAccount").child("family_name").val(),
           given_name: child.child("infoAccount").child("given_name").val(),
           name: child.child("infoAccount").child("name").val(),
-          picture: child.child("infoAccount").child("picture").val()
+          picture: child.child("infoAccount").child("picture").val(),
+            token: child.child("token").val()
         };
       });
       this.FirebaseApi.myGroup &&
@@ -253,44 +256,7 @@ export default class Homepage extends Component {
     });
   }
 }
-async function registerForPushNotificationsAsync(user) {
-  // Android remote notification permissions are granted during the app
-  // install, so this will only ask on iOS
-  const { Permissions } = Expo;
-  let { status } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
-  //
-  console.log(status);
-  // Stop here if the user did not grant permissions
-  if (status !== "granted") {
-    alert(
-      "Hey! You might want to enable notifications for my app, they are good."
-    );
 
-    return;
-  }
-  // Get the token that uniquely identifies this device
-  let token = await Notifications.getExpoPushTokenAsync();
-  //token = "ExponentPushToken[" + user.id + "]";
-  //userID = firebase.auth().currentUser.uid;
-    console.log(token);
-
-  //firebase.database().ref('/users/' + userID).update({ token: token });
-
-  // // POST the token to our backend so we can use it to send pushes from there
-  await fetch(PUSH_ENDPOINT, {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      token: {
-        value: token,
-      },
-    })
-  });
-  return 1;
-}
 const styles = StyleSheet.create({
   container: {
     flex: 1
