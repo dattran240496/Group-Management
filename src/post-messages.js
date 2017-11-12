@@ -62,7 +62,10 @@ export default class PostMessage extends Component {
         />
         <TouchableOpacity
           onPress={() => {
-            this.postMessage();
+            this.state.message !== "" ? this.postMessage()
+                : (
+                    Alert.alert("Warning!", "Message is not empty!")
+                )
           }}
           style={{
             justifyContent: "center",

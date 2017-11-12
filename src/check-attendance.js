@@ -39,7 +39,7 @@ export default class CheckAttendance extends Component {
     };
   }
   componentWillMount() {
-      this.setState({});
+    this.setState({});
     this.name = this.Global.groupName;
     this.info = this.FirebaseApi.accountData[
       this.FirebaseApi.groupData[this.name]._createGroupBy
@@ -73,7 +73,7 @@ export default class CheckAttendance extends Component {
       >
         <View
           style={{
-            flex: 1,
+            flex: 0.7,
             borderBottomColor: "#e1e1e1",
             borderBottomWidth: 1,
             justifyContent: "center",
@@ -100,7 +100,7 @@ export default class CheckAttendance extends Component {
 
         <View
           style={{
-            flex: 3,
+            flex: 2.5,
             borderBottomColor: "#e1e1e1",
             borderBottomWidth: 1,
             flexDirection: "row",
@@ -117,38 +117,84 @@ export default class CheckAttendance extends Component {
               resizeMode: "contain"
             }}
           />
-          <View style={{ paddingLeft: 20 }}>
-            <Text
-              style={{
-                fontSize: 20
-              }}
-            >
-              Name: {this.info.name}
-            </Text>
+
+          <View>
+            <View style={{ paddingLeft: 20, flexDirection: "row" }}>
+              <Text
+                style={{
+                  fontSize: 20,
+                  width: 100
+                }}
+              >
+                Name
+              </Text>
+              <Text
+                style={{
+                  fontSize: 20
+                }}
+              >
+                :
+              </Text>
+              <Text
+                style={{
+                  fontSize: 20,
+                  paddingLeft: 5
+                }}
+              >
+                {this.info.name}
+              </Text>
+            </View>
+            <View style={{ paddingLeft: 20, flexDirection: "row" }}>
+              <Text
+                style={{
+                  fontSize: 20,
+                  width: 100
+                }}
+              >
+                Position
+              </Text>
+              <Text
+                style={{
+                  fontSize: 20
+                }}
+              >
+                :
+              </Text>
+              <Text
+                style={{
+                  fontSize: 20,
+                  paddingLeft: 5
+                }}
+              >
+                Lecture
+              </Text>
+            </View>
           </View>
         </View>
-          <View style={{
-              flex: 3,
-              borderBottomColor: "#e1e1e1",
-              borderBottomWidth: 1,
-          }}>
-              <FlatList
-                  style={{
-
-                      padding: 5,
-                  }}
-                  ref={ref => (this.postMessage = ref)}
-                  keyExtractor={(item, index) => index}
-                  data={this.state.messages}
-                  extraData={this.state}
-                  renderItem={({ item, index }) => this._renderMessages(item, index)}
-              />
-              <View style={{
-                  width: width,
-                  height: 10
-              }}/>
-          </View>
-
+        <View
+          style={{
+            flex: 3,
+            borderBottomColor: "#e1e1e1",
+            borderBottomWidth: 1
+          }}
+        >
+          <FlatList
+            style={{
+              padding: 5
+            }}
+            ref={ref => (this.postMessage = ref)}
+            keyExtractor={(item, index) => index}
+            data={this.state.messages}
+            extraData={this.state}
+            renderItem={({ item, index }) => this._renderMessages(item, index)}
+          />
+          <View
+            style={{
+              width: width,
+              height: 10
+            }}
+          />
+        </View>
 
         <View
           style={{
@@ -213,6 +259,24 @@ export default class CheckAttendance extends Component {
             >
               <Text style={{ fontSize: 15 }}>Post Message</Text>
             </TouchableOpacity>}
+          {this.info.email === this.User.user.email &&
+            <TouchableOpacity
+              style={{
+                width: 150,
+                height: 50,
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: 5,
+                borderColor: "#e1e1e1",
+                borderWidth: 1,
+                marginTop: 10
+              }}
+              onPress={() => {
+                  Actions.createPoll();
+              }}
+            >
+              <Text style={{ fontSize: 15 }}>Create Poll</Text>
+            </TouchableOpacity>}
         </View>
       </View>
     );
@@ -241,8 +305,8 @@ export default class CheckAttendance extends Component {
       : null;
   }
   getMessage() {
-      let arrMessage = [];
-      this.itemRefs
+    let arrMessage = [];
+    this.itemRefs
       .child("Group")
       .child(this.Global.groupName)
       .child("postedMessages")
@@ -258,12 +322,15 @@ export default class CheckAttendance extends Component {
           //     messages: child.child("message").val(),
           //     timeAtPost: child.child("timeAtPost").val()
           // }
+            child.child("options").val() ?
+                index["options"] =  child.child("options").val()
+                : null
           arrMessage.push(index);
         });
         arrMessage.reverse();
-          this.setState({
-              messages: arrMessage
-          });
+        this.setState({
+          messages: arrMessage
+        });
       });
     //console.log(this.state.messages);
     // if members and messages got, turn off modal loading
@@ -283,20 +350,36 @@ export default class CheckAttendance extends Component {
           flexDirection: "row"
         }}
       >
+          {
+              item.options ?
+                  <Icon
+                  name="flag"
+                  color="#e1e1e1"
+                  size={15}
+                  style={{
+                  justifyContent:'center',
+                      paddingRight: 5
+                  }}
+                  />
+                  : null
+          }
         <TouchableOpacity
-            onPress={()=>{
-                Actions.detailMessage({detailMessage: item})
-            }}
+          onPress={() => {
+              item.options ? null
+                  : Actions.detailMessage({ detailMessage: item });
+
+          }}
           style={{
-            width: width - 150,
+            width: item.options ? width - 170 : width - 150,
             height: 20
           }}
         >
           <Text
-              numberOfLines={1}
+            numberOfLines={1}
             ellipsizeMode="tail"
             style={{
-              fontSize: 13
+              fontSize: 13,
+                color: item.options ? "red" : null
             }}
           >
             {item.message}
@@ -307,7 +390,7 @@ export default class CheckAttendance extends Component {
             width: 130,
             height: 20,
             fontSize: 13,
-              paddingLeft:5
+            paddingLeft: 5
           }}
         >
           {item.timeAtPost}

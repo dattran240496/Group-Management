@@ -16,19 +16,19 @@ import Drawer from "react-native-drawer";
 import SideMenu from "./SideMenu";
 import Login from "./login";
 import Loading from "./loading";
-import GroupList from "./group-list"
-import Homepage from "./home-page"
-import MyGroup from "./my-group"
-import EnterGroupName from "./enter-group-name"
-import CheckAttendance from "./check-attendance"
-import PostMessage from "./post-messages"
-import DetailMessage from "./detail-message"
-import Member from "./members"
-import ModalBox from "./components/index"
+import GroupList from "./group-list";
+import Homepage from "./home-page";
+import MyGroup from "./my-group";
+import EnterGroupName from "./enter-group-name";
+import CheckAttendance from "./check-attendance";
+import PostMessage from "./post-messages";
+import DetailMessage from "./detail-message";
+import CreatePoll from "./create-poll";
+import Member from "./members";
+import ModalBox from "./components/index";
 import User from "./models/user";
 import Global from "./models/global";
-import FirebaseApi from "./models/firebase"
-
+import FirebaseApi from "./models/firebase";
 
 @autobind
 @observer
@@ -46,12 +46,8 @@ export default class App extends Component {
     this.FirebaseApi = FirebaseApi;
     this.Global = Global;
   }
-  componentDidMount() {
-
-  }
-  componentWillMount(){
-
-  }
+  componentDidMount() {}
+  componentWillMount() {}
   closeDrawer = () => {
     this._drawer.close();
   };
@@ -67,7 +63,7 @@ export default class App extends Component {
         content={<SideMenu User={this.User} closeDrawer={this.closeDrawer} />}
         acceptDoubleTap
         styles={{
-          main: {shadowColor: '#000000', shadowOpacity: 0.8, shadowRadius: 15}
+          main: { shadowColor: "#000000", shadowOpacity: 0.8, shadowRadius: 15 }
         }}
         onOpen={() => {
           this.setState({ drawerOpen: true });
@@ -85,12 +81,12 @@ export default class App extends Component {
         tapToClose={true}
         negotiatePan
         tweenHandler={ratio => ({
-          main: {opacity: (2 - ratio) / 2}
+          main: { opacity: (2 - ratio) / 2 }
         })}
       >
         <Router
           sceneStyle={{
-            paddingTop: 64,
+            paddingTop: 64
           }}
           backButtonIcon="angle-left"
           leftIconStyle={{
@@ -108,80 +104,86 @@ export default class App extends Component {
           User={this.User}
           FirebaseApi={this.FirebaseApi}
           Global={this.Global}
-
         >
           <Scene
-              key="login"
-              title=""
-              component={Login}
-              hideNavBar={true}
-              sceneStyle={{
-                  paddingTop: 0
-              }}/>
-          <Scene
-              key="loading"
-              title=""
-              component={Loading}
-              hideNavBar={true}
-              sceneStyle={{
-                  paddingTop: 0
-              }}/>
-          <Scene
-              key="homePage"
-              title="Homepage"
-              schema="modal"
-              direction="vertical"
-              component={Homepage}
-              hideNavBar={false}
-              />
-          <Scene
-              key="groupList"
-              title="Group List"
-              component={GroupList}
-              hideNavBar={false}
+            key="login"
+            title=""
+            component={Login}
+            hideNavBar={true}
+            sceneStyle={{
+              paddingTop: 0
+            }}
           />
           <Scene
-              key="myGroup"
-              title="My Group"
-              component={MyGroup}
-              hideNavBar={false}
+            key="loading"
+            title=""
+            component={Loading}
+            hideNavBar={true}
+            sceneStyle={{
+              paddingTop: 0
+            }}
           />
           <Scene
-              key="enterGroupName"
-              title="Enter Group Name"
-              component={EnterGroupName}
-              hideNavBar={false}
+            key="homePage"
+            title="Homepage"
+            schema="modal"
+            direction="vertical"
+            component={Homepage}
+            hideNavBar={false}
           />
           <Scene
-              key="checkAttendance"
-              title="Check Attendance"
-              component={CheckAttendance}
-              hideNavBar={false}
+            key="groupList"
+            title="Group List"
+            component={GroupList}
+            hideNavBar={false}
           />
           <Scene
-              key="members"
-              title="Members"
-              component={Member}
-              hideNavBar={false}
+            key="myGroup"
+            title="My Group"
+            component={MyGroup}
+            hideNavBar={false}
           />
           <Scene
-              key="postMessage"
-              title="Post Message"
-              component={PostMessage}
-              hideNavBar={false}
+            key="enterGroupName"
+            title="Enter Group Name"
+            component={EnterGroupName}
+            hideNavBar={false}
           />
           <Scene
-              key="detailMessage"
-              title="Detail Message"
-              component={DetailMessage}
-              hideNavBar={false}
+            key="checkAttendance"
+            title="Check Attendance"
+            component={CheckAttendance}
+            hideNavBar={false}
           />
-
+          <Scene
+            key="members"
+            title="Members"
+            component={Member}
+            hideNavBar={false}
+          />
+          <Scene
+            key="postMessage"
+            title="Post Message"
+            component={PostMessage}
+            hideNavBar={false}
+          />
+          <Scene
+            key="detailMessage"
+            title="Detail Message"
+            component={DetailMessage}
+            hideNavBar={false}
+          />
+          <Scene
+            key="createPoll"
+            title="Create Poll"
+            component={CreatePoll}
+            hideNavBar={false}
+          />
         </Router>
         <ModalBox
-            Global={this.Global}
-            Firebase={this.FirebaseApi}
-            User={this.User}
+          Global={this.Global}
+          Firebase={this.FirebaseApi}
+          User={this.User}
         />
       </Drawer>
     );
