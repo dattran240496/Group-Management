@@ -106,12 +106,14 @@ export default class VotePoll extends Component {
     let isChecked = false;
     let indexUser = -1;
     item.selectedMems ? (
-        item.selectedMems.map((v, i) =>{
-        v === this.User.user.email ? (
-            isChecked = true,
-            indexUser = i
-        ) : null
-    })): null;
+        Object.values(item.selectedMems).map((v, i)=>{
+            console.log(v);
+            v === this.User.user.email ? (
+                isChecked = true,
+                    indexUser = i
+            ) : null
+        })
+    ): null;
       return (
         <View
             key={index}
@@ -147,9 +149,10 @@ export default class VotePoll extends Component {
                 >
                     <TouchableOpacity
                         onPress={()=>{
-                            let user = item.selectedMems;
-                            user.push(this.User.user.email);
+                            let user;// = item.selectedMems || [];
+                            user = (this.User.user.email);
                             isChecked ? (
+                                console.log("remove"),
                                 this.itemRefs
                                     .child("Group")
                                     .child(this.Global.groupName)
@@ -167,7 +170,8 @@ export default class VotePoll extends Component {
                                     .child(this.state.poll.key)
                                     .child("options")
                                     .child(index)
-                                    .child("selectedMems").set(user)
+                                    .child("selectedMems")
+                                    .push(user)
                             )
                         }}
                         style={{
@@ -218,7 +222,7 @@ export default class VotePoll extends Component {
                 <Text style={{
                     color: "#fff"
                 }}>
-                    {item.selectedMems ? item.selectedMems.length : 0}
+                    {item.selectedMems ? Object.values(item.selectedMems).length : 0}
                 </Text>
             </View>
         </View>

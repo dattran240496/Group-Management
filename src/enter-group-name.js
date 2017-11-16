@@ -115,12 +115,14 @@ export default class EnterGroupName extends Component {
         }
       });
       if (!isNameExisted) {
-        this.itemRefs.child("Group").child(groupName).update({
+        this.itemRefs.child("Group").push().update({
+            groupName: groupName,
           createdGroupBy: this.User.user.id,
           groupPass: this.state.groupPass
         });
         let value;
-        this.itemRefs.child("Account").child(this.User.user.id).child("MyGroup").child(groupName).update({
+        this.itemRefs.child("Account").child(this.User.user.id).child("MyGroup").push().update({
+            groupName: groupName,
             joined : true
         });
           return Actions.pop();
