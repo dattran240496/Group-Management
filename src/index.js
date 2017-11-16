@@ -24,6 +24,7 @@ import CheckAttendance from "./check-attendance";
 import PostMessage from "./post-messages";
 import DetailMessage from "./detail-message";
 import CreatePoll from "./create-poll";
+import VotePoll from "./vote-poll";
 import Member from "./members";
 import ModalBox from "./components/index";
 import User from "./models/user";
@@ -177,6 +178,12 @@ export default class App extends Component {
             key="createPoll"
             title="Create Poll"
             component={CreatePoll}
+            hideNavBar={false}
+          />
+          <Scene
+            key="votePoll"
+            title="Vote"
+            component={VotePoll}
             hideNavBar={false}
           />
         </Router>

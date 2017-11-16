@@ -29,16 +29,17 @@ export default class CreatePoll extends Component {
     this.state = {
       message: "",
       numbersOption: 3,
-        arrOptions:["", "", ""]
+      arrOptions: ["", "", ""]
     };
     this.Global = this.props.Global;
+    this.User = this.props.User;
     this.FirebaseApi = this.props.FirebaseApi;
     this.itemRefs = firebase.database().ref("app_expo");
   }
   render() {
     let arrayComponentOption = [];
     for (let i = 1; i <= this.state.numbersOption; i++) {
-        arrayComponentOption.push(
+      arrayComponentOption.push(
         <View
           key={i}
           style={{
@@ -61,8 +62,8 @@ export default class CreatePoll extends Component {
               marginLeft: 5
             }}
             onChangeText={txtOption => {
-                let arr = this.state.arrOptions;
-                arr[i - 1] = txtOption;
+              let arr = this.state.arrOptions;
+              arr[i - 1] = txtOption;
               this.setState({
                 arrOptions: arr
               });
@@ -71,17 +72,14 @@ export default class CreatePoll extends Component {
             numberOfLines={1}
             ellipsizeMode="tail"
             onFocus={() => {
-              if (
-                i === this.state.numbersOption
-              ) {
-
+              if (i === this.state.numbersOption) {
                 let numbers = this.state.numbersOption;
                 numbers++;
                 let arr = this.state.arrOptions;
                 arr.push("");
                 this.setState({
                   numbersOption: numbers,
-                    arrOptions: arr
+                  arrOptions: arr
                 });
               }
             }}
@@ -93,7 +91,7 @@ export default class CreatePoll extends Component {
       <View
         style={{
           flex: 1,
-            alignItems:'center'
+          alignItems: "center"
         }}
       >
         <TextInput
@@ -116,42 +114,68 @@ export default class CreatePoll extends Component {
           value={this.state.message}
           multiline={true}
         />
-          <View style={{
-              width: width,
-              height: 100
-          }}>
-              <ScrollView
-
-              >
-                  {arrayComponentOption}
-              </ScrollView>
-          </View>
+        <View
+          style={{
+            width: width,
+            height: 100
+          }}
+        >
+          <ScrollView>
+            {arrayComponentOption}
+          </ScrollView>
+        </View>
 
         <TouchableOpacity
           onPress={() => {
-              if (this.state.message !== ""){
-                  for (let i = this.state.arrOptions.length - 1; i >= 0; i--) {
-                      if (this.state.arrOptions[i] === "") {
-                          this.state.arrOptions.splice(i, 1);
-                      }
-                  }
-
-                  let timeAtPost = new Date(); // get time at post
-                  let hours = timeAtPost.getHours().toString().length === 1 ? "0" : ""; // if hour < 10 => add "0" previous
-                  let minutes = timeAtPost.getMinutes().toString().length === 1 ? "0"  : ""; // if minute < 10 => add "0" previous
-
-                  // format time: dd/mm/yyyy - hh:mm
-                  let formatTime = timeAtPost.getDate() + "/" + (timeAtPost.getMonth() + 1) + "/" + timeAtPost.getFullYear() +
-                      " - " + hours + timeAtPost.getHours() + ":" + minutes + timeAtPost.getMinutes();
-                  this.itemRefs.child("Group").child(this.Global.groupName).child("postedMessages").push().set({
-                      message: this.state.message,
-                      timeAtPost: formatTime,
-                      options: this.state.arrOptions.length !== 0 ? this.state.arrOptions : "null"
-                  });
-                  Actions.pop();
-              }else{
-                  Alert.alert("Warning!", "Poll is not empty!")
+            if (this.state.message !== "") {
+              for (let i = this.state.arrOptions.length - 1; i >= 0; i--) {
+                if (this.state.arrOptions[i] === "") {
+                  this.state.arrOptions.splice(i, 1);
+                }
               }
+              let timeAtPost = new Date(); // get time at post
+              let hours =
+                timeAtPost.getHours().toString().length === 1 ? "0" : ""; // if hour < 10 => add "0" previous
+              let minutes =
+                timeAtPost.getMinutes().toString().length === 1 ? "0" : ""; // if minute < 10 => add "0" previous
+
+              // format time: dd/mm/yyyy - hh:mm
+              let formatTime =
+                timeAtPost.getDate() +
+                "/" +
+                (timeAtPost.getMonth() + 1) +
+                "/" +
+                timeAtPost.getFullYear() +
+                " - " +
+                hours +
+                timeAtPost.getHours() +
+                ":" +
+                minutes +
+                timeAtPost.getMinutes();
+              this.itemRefs
+                .child("Group")
+                .child(this.Global.groupName)
+                .child("postedMessages")
+                .push()
+                .set({
+                  message: this.state.message,
+                  timeAtPost: formatTime,
+                  options:
+                    this.state.arrOptions.length !== 0
+                      ? this.state.arrOptions.map((v, i) => {
+                          let selected = [];
+                          selected.push(this.User.user.email);
+                          return {
+                            option: v,
+                              selectedMems: selected
+                          };
+                        })
+                      : "null"
+                });
+              Actions.pop();
+            } else {
+              Alert.alert("Warning!", "Poll is not empty!");
+            }
           }}
           style={{
             justifyContent: "center",

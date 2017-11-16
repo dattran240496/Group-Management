@@ -272,7 +272,7 @@ export default class CheckAttendance extends Component {
                 marginTop: 10
               }}
               onPress={() => {
-                  Actions.createPoll();
+                Actions.createPoll();
               }}
             >
               <Text style={{ fontSize: 15 }}>Create Poll</Text>
@@ -316,15 +316,16 @@ export default class CheckAttendance extends Component {
         dataSnapshot.forEach(child => {
           let index = {
             message: child.child("message").val(),
-            timeAtPost: child.child("timeAtPost").val()
+            timeAtPost: child.child("timeAtPost").val(),
+            key: child.key
           };
           // this.state.messages[child.key] = {
           //     messages: child.child("message").val(),
           //     timeAtPost: child.child("timeAtPost").val()
           // }
-            child.child("options").val() ?
-                index["options"] =  child.child("options").val()
-                : null
+          child.child("options").val()
+            ? (index["options"] = child.child("options").val())
+            : null;
           arrMessage.push(index);
         });
         arrMessage.reverse();
@@ -350,24 +351,26 @@ export default class CheckAttendance extends Component {
           flexDirection: "row"
         }}
       >
-          {
-              item.options ?
-                  <Icon
-                  name="flag"
-                  color="#e1e1e1"
-                  size={15}
-                  style={{
-                  justifyContent:'center',
-                      paddingRight: 5
-                  }}
-                  />
-                  : null
-          }
+        {item.options
+          ? <Icon
+              name="flag"
+              color="#e1e1e1"
+              size={15}
+              style={{
+                justifyContent: "center",
+                paddingRight: 5
+              }}
+            />
+          : null}
         <TouchableOpacity
           onPress={() => {
-              item.options ? null
-                  : Actions.detailMessage({ detailMessage: item });
-
+            console.log(item);
+            //if option is poll, action to vote, else  action to message
+            item.options
+              ? Actions.votePoll({
+                 poll: item
+                })
+              : Actions.detailMessage({ detailMessage: item });
           }}
           style={{
             width: item.options ? width - 170 : width - 150,
@@ -379,7 +382,7 @@ export default class CheckAttendance extends Component {
             ellipsizeMode="tail"
             style={{
               fontSize: 13,
-                color: item.options ? "red" : null
+              color: item.options ? "red" : null
             }}
           >
             {item.message}
