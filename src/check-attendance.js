@@ -27,6 +27,7 @@ export default class CheckAttendance extends Component {
   @observable name = null;
   @observable info = null;
   @observable isChecking = false;
+  @observable isEdit = false;
   constructor(props) {
     super(props);
     this.User = this.props.User;
@@ -77,7 +78,8 @@ export default class CheckAttendance extends Component {
             borderBottomColor: "#e1e1e1",
             borderBottomWidth: 1,
             justifyContent: "center",
-            paddingLeft: 10
+            paddingLeft: 10,
+              zIndex: 1
           }}
         >
           <Text
@@ -93,7 +95,55 @@ export default class CheckAttendance extends Component {
               position: "absolute",
               right: 10
             }}
+            onPress={()=>{
+                this.isEdit = !this.isEdit;
+            }}
           >
+              {
+                  this.isEdit ? (
+                      <View style={{
+                          width: 150,
+                          height: 50,
+                          position: 'absolute',
+                          backgroundColor: '#fff',
+                          borderWidth: 1,
+                          borderColor: "#e1e1e1",
+                          top: 20,
+                          right: 5,
+                      }}>
+                          <TouchableOpacity
+                              onPress={()=>{
+                                  Actions.editGroup({title: 'Change group name', typeEdit: "name"})
+                              }}
+                              style={{
+                              width: 150,
+                              height: 25,
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              borderBottomWidth: 1,
+                              borderBottomColor: "#e1e1e1"
+                          }}>
+                              <Text>
+                                  Change group name
+                              </Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                              onPress={()=>{
+                                  Actions.editGroup({title: 'Change password', typeEdit: "password"})
+                              }}
+                              style={{
+                              width: 150,
+                              height: 25,
+                              justifyContent: 'center',
+                              alignItems: 'center'
+                          }}>
+                              <Text>
+                                  Change password
+                              </Text>
+                          </TouchableOpacity>
+                      </View>
+                  ) : null
+              }
             <Icon name="cog" size={20} color="#000" />
           </TouchableOpacity>
         </View>
@@ -105,7 +155,8 @@ export default class CheckAttendance extends Component {
             borderBottomWidth: 1,
             flexDirection: "row",
             alignItems: "center",
-            paddingLeft: 10
+            paddingLeft: 10,
+              zIndex: 0
           }}
         >
           <Image

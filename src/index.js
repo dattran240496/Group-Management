@@ -25,6 +25,7 @@ import PostMessage from "./post-messages";
 import DetailMessage from "./detail-message";
 import CreatePoll from "./create-poll";
 import VotePoll from "./vote-poll";
+import EditGroup from "./edit-group";
 import Member from "./members";
 import ModalBox from "./components/index";
 import User from "./models/user";
@@ -185,6 +186,12 @@ export default class App extends Component {
             title="Vote"
             component={VotePoll}
             hideNavBar={false}
+          />
+          <Scene
+              key="editGroup"
+              title=""
+              component={EditGroup}
+              hideNavBar={false}
           />
         </Router>
         <ModalBox
