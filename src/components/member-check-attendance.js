@@ -34,7 +34,7 @@ export default class MemberCheckAttendanceModal extends Component {
   componentWillMount() {
     this.itemRefs
       .child("Group")
-      .child(this.Global.groupName)
+      .child(this.Global.groupKey)
       .on("value", dataSnapshot => {
         dataSnapshot.forEach(child => {
           if (child.key === "newUpdate") {
@@ -44,7 +44,7 @@ export default class MemberCheckAttendanceModal extends Component {
       });
     this.itemRefs
       .child("Group")
-      .child(this.Global.groupName)
+      .child(this.Global.groupKey)
       .child("checkedAttendance")
       .on("value", dataSnapshot => {
         dataSnapshot.forEach(child => {
@@ -117,14 +117,12 @@ export default class MemberCheckAttendanceModal extends Component {
         longitude: this.admin.longitude
       }
     );
-    console.log("distance: ");
-    console.log(distance);
-    console.log(this.User.user);
+
     if (distance < 20) {
       console.log(this.newUpdate);
       this.itemRefs
         .child("Group")
-        .child(this.Global.groupName)
+        .child(this.Global.groupKey)
         .child("checkedAttendance")
         .child(this.newUpdate)
         .child("members")

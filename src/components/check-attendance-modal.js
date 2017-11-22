@@ -67,8 +67,8 @@ export default class CheckAttendanceModal extends Component {
                 let timeMoment = moment(timeDate, "YYYY-MM-DDhh:mm:ss");
                   let { status } = await Permissions.askAsync(Permissions.LOCATION);
                   let location = await Location.getCurrentPositionAsync({});
-                  console.log("location");
-                  console.log(location);
+                  //console.log("location");
+                  //console.log(location);
                   _this.isChecking = true;
                   //update time
                   _this.newUpdate = timeMoment
@@ -76,13 +76,13 @@ export default class CheckAttendanceModal extends Component {
                       .toString();
                   _this.itemRefs
                       .child("Group")
-                      .child(_this.Global.groupName)
+                      .child(this.Global.groupKey)
                       .update({
                           newUpdate: _this.newUpdate
                       });
                   this.itemRefs
                       .child("Group")
-                      .child(_this.Global.groupName)
+                      .child(_this.Global.groupKey)
                       .child("checkedAttendance")
                       .child(_this.newUpdate)
                       .child("members").on("value", dataSnapshot => {
@@ -96,7 +96,7 @@ export default class CheckAttendanceModal extends Component {
                   // update isChecking
                   _this.itemRefs
                       .child("Group")
-                      .child(_this.Global.groupName)
+                      .child(_this.Global.groupKey)
                       .child("checkedAttendance")
                       .child("isChecking")
                       .update({
@@ -105,7 +105,7 @@ export default class CheckAttendanceModal extends Component {
                   // update admin's location to members compare with it
                   _this.itemRefs
                       .child("Group")
-                      .child(_this.Global.groupName)
+                      .child(_this.Global.groupKey)
                       .child("checkedAttendance")
                       .child(timeMoment.format("YYYY-MM-DDhh:mm:ss"))
                       .update({
@@ -146,13 +146,13 @@ export default class CheckAttendanceModal extends Component {
             this.Global.modalType = false;
             this.itemRefs
               .child("Group")
-              .child(this.Global.groupName)
+              .child(this.Global.groupKey)
               .child("checkedAttendance")
               .child("isChecking")
               .update({
                 value: "false"
               });
-              Expo.FileSystem.writeAsStringAsync(FileSystem.documentDirectory + "test.txt", "Test");
+              //Expo.FileSystem.writeAsStringAsync(FileSystem.documentDirectory + "test.txt", "Test");
 
           }}
           style={{

@@ -37,7 +37,6 @@ export default class MyGroup extends Component {
   }
   componentWillMount() {
       this.setState({});
-    console.log(this.state.myGroupList);
   }
   render() {
     return (
@@ -65,7 +64,7 @@ export default class MyGroup extends Component {
         <FlatList
           ref={ref => (this.flatListMyGroup = ref)}
           keyExtractor={(item, index) => index}
-          data={this.state.myGroupList}
+          data={this.FirebaseApi.myGroup}
           extraData={this.state}
           renderItem={({ item, index }) => this._renderItem(item, index)}
         />
@@ -74,14 +73,14 @@ export default class MyGroup extends Component {
   }
 
   _renderItem(item, index) {
-    let name = item.replace("%", ".");
+    let name = item.groupName.replace("%", ".");
     return (
-      <View key={"_key " + item} style={{}}>
+      <View key={"_key " + index} style={{}}>
         <TouchableOpacity
           onPress={() => {
             //this.state.groupName = Object.keys(item);
             this.Global.modalType = "loading";
-            this.Global.groupName = item;
+            this.Global.groupKey = item.groupKey,
             Actions.checkAttendance();
           }}
           style={{

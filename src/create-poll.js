@@ -154,7 +154,7 @@ export default class CreatePoll extends Component {
                 timeAtPost.getMinutes();
               this.itemRefs
                 .child("Group")
-                .child(this.Global.groupName)
+                .child(this.Global.groupKey)
                 .child("postedMessages")
                 .push()
                 .set({
@@ -172,7 +172,7 @@ export default class CreatePoll extends Component {
                         })
                       : "null"
                 });
-              Actions.pop();
+              Actions.pop({type: "refresh"});
             } else {
               Alert.alert("Warning!", "Poll is not empty!");
             }

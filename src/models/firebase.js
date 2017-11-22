@@ -8,10 +8,10 @@ import {Permissions, Notifications} from 'expo'
 import firebase from "firebase"
 @autobind
 class FirebaseApi {
-  @observable groupData;
-  @observable accountData;
-  @observable myGroup;
-  @observable members
+  @observable groupData; // info currently group
+  @observable accountData; // info user
+  @observable myGroup; // list group
+  @observable members; //
 }
 
 

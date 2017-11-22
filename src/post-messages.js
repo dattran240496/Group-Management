@@ -112,7 +112,7 @@ export default class PostMessage extends Component {
     " - " + hours + timeAtPost.getHours() + ":" + minutes + timeAtPost.getMinutes();
 
     // post message + time
-    this.itemRefs.child("Group").child(this.Global.groupName).child("postedMessages").push().set({
+    this.itemRefs.child("Group").child(this.Global.groupKey).child("postedMessages").push().set({
         message: this.state.message,
         timeAtPost: formatTime
     });

@@ -10,6 +10,7 @@ class Global {
     @observable accessToken;
     @observable modalType = false;
     @observable groupName = "";
+    @observable groupKey = "";
     @observable urlPushNoti = "https://exp.host/--/api/v2/push/send";
 }
 const global = new Global();

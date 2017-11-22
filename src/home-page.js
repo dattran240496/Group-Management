@@ -22,7 +22,7 @@ import { Permissions, Notifications } from "expo";
 const { width, height } = Dimensions.get("window");
 import { _ } from "lodash";
 //import registerForPushNotificationsAsync from "./api/registerForPushNotificationsAsync"
-const PUSH_ENDPOINT = 'https://exponent-push-server.herokuapp.com/tokens';
+const PUSH_ENDPOINT = "https://exponent-push-server.herokuapp.com/tokens";
 @autobind
 @observer
 export default class Homepage extends Component {
@@ -41,8 +41,7 @@ export default class Homepage extends Component {
   }
   componentWillMount() {
     //this.Global.modalType = "loading";
-    this.User.user = this.props.user;
-    console.log(this.User.user);
+    this.props.user ? (this.User.user = this.props.user) : null;
     !this.FirebaseApi.groupData
       ? this.getGroupName()
       : (this.Global.modalType = false);
@@ -56,30 +55,9 @@ export default class Homepage extends Component {
     //this.isDisable ? this.Global.modalType = false : null;
   }
   componentDidMount() {
-          //registerForPushNotificationsAsync(this.User.user);
-      //console.log(this.FirebaseApi.accountData);
+    //registerForPushNotificationsAsync(this.User.user);
+    //console.log(this.FirebaseApi.accountData);
   }
-
-  _handleButtonPress = () => {
-    const localnotification = {
-      title: "Example Title!",
-      body: "This is the body text of the local notification",
-      android: {
-        sound: true
-      },
-      ios: {
-        sound: true
-      }
-    };
-    let sendAfterFiveSeconds = Date.now();
-    sendAfterFiveSeconds += 5000;
-
-    const schedulingOptions = { time: sendAfterFiveSeconds };
-    Notifications.scheduleLocalNotificationAsync(
-      localnotification,
-      schedulingOptions
-    );
-  };
 
   render() {
     return (
@@ -143,22 +121,6 @@ export default class Homepage extends Component {
           >
             <Text>My Group</Text>
           </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={this._handleButtonPress.bind(this)}
-            style={{
-              marginTop: 10,
-              width: 120,
-              height: 50,
-              borderRadius: 5,
-              justifyContent: "center",
-              alignItems: "center",
-              borderColor: "#e1e1e1",
-              borderWidth: 1
-            }}
-          >
-            <Text>Notification</Text>
-          </TouchableOpacity>
         </View>
         <View
           style={{
@@ -200,11 +162,12 @@ export default class Homepage extends Component {
       this.FirebaseApi.groupData = [];
       dataSnapshot.forEach(child => {
         key = {};
-        this.FirebaseApi.groupData[child.key] = {
-          _createGroupBy: child.child("createdGroupBy").val(),
-          _groupPass: child.child("groupPass").val()
-        };
-        //this.FirebaseApi.groupData[];
+        this.FirebaseApi.groupData.push({
+            createdGroupBy: child.child("createdGroupBy").val(),
+            groupPass: child.child("groupPass").val(),
+            groupName: child.child("groupName").val(),
+            key: child.key
+        });
       });
       this.FirebaseApi.myGroup &&
       this.FirebaseApi.groupData &&
@@ -223,7 +186,10 @@ export default class Homepage extends Component {
       .on("value", dataSnapshot => {
         this.FirebaseApi.myGroup = [];
         dataSnapshot.forEach(child => {
-          this.FirebaseApi.myGroup.push(child.key);
+          this.FirebaseApi.myGroup.push({
+              groupName: child.child("groupName").val(),
+              groupKey: child.key
+          });
         });
         this.FirebaseApi.myGroup &&
         this.FirebaseApi.groupData &&
@@ -244,7 +210,7 @@ export default class Homepage extends Component {
           given_name: child.child("infoAccount").child("given_name").val(),
           name: child.child("infoAccount").child("name").val(),
           picture: child.child("infoAccount").child("picture").val(),
-            token: child.child("token").val()
+          token: child.child("token").val()
         };
       });
       this.FirebaseApi.myGroup &&

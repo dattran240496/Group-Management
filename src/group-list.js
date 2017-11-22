@@ -22,27 +22,22 @@ const { width, height } = Dimensions.get("window");
 import { _ } from "lodash";
 @autobind
 @observer
-export default class CheckAttendance extends Component {
-  @observable indexSelected = -1;
+export default class GroupList extends Component {
   @observable group = [];
   constructor(props) {
     super(props);
     this.User = this.props.User;
     this.FirebaseApi = this.props.FirebaseApi;
     this.state = {
-      groupName: "",
+      groupNameSearch: "",
       groupNameList: [],
-      groupPass: ""
+      groupPass: "",
+        groupSelectedToJoin: null
     };
     this.itemRefs = firebase.database().ref("app_expo");
   }
   componentWillMount() {
-    for (let keys in this.FirebaseApi.groupData) {
-      this.group.push(keys);
-    }
-    this.setState({
-      groupNameList: this.group
-    });
+      this.state.groupNameList = this.FirebaseApi.groupData;
   }
   render() {
     return (
@@ -63,11 +58,11 @@ export default class CheckAttendance extends Component {
             borderWidth: 1,
             borderColor: "#e1e1e1",
             fontSize: 15,
-            fontStyle: this.state.groupName !== "" ? "normal" : "italic"
+            fontStyle: this.state.groupNameSearch !== "" ? "normal" : "italic"
           }}
           onChangeText={name => {
-            this.setState({ groupName: name });
-            this._filterGroupName(name);
+            this.setState({ groupNameSearch: name });
+            this.filterGroupName(name);
           }}
         />
         <FlatList
@@ -112,7 +107,7 @@ export default class CheckAttendance extends Component {
           />
           <TouchableOpacity
             onPress={() => {
-              this._joinGroup();
+              this.joinGroup();
             }}
             style={{
               marginTop: 15,
@@ -130,13 +125,12 @@ export default class CheckAttendance extends Component {
       </View>
     );
   }
-  _filterGroupName(name) {
+  filterGroupName(name) {
     let _this = this;
-    let groupData = this.group;
+    let groupData = this.FirebaseApi.groupData;
     groupData = _.filter(groupData, function(o) {
-      console.log(o);
       let regx = new RegExp(name.toLowerCase());
-      return regx.test(o.toString().toLowerCase());
+      return regx.test(o.groupName.toString().toLowerCase());
     });
     this.setState({
       groupNameList: groupData
@@ -145,14 +139,15 @@ export default class CheckAttendance extends Component {
 
   _renderItem(item, index) {
     //console.log(Object.values(this.state.groupNameList));
-    let name = item.replace("%", ".");
+    let name = item.groupName.replace("%", ".");
     return (
       <View key={"_key " + item} style={{}}>
         <TouchableOpacity
           onPress={() => {
-            this.indexSelected = index;
-            this.state.groupName = name;
             this._modalEnterPas.open();
+            this.setState({
+                groupSelectedToJoin: item
+            })
           }}
           style={{
             width: width,
@@ -175,20 +170,23 @@ export default class CheckAttendance extends Component {
     );
   }
 
-  _joinGroup() {
+  joinGroup() {
     let _id = this.User.user.id;
-    console.log(this.User.user);
-    // console.log(this.FirebaseApi.groupData[this.state.groupName].createdGroupBy);
-    _id === this.FirebaseApi.groupData[this.state.groupName]._createdGroupBy // if user joined this group
+    let isJoined = false;
+    this.FirebaseApi.myGroup.map((v, i)=>{
+       v === this.state.groupSelectedToJoin.groupName ? isJoined = true : null
+    });
+    console.log(this.state.groupSelectedToJoin);
+    _id === this.state.groupSelectedToJoin.createdGroupBy || isJoined // if user joined this group
       ? Alert.alert("Warning!", "You joined this group!")
       : this.state.groupPass === "" // if password is empty
         ? Alert.alert("Warning!", "Password is not empty!")
         : this.state.groupPass ===
-          this.FirebaseApi.groupData[this.state.groupName]._groupPass // if password is true
+        this.state.groupSelectedToJoin.groupPass // if password is true
           ? (
               this.itemRefs
                 .child("Group")
-                .child(this.state.groupName.toString())
+                .child(this.state.groupSelectedToJoin.key)
                 .child("groupMember")
                 .child(_id)
                 .update({
@@ -198,9 +196,9 @@ export default class CheckAttendance extends Component {
                 .child("Account")
                 .child(this.User.user.id)
                 .child("MyGroup")
-                .child(this.state.groupName.toString())
+                  .child(this.state.groupSelectedToJoin.key)
                 .update({
-                  joined: true
+                    groupName: this.state.groupSelectedToJoin.groupName
                 }),
               this._modalEnterPas.close()
             )

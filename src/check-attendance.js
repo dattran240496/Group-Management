@@ -36,22 +36,27 @@ export default class CheckAttendance extends Component {
     this.itemRefs = firebase.database().ref("app_expo");
     this.state = {
       groupName: this.Global.groupName,
-      messages: null
+      messages: null,
+      groupKey: ""
     };
   }
   componentWillMount() {
-    this.setState({});
-    this.name = this.Global.groupName;
-    this.info = this.FirebaseApi.accountData[
-      this.FirebaseApi.groupData[this.name]._createGroupBy
-    ];
-    this.getMembers();
-    this.getMessage();
+    //this.setState({});
+      let idAdmin = "";
+      this.itemRefs.child("Group").child(this.Global.groupKey).child("createdGroupBy").on("value", dataSnapshot =>{
+          idAdmin = dataSnapshot.val()
+      });
+      this.itemRefs.child("Group").child(this.Global.groupKey).child("groupName").on("value", dataSnapshot =>{
+          this.Global.groupName = dataSnapshot.val()
+      });
+      this.info = this.FirebaseApi.accountData[idAdmin];
+      this.getMembers();
+      this.getMessage();
   }
   componentDidMount() {
     this.itemRefs
       .child("Group")
-      .child(this.name)
+      .child(this.Global.groupKey)
       .child("checkedAttendance")
       .child("isChecking")
       .on("value", dataSnapshot => {
@@ -64,6 +69,7 @@ export default class CheckAttendance extends Component {
             : (this.Global.modalType = false);
         });
       });
+
   }
   render() {
     return (
@@ -79,7 +85,7 @@ export default class CheckAttendance extends Component {
             borderBottomWidth: 1,
             justifyContent: "center",
             paddingLeft: 10,
-              zIndex: 1
+            zIndex: 1
           }}
         >
           <Text
@@ -88,62 +94,68 @@ export default class CheckAttendance extends Component {
               fontWeight: "bold"
             }}
           >
-            Group: {this.state.groupName.toString().replace("%", ".")}
+            Group: {this.Global.groupName.toString().replace("%", ".")}
           </Text>
           <TouchableOpacity
             style={{
               position: "absolute",
               right: 10
             }}
-            onPress={()=>{
-                this.isEdit = !this.isEdit;
+            onPress={() => {
+              this.isEdit = !this.isEdit;
             }}
           >
-              {
-                  this.isEdit ? (
-                      <View style={{
-                          width: 150,
-                          height: 50,
-                          position: 'absolute',
-                          backgroundColor: '#fff',
-                          borderWidth: 1,
-                          borderColor: "#e1e1e1",
-                          top: 20,
-                          right: 5,
-                      }}>
-                          <TouchableOpacity
-                              onPress={()=>{
-                                  Actions.editGroup({title: 'Change group name', typeEdit: "name"})
-                              }}
-                              style={{
-                              width: 150,
-                              height: 25,
-                              justifyContent: 'center',
-                              alignItems: 'center',
-                              borderBottomWidth: 1,
-                              borderBottomColor: "#e1e1e1"
-                          }}>
-                              <Text>
-                                  Change group name
-                              </Text>
-                          </TouchableOpacity>
-                          <TouchableOpacity
-                              onPress={()=>{
-                                  Actions.editGroup({title: 'Change password', typeEdit: "password"})
-                              }}
-                              style={{
-                              width: 150,
-                              height: 25,
-                              justifyContent: 'center',
-                              alignItems: 'center'
-                          }}>
-                              <Text>
-                                  Change password
-                              </Text>
-                          </TouchableOpacity>
-                      </View>
-                  ) : null
-              }
+            {this.isEdit
+              ? <View
+                  style={{
+                    width: 150,
+                    height: 50,
+                    position: "absolute",
+                    backgroundColor: "#fff",
+                    borderWidth: 1,
+                    borderColor: "#e1e1e1",
+                    top: 20,
+                    right: 5
+                  }}
+                >
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.isEdit = false;
+                      Actions.editGroup({
+                        title: "Change group name",
+                        typeEdit: "name"
+                      });
+                    }}
+                    style={{
+                      width: 150,
+                      height: 25,
+                      justifyContent: "center",
+                      alignItems: "center",
+                      borderBottomWidth: 1,
+                      borderBottomColor: "#e1e1e1"
+                    }}
+                  >
+                    <Text>Change group name</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.isEdit = false;
+                      Actions.editGroup({
+                        title: "Change password",
+                        typeEdit: "password"
+                      });
+                    }}
+                    style={{
+                      width: 150,
+                      height: 25,
+                      justifyContent: "center",
+                      alignItems: "center"
+                    }}
+                  >
+                    <Text>Change password</Text>
+                  </TouchableOpacity>
+                </View>
+              : null}
             <Icon name="cog" size={20} color="#000" />
           </TouchableOpacity>
         </View>
@@ -156,7 +168,7 @@ export default class CheckAttendance extends Component {
             flexDirection: "row",
             alignItems: "center",
             paddingLeft: 10,
-              zIndex: 0
+            zIndex: 0
           }}
         >
           <Image
@@ -336,7 +348,7 @@ export default class CheckAttendance extends Component {
     let key = {};
     this.itemRefs
       .child("Group")
-      .child(this.Global.groupName)
+      .child(this.Global.groupKey)
       .child("groupMember")
       .on("value", dataSnapshot => {
         this.FirebaseApi.members = [];
@@ -359,7 +371,7 @@ export default class CheckAttendance extends Component {
     let arrMessage = [];
     this.itemRefs
       .child("Group")
-      .child(this.Global.groupName)
+      .child(this.Global.groupKey)
       .child("postedMessages")
       .on("value", dataSnapshot => {
         this.state.messages = [];
@@ -419,7 +431,7 @@ export default class CheckAttendance extends Component {
             //if option is poll, action to vote, else  action to message
             item.options
               ? Actions.votePoll({
-                 poll: item
+                  poll: item
                 })
               : Actions.detailMessage({ detailMessage: item });
           }}
@@ -444,7 +456,8 @@ export default class CheckAttendance extends Component {
             width: 130,
             height: 20,
             fontSize: 13,
-            paddingLeft: 5
+            paddingLeft: 5,
+              fontStyle: 'italic'
           }}
         >
           {item.timeAtPost}
