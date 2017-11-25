@@ -4,7 +4,8 @@ import {
   Text,
   View,
   TouchableOpacity,
-  AsyncStorage
+  AsyncStorage,
+    Image
 } from "react-native";
 import Expo from "expo";
 import { Actions, Router, Scene } from "react-native-mobx";
@@ -24,7 +25,9 @@ export default class Loading extends Component {
 
     return (
       <View style={styles.container}>
-        <Text>Loading...</Text>
+        <Image
+          source={require("./images/loading/loadinganimation.gif")}
+        />
       </View>
     );
   }

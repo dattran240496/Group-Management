@@ -8,7 +8,8 @@ import {
   Dimensions,
   TextInput,
   Alert,
-  Platform
+  Platform,
+  ScrollView
 } from "react-native";
 import Expo from "expo";
 import { Actions, Router, Scene } from "react-native-mobx";
@@ -21,6 +22,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { Permissions, Notifications } from "expo";
 const { width, height } = Dimensions.get("window");
 import { _ } from "lodash";
+import Swiper from "react-native-swiper";
 //import registerForPushNotificationsAsync from "./api/registerForPushNotificationsAsync"
 const PUSH_ENDPOINT = "https://exponent-push-server.herokuapp.com/tokens";
 @autobind
@@ -64,9 +66,96 @@ export default class Homepage extends Component {
       <View style={styles.container}>
         <View
           style={{
+            width: width,
+            height: 200
+          }}
+        >
+          <Swiper>
+            <View
+              style={{
+                backgroundColor: "#5DADE2",
+                width: width,
+                height: 200,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+                <Text style={{
+                    color: "#fff",
+                    fontSize: 18,
+                    fontWeight: 'bold'
+                }}>
+                    CLASS MANAGEMANT IS SIMPLE
+                </Text>
+                <Text style={{
+                    color: "#fff",
+                    fontSize: 16,
+                    textAlign: 'center',
+                    paddingTop: 5
+                }}>
+                    Make class management easier with the application.
+                </Text>
+            </View>
+              <View
+                  style={{
+                      backgroundColor: "#5DADE2",
+                      width: width,
+                      height: 200,
+                      justifyContent: "center",
+                      alignItems: "center",
+                  }}
+              >
+                  <Text style={{
+                      color: "#fff",
+                      fontSize: 18,
+                      fontWeight: 'bold'
+                  }}>
+                      CLASS MANAGEMANT IS SIMPLE
+                  </Text>
+                  <Text style={{
+                      color: "#fff",
+                      fontSize: 16,
+                      textAlign: 'center',
+                      paddingTop: 5
+                  }}>
+                      Make class management easier with the application.
+                  </Text>
+              </View>
+              <View
+                  style={{
+                      backgroundColor: "#5DADE2",
+                      width: width,
+                      height: 200,
+                      justifyContent: "center",
+                      alignItems: "center",
+                  }}
+              >
+                  <Text style={{
+                      color: "#fff",
+                      fontSize: 18,
+                      fontWeight: 'bold'
+                  }}>
+                      CLASS MANAGEMANT IS SIMPLE
+                  </Text>
+                  <Text style={{
+                      color: "#fff",
+                      fontSize: 16,
+                      textAlign: 'center',
+                      paddingTop: 5
+                  }}>
+                      Make class management easier with the application.
+                  </Text>
+              </View>
+          </Swiper>
+        </View>
+
+        <View
+          style={{
             flex: 1,
             justifyContent: "center",
-            alignItems: "center"
+              paddingTop: 30,
+              flexWrap: 'wrap',
+              flexDirection: 'row',
           }}
         >
           <TouchableOpacity
@@ -74,13 +163,14 @@ export default class Homepage extends Component {
               Actions.enterGroupName();
             }}
             style={{
-              width: 120,
-              height: 50,
-              borderRadius: 5,
+              width: 130,
+              height: 130,
+              borderRadius: 10,
               justifyContent: "center",
               alignItems: "center",
               borderColor: "#e1e1e1",
-              borderWidth: 1
+              borderWidth: 1,
+                backgroundColor: "#fff"
             }}
           >
             <Text>New Group</Text>
@@ -91,14 +181,15 @@ export default class Homepage extends Component {
               Actions.groupList();
             }}
             style={{
-              marginTop: 10,
-              width: 120,
-              height: 50,
-              borderRadius: 5,
+              width: 130,
+              height: 130,
+              borderRadius: 10,
               justifyContent: "center",
               alignItems: "center",
               borderColor: "#e1e1e1",
-              borderWidth: 1
+              borderWidth: 1,
+                marginLeft: 10,
+                backgroundColor: "#fff"
             }}
           >
             <Text>Find Group</Text>
@@ -109,18 +200,37 @@ export default class Homepage extends Component {
               Actions.myGroup();
             }}
             style={{
-              marginTop: 10,
-              width: 120,
-              height: 50,
-              borderRadius: 5,
+              width: 130,
+              height: 130,
+              borderRadius: 10,
               justifyContent: "center",
               alignItems: "center",
               borderColor: "#e1e1e1",
-              borderWidth: 1
+              borderWidth: 1,
+                marginTop: 10,
+                backgroundColor: "#fff"
             }}
           >
             <Text>My Group</Text>
           </TouchableOpacity>
+            <TouchableOpacity
+                onPress={() => {
+                }}
+                style={{
+                    width: 130,
+                    height: 130,
+                    borderRadius: 10,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderColor: "#e1e1e1",
+                    borderWidth: 1,
+                    marginLeft: 10,
+                    marginTop: 10,
+                    backgroundColor: "#fff"
+                }}
+            >
+                <Text>NULL</Text>
+            </TouchableOpacity>
         </View>
         <View
           style={{
@@ -163,10 +273,10 @@ export default class Homepage extends Component {
       dataSnapshot.forEach(child => {
         key = {};
         this.FirebaseApi.groupData.push({
-            createdGroupBy: child.child("createdGroupBy").val(),
-            groupPass: child.child("groupPass").val(),
-            groupName: child.child("groupName").val(),
-            key: child.key
+          createdGroupBy: child.child("createdGroupBy").val(),
+          groupPass: child.child("groupPass").val(),
+          groupName: child.child("groupName").val(),
+          key: child.key
         });
       });
       this.FirebaseApi.myGroup &&
@@ -187,8 +297,8 @@ export default class Homepage extends Component {
         this.FirebaseApi.myGroup = [];
         dataSnapshot.forEach(child => {
           this.FirebaseApi.myGroup.push({
-              groupName: child.child("groupName").val(),
-              groupKey: child.key
+            groupName: child.child("groupName").val(),
+            groupKey: child.key
           });
         });
         this.FirebaseApi.myGroup &&
@@ -225,6 +335,7 @@ export default class Homepage extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+      backgroundColor: '#e1e1e1'
   }
 });

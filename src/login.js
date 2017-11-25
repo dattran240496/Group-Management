@@ -4,7 +4,8 @@ import {
   Text,
   View,
   TouchableOpacity,
-  AsyncStorage
+  AsyncStorage,
+  Image
 } from "react-native";
 import Expo, { Notifications, Permissions } from "expo";
 import { Actions, Router, Scene } from "react-native-mobx";
@@ -14,7 +15,7 @@ import { observer } from "mobx-react/native";
 import Loading from "./loading";
 import { _ } from "lodash";
 import firebase from "./api/api";
-
+import { __d } from "./components/helpers/index";
 async function setData(item, token) {
   try {
     await AsyncStorage.setItem("@user:key", JSON.stringify(item));
@@ -57,24 +58,23 @@ async function getUserInfo(accessToken, itemRefs) {
     .then(responseJS => {
       let register = registerForPushNotificationsAsync();
       let token = "";
-      token !== "" ?
-      register.then(function(o) {
-          token = o;
-          itemRefs.child("Account").child(responseJS.id).update({
+      token !== ""
+        ? register.then(function(o) {
+            token = o;
+            itemRefs.child("Account").child(responseJS.id).update({
               token: token,
               infoAccount: responseJS
-          });
-          responseJS["token"] = token;
-          setData(responseJS);
-          return Actions.homePage({ user: responseJS, type: "replace" });
-
-      }) :
-          setData(responseJS);
-        itemRefs.child("Account").child(responseJS.id).update({
-            token: token,
-            infoAccount: responseJS
-        });
-        return Actions.homePage({ user: responseJS, type: "replace" });
+            });
+            responseJS["token"] = token;
+            setData(responseJS);
+            return Actions.homePage({ user: responseJS, type: "replace" });
+          })
+        : setData(responseJS);
+      itemRefs.child("Account").child(responseJS.id).update({
+        token: token,
+        infoAccount: responseJS
+      });
+      return Actions.homePage({ user: responseJS, type: "replace" });
     })
     .catch(error => {
       console.error(error);
@@ -128,29 +128,77 @@ export default class Login extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <TouchableOpacity
+        <View
           style={{
-            width: 150,
-            height: 50,
-            borderRadius: 5,
-            borderWidth: 1,
-            borderColor: "#e1e1e1",
-            justifyContent: "center",
-            alignItems: "center"
-          }}
-          onPress={() => {
-            this.Global.modalType = "loading";
-            fetchAsync(this.itemRefs);
+            flex: 1,
+            justifyContent: "center"
           }}
         >
           <Text
             style={{
-              fontSize: 15
+              fontSize: __d(40),
+              color: "#fff",
+              fontStyle: "italic",
+              fontFamily: "Georgia-BoldItalic"
             }}
           >
-            Login
+            Check
           </Text>
-        </TouchableOpacity>
+          <Text
+            style={{
+              fontSize: __d(40),
+              color: "#fff",
+              paddingLeft: __d(50),
+              fontStyle: "italic",
+              fontFamily: "Georgia-BoldItalic"
+            }}
+          >
+            Attendance
+          </Text>
+        </View>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center"
+          }}
+        >
+          <TouchableOpacity
+            style={{
+              width: __d(250),
+              height: __d(50),
+              borderRadius: 5,
+              borderWidth: 1,
+              borderColor: "#e1e1e1",
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "row"
+            }}
+            onPress={() => {
+              this.Global.modalType = "loading";
+              fetchAsync(this.itemRefs);
+            }}
+          >
+            <Image
+              source={require("./images/login/googleBtn.png")}
+              style={{
+                width: 50,
+                height: 40,
+                resizeMode: "contain"
+              }}
+            />
+            <Text
+              style={{
+                fontSize: __d(18),
+                color: "#fff",
+                paddingLeft: __d(5),
+                  fontWeight: 'bold'
+              }}
+            >
+              Login with Google
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -159,7 +207,7 @@ export default class Login extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#5DADE2",
     alignItems: "center",
     justifyContent: "center"
   }

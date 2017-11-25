@@ -132,6 +132,9 @@ export default class App extends Component {
             direction="vertical"
             component={Homepage}
             hideNavBar={false}
+            navigationBarStyle={{
+                backgroundColor: "#fff"
+            }}
           />
           <Scene
             key="groupList"

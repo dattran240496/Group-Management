@@ -5,7 +5,8 @@ import {
   View,
   TouchableOpacity,
   AsyncStorage,
-  Dimensions
+  Dimensions,
+    Image
 } from "react-native";
 import Expo from "expo";
 import { Actions, Router, Scene } from "react-native-mobx";
@@ -27,7 +28,12 @@ export default class LoadingModal extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>Loading...</Text>
+        <Image
+            source={require("../images/loading/loadinganimation.gif")}
+            style={{
+              flex:1
+            }}
+        />
       </View>
     );
   }
