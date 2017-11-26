@@ -45,20 +45,24 @@ export default class GroupList extends Component {
         style={{
           flex: 1,
           justifyContent: "center",
-          alignItems: "center"
+          alignItems: "center",
+            backgroundColor: '#e1e1e1'
         }}
       >
         <TextInput
           placeholder="Group name..."
           placeholderStyle={{ color: "#e1e1e1" }}
           style={{
-            width: width,
-            height: 50,
+            width: width - 30,
+            height: 40,
             paddingLeft: 10,
             borderWidth: 1,
             borderColor: "#e1e1e1",
-            fontSize: 15,
-            fontStyle: this.state.groupNameSearch !== "" ? "normal" : "italic"
+            fontSize: 13,
+            fontStyle: this.state.groupNameSearch !== "" ? "normal" : "italic",
+              borderRadius: 5,
+              marginTop: 20,
+              backgroundColor: '#fff'
           }}
           onChangeText={name => {
             this.setState({ groupNameSearch: name });
@@ -66,6 +70,11 @@ export default class GroupList extends Component {
           }}
         />
         <FlatList
+            style={{
+                borderTopWidth: 1,
+                borderTopColor: '#e1e1e1',
+                marginTop: 10,
+            }}
           ref={ref => (this.flatList = ref)}
           keyExtractor={(item, index) => index}
           data={this.state.groupNameList}
@@ -89,7 +98,10 @@ export default class GroupList extends Component {
         >
           <TextInput
             placeholder="Group pass..."
-            placeholderStyle={{ color: "#e1e1e1" }}
+            placeholderStyle={{
+                color: "#e1e1e1",
+            }}
+
             style={{
               marginTop: 5,
               width: 250,
@@ -98,7 +110,7 @@ export default class GroupList extends Component {
               borderRadius: 5,
               borderWidth: 1,
               borderColor: "#e1e1e1",
-              fontSize: 15,
+              fontSize: 13,
               fontStyle: this.state.groupPass !== "" ? "normal" : "italic"
             }}
             onChangeText={txt => {
@@ -111,15 +123,20 @@ export default class GroupList extends Component {
             }}
             style={{
               marginTop: 15,
-              width: 100,
+              width: 250,
               height: 40,
               justifyContent: "center",
               alignItems: "center",
               borderColor: "#e1e1e1",
-              borderWidth: 1
+              borderWidth: 1,
+                backgroundColor: '#5DADE2',
+                borderRadius: 5
             }}
           >
-            <Text>Join group</Text>
+            <Text style={{
+                color: '#fff',
+                fontSize: 15
+            }}>Join group</Text>
           </TouchableOpacity>
         </Modal>
       </View>
@@ -140,6 +157,7 @@ export default class GroupList extends Component {
   _renderItem(item, index) {
     //console.log(Object.values(this.state.groupNameList));
     let name = item.groupName.replace("%", ".");
+    let numberOfGroup = Object.values(item.groupMember).length;
     return (
       <View key={"_key " + item} style={{}}>
         <TouchableOpacity
@@ -150,17 +168,45 @@ export default class GroupList extends Component {
             })
           }}
           style={{
-            width: width,
+            width: width ,
             height: 50,
             justifyContent: "center",
-            paddingLeft: 10,
+              alignItems: 'center',
             borderBottomWidth: 1,
-            borderBottomColor: "#e1e1e1"
+            borderBottomColor: "#e1e1e1",
+              backgroundColor: '#fff',
+              flexDirection: 'row'
           }}
         >
+            <View style={{
+                width: 50,
+                height: 50,
+                backgroundColor: '#5DADE2',
+                justifyContent: 'center',
+                alignItems: 'center'
+            }}>
+                <View style={{
+                    width: 35,
+                    height: 35,
+                    borderRadius: 17.5,
+                    borderWidth: 1.5,
+                    borderColor: '#fff',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }}>
+                    <Text style={{
+                        color: "#fff"
+                    }}>
+                        {numberOfGroup}
+                    </Text>
+                </View>
+
+            </View>
           <Text
             style={{
-              fontSize: 15
+              fontSize: 15,
+                flex: 1,
+                paddingLeft: 10
             }}
           >
             {name}

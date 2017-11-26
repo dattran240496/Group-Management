@@ -28,7 +28,8 @@ export default class EnterGroupName extends Component {
     super(props);
     this.state = {
       groupName: "",
-      groupPass: ""
+      groupPass: "",
+      confirmGroupPass: "",
     };
     this.User = this.props.User;
     this.FirebaseApi = this.props.FirebaseApi;
@@ -40,104 +41,145 @@ export default class EnterGroupName extends Component {
       <View
         style={{
           flex: 1,
-          alignItems: "center"
+          alignItems: "center",
+          backgroundColor: "#e1e1e1",
+            paddingTop: 20
         }}
       >
         <TextInput
           placeholder="Group name..."
           placeholderStyle={{ color: "#e1e1e1" }}
           style={{
-            width: width,
+            width: width - 30,
             height: 40,
             paddingLeft: 10,
-            borderWidth: 1.5,
-            borderColor: "#e1e1e1",
+            // borderWidth: 1.5,
+            // borderColor: "#e1e1e1",
+              borderTopLeftRadius: 5,
+              borderTopRightRadius: 5,
             fontSize: 15,
-            fontStyle: this.state.groupName !== "" ? "normal" : "italic"
+            fontStyle: this.state.groupName !== "" ? "normal" : "italic",
+            backgroundColor: "#fff"
           }}
           onChangeText={txt => {
             this.setState({ groupName: txt });
           }}
         />
-        {!_.isEmpty(this.errors) &&
+        {!_.isEmpty(this.errors["groupName"]) &&
           <Text style={{ color: "red", marginTop: 5 }}>
-            {this.errors}
+            {this.errors["groupName"]}
           </Text>}
 
         <TextInput
           placeholder="Group pass..."
           placeholderStyle={{ color: "#e1e1e1" }}
+          secureTextEntry={true}
           style={{
-            marginTop: 5,
-            width: width,
+            width: width - 30,
             height: 40,
             paddingLeft: 10,
-            borderBottomWidth: 1.5,
-            borderBottomColor: "#e1e1e1",
+            // borderBottomWidth: 1.5,
+            // borderBottomColor: "#e1e1e1",
+            borderTopWidth: 1.5,
+            borderTopColor: "#e1e1e1",
             fontSize: 15,
-            fontStyle: this.state.groupPass !== "" ? "normal" : "italic"
+            fontStyle: this.state.groupPass !== "" ? "normal" : "italic",
+            backgroundColor: "#fff"
           }}
           onChangeText={txt => {
             this.setState({ groupPass: txt });
           }}
         />
+          <TextInput
+              placeholder="Confirm group pass..."
+              placeholderStyle={{ color: "#e1e1e1" }}
+              secureTextEntry={true}
+              style={{
+                  width: width - 30,
+                  height: 40,
+                  paddingLeft: 10,
+                  borderTopWidth: 1.5,
+                  borderTopColor: "#e1e1e1",
+                  fontSize: 15,
+                  fontStyle: this.state.confirmGroupPass !== "" ? "normal" : "italic",
+                  backgroundColor: "#fff"
+              }}
+              onChangeText={txt => {
+                  this.setState({ confirmGroupPass: txt });
+              }}
+          />
+          {!_.isEmpty(this.errors["password"]) &&
+          <Text style={{ color: "red", marginTop: 5 }}>
+              {this.errors["password"]}
+          </Text>}
         <TouchableOpacity
           onPress={() => {
             this.pushGroupName();
           }}
           style={{
-            marginTop: 10,
-            width: 120,
+            width: width - 30,
             height: 50,
-            borderRadius: 5,
-            borderWidth: 1,
-            borderColor: "#e1e1e1",
+            borderBottomLeftRadius: 5,
+            borderBottomRightRadius: 5,
             justifyContent: "center",
-            alignItems: "center"
+            alignItems: "center",
+              backgroundColor: '#5DADE2'
           }}
         >
-          <Text style={{}}>Create Group</Text>
+          <Text style={{
+              color: '#fff',
+              fontSize: 20
+          }}>Create Group</Text>
         </TouchableOpacity>
       </View>
     );
   }
   pushGroupName() {
     let isNameExisted = false;
-    if (this.validate(this.state.groupName)) {
-      this.errors = {};
-      let groupName = this.state.groupName.replace(".", "%");
-      this.FirebaseApi.groupData.map((v, i) => {
-        if (v.groupName === groupName) {
-          isNameExisted = true;
-          return Alert.alert("Warning!", "Group name existed!");
+    if (this.state.groupPass === this.state.confirmGroupPass){
+        this.errors["password"] = null;
+        if (this.validate(this.state.groupName)) {
+            this.errors = {};
+            let groupName = this.state.groupName.replace(".", "%");
+            this.FirebaseApi.groupData.map((v, i) => {
+                if (v.groupName === groupName) {
+                    isNameExisted = true;
+                    return Alert.alert("Warning!", "Group name existed!");
+                }
+            });
+            if (!isNameExisted) {
+                this.itemRefs.child("Group").push().update({
+                    groupName: groupName,
+                    createdGroupBy: this.User.user.id,
+                    groupPass: this.state.groupPass
+                });
+                let groupKey = "";
+                this.itemRefs.child("Group").on("value", dataSnapshot => {
+                    dataSnapshot.forEach(child => {
+                        child.child("groupName").val() === groupName
+                            ? (groupKey = child.key)
+                            : null;
+                    });
+                });
+                this.itemRefs
+                    .child("Account")
+                    .child(this.User.user.id)
+                    .child("MyGroup")
+                    .child(groupKey)
+                    .update({
+                        groupName: groupName
+                    });
+                return Actions.pop();
+            }
+        } else {
+            this.setState({})
+            this.errors["groupName"] = "Group names can not have special characters!";
         }
-      });
-      if (!isNameExisted) {
-        this.itemRefs.child("Group").push().update({
-          groupName: groupName,
-          createdGroupBy: this.User.user.id,
-          groupPass: this.state.groupPass
-        });
-        let groupKey = "";
-          this.itemRefs.child("Group").on("value", dataSnapshot => {
-              dataSnapshot.forEach(child => {
-                  child.child("groupName").val() === groupName ?
-                      groupKey = child.key : null
-              })
-          });
-        this.itemRefs
-          .child("Account")
-          .child(this.User.user.id)
-          .child("MyGroup")
-          .child(groupKey)
-          .update({
-            groupName: groupName
-          });
-        return Actions.pop();
-      }
-    } else {
-      return (this.errors = "Group names can not have special characters!");
+    }else{
+        this.setState({}),
+        this.errors["password"] = "Password and Confirm password is not match!"
     }
+
   }
 
   validate(value) {

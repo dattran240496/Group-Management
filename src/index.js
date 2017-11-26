@@ -141,60 +141,90 @@ export default class App extends Component {
             title="Group List"
             component={GroupList}
             hideNavBar={false}
+            navigationBarStyle={{
+                backgroundColor: "#fff"
+            }}
           />
           <Scene
             key="myGroup"
             title="My Group"
             component={MyGroup}
             hideNavBar={false}
+            navigationBarStyle={{
+                backgroundColor: "#fff"
+            }}
           />
           <Scene
             key="enterGroupName"
             title="Enter Group Name"
             component={EnterGroupName}
             hideNavBar={false}
+            navigationBarStyle={{
+                backgroundColor: "#fff"
+            }}
           />
           <Scene
             key="checkAttendance"
             title="Check Attendance"
             component={CheckAttendance}
             hideNavBar={false}
+            navigationBarStyle={{
+                backgroundColor: "#fff"
+            }}
           />
           <Scene
             key="members"
             title="Members"
             component={Member}
             hideNavBar={false}
+            navigationBarStyle={{
+                backgroundColor: "#fff"
+            }}
           />
           <Scene
             key="postMessage"
             title="Post Message"
             component={PostMessage}
             hideNavBar={false}
+            navigationBarStyle={{
+                backgroundColor: "#fff"
+            }}
           />
           <Scene
             key="detailMessage"
             title="Detail Message"
             component={DetailMessage}
             hideNavBar={false}
+            navigationBarStyle={{
+                backgroundColor: "#fff"
+            }}
           />
           <Scene
             key="createPoll"
             title="Create Poll"
             component={CreatePoll}
             hideNavBar={false}
+            navigationBarStyle={{
+                backgroundColor: "#fff"
+            }}
           />
           <Scene
             key="votePoll"
             title="Vote"
             component={VotePoll}
             hideNavBar={false}
+            navigationBarStyle={{
+                backgroundColor: "#fff"
+            }}
           />
           <Scene
               key="editGroup"
               title=""
               component={EditGroup}
               hideNavBar={false}
+              navigationBarStyle={{
+                  backgroundColor: "#fff"
+              }}
           />
         </Router>
         <ModalBox
