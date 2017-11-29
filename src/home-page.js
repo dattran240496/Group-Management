@@ -335,13 +335,13 @@ export default class Homepage extends Component {
       this.FirebaseApi.groupData = [];
       dataSnapshot.forEach(child => {
         key = {};
-        this.FirebaseApi.groupData.push({
+        this.FirebaseApi.groupData[child.key] = {
           createdGroupBy: child.child("createdGroupBy").val(),
           groupPass: child.child("groupPass").val(),
           groupName: child.child("groupName").val(),
           key: child.key,
           groupMember: child.child("groupMember").val()
-        });
+        };
       });
       this.FirebaseApi.myGroup &&
       this.FirebaseApi.groupData &&
@@ -360,10 +360,10 @@ export default class Homepage extends Component {
       .on("value", dataSnapshot => {
         this.FirebaseApi.myGroup = [];
         dataSnapshot.forEach(child => {
-          this.FirebaseApi.myGroup.push({
+          this.FirebaseApi.myGroup[child.key] = {
             groupName: child.child("groupName").val(),
             groupKey: child.key
-          });
+          };
         });
         this.FirebaseApi.myGroup &&
         this.FirebaseApi.groupData &&

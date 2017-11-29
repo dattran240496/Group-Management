@@ -151,7 +151,8 @@ export default class EnterGroupName extends Component {
                 this.itemRefs.child("Group").push().update({
                     groupName: groupName,
                     createdGroupBy: this.User.user.id,
-                    groupPass: this.state.groupPass
+                    groupPass: this.state.groupPass,
+                    groupMember: [this.User.user.email]
                 });
                 let groupKey = "";
                 this.itemRefs.child("Group").on("value", dataSnapshot => {

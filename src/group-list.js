@@ -160,7 +160,7 @@ export default class GroupList extends Component {
   }
   filterGroupName(name) {
     let _this = this;
-    let groupData = this.FirebaseApi.groupData;
+    let groupData = this.state.groupFilter;
     groupData = _.filter(groupData, function(o) {
       let regx = new RegExp(name.toLowerCase());
       return regx.test(o.groupName.toString().toLowerCase());
@@ -171,9 +171,8 @@ export default class GroupList extends Component {
   }
 
   _renderItem(item, index) {
-    console.log(Object.values(this.state.groupNameList));
-    let name = item.groupName.replace("%", ".") || item.groupName;
-    let numberOfGroup = item.groupMember !== null ? Object.values(item.groupMember).length : 0;
+    let name = item.groupName.replace("%", ".");
+    let numberOfGroup = item.groupMember ? Object.values(item.groupMember).length : 0;
     return (
       <View key={"_key " + item} style={{}}>
         <TouchableOpacity
@@ -269,19 +268,17 @@ export default class GroupList extends Component {
             )
           : Alert.alert("Warning!", "Invalid password!");
   }
-  async filterGroupData() {
+    filterGroupData() {
     let _this = this;
-    let groupData = this.state.groupNameList;
-      await this.FirebaseApi.myGroup.map((v, i) => {
-      groupData = _.find(groupData, function(o) {
-        return o.groupName !== v.groupName;
+    let groupData = Object.values(this.FirebaseApi.groupData);
+          Object.values(this.FirebaseApi.myGroup).map((v, i) => {
+      groupData = _.filter(groupData, function(o) {
+          return o.groupName !== v.groupName;
       });
-      console.log(groupData)
-    });
-      //console.log(groupData);
-    groupData ?
+       });
         this.setState({
+            groupFilter: groupData,
             groupNameList: groupData
-        }) : []
+        })
   }
 }
