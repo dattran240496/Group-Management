@@ -20,6 +20,7 @@ import Modal from "react-native-modalbox";
 import Icon from "react-native-vector-icons/FontAwesome";
 const { width, height } = Dimensions.get("window");
 import { _ } from "lodash";
+import { __d } from "./components/helpers/index";
 @autobind
 @observer
 export default class GroupList extends Component {
@@ -30,64 +31,76 @@ export default class GroupList extends Component {
     this.FirebaseApi = this.props.FirebaseApi;
     this.state = {
       groupNameSearch: "",
-      groupNameList: [],
+      groupNameList: this.FirebaseApi.groupData,
       groupPass: "",
-        groupSelectedToJoin: null
+      groupSelectedToJoin: null,
+      groupFilter: []
     };
     this.itemRefs = firebase.database().ref("app_expo");
   }
   componentWillMount() {
-      this.state.groupNameList = this.FirebaseApi.groupData;
+    this.filterGroupData();
   }
   render() {
     return (
       <View
         style={{
           flex: 1,
-          justifyContent: "center",
+          //justifyContent: "center",
           alignItems: "center",
-            backgroundColor: '#e1e1e1'
+          backgroundColor: "#e1e1e1"
         }}
       >
         <TextInput
           placeholder="Group name..."
           placeholderStyle={{ color: "#e1e1e1" }}
           style={{
-            width: width - 30,
-            height: 40,
-            paddingLeft: 10,
+            width: width - __d(30),
+            height: __d(40),
+            paddingLeft: __d(10),
             borderWidth: 1,
             borderColor: "#e1e1e1",
-            fontSize: 13,
+            fontSize: __d(13),
             fontStyle: this.state.groupNameSearch !== "" ? "normal" : "italic",
-              borderRadius: 5,
-              marginTop: 20,
-              backgroundColor: '#fff'
+            borderRadius: __d(5),
+            marginTop: __d(20),
+            backgroundColor: "#fff"
           }}
           onChangeText={name => {
             this.setState({ groupNameSearch: name });
             this.filterGroupName(name);
           }}
         />
-        <FlatList
-            style={{
-                borderTopWidth: 1,
-                borderTopColor: '#e1e1e1',
-                marginTop: 10,
-            }}
-          ref={ref => (this.flatList = ref)}
-          keyExtractor={(item, index) => index}
-          data={this.state.groupNameList}
-          extraData={this.state}
-          renderItem={({ item, index }) => this._renderItem(item, index)}
-        />
+          {
+              !_.isEmpty(this.state.groupNameList) ?
+                  <FlatList
+                      style={{
+                          borderTopWidth: 1,
+                          borderTopColor: "#e1e1e1",
+                          marginTop: __d(10)
+                      }}
+                      ref={ref => (this.flatList = ref)}
+                      keyExtractor={(item, index) => index}
+                      data={this.state.groupNameList}
+                      extraData={this.state}
+                      renderItem={({ item, index }) => this._renderItem(item, index)}
+                  />
+                  :
+                  <Text style={{
+                      marginTop: __d(10),
+                      //color: '#fff',
+                      fontSize: __d(18)
+                  }}>
+                      No group you can join!
+                  </Text>
+          }
         <Modal
           ref={ref => (this._modalEnterPas = ref)}
           style={{
-            width: 300,
-            height: 150,
+            width: __d(300),
+            height: __d(150),
             backgroundColor: "#fff",
-            borderRadius: 8,
+            borderRadius: __d(8),
             justifyContent: "center",
             alignItems: "center"
             //flexDirection: "row"
@@ -99,18 +112,17 @@ export default class GroupList extends Component {
           <TextInput
             placeholder="Group pass..."
             placeholderStyle={{
-                color: "#e1e1e1",
+              color: "#e1e1e1"
             }}
-
             style={{
-              marginTop: 5,
-              width: 250,
-              height: 40,
-              paddingLeft: 10,
-              borderRadius: 5,
-              borderWidth: 1,
+              marginTop: __d(5),
+              width: __d(250),
+              height: __d(40),
+              paddingLeft: __d(10),
+              borderRadius: __d(5),
+              borderWidth: __d(1),
               borderColor: "#e1e1e1",
-              fontSize: 13,
+              fontSize: __d(13),
               fontStyle: this.state.groupPass !== "" ? "normal" : "italic"
             }}
             onChangeText={txt => {
@@ -122,21 +134,25 @@ export default class GroupList extends Component {
               this.joinGroup();
             }}
             style={{
-              marginTop: 15,
-              width: 250,
-              height: 40,
+              marginTop: __d(15),
+              width: __d(250),
+              height: __d(40),
               justifyContent: "center",
               alignItems: "center",
               borderColor: "#e1e1e1",
-              borderWidth: 1,
-                backgroundColor: '#5DADE2',
-                borderRadius: 5
+              borderWidth: __d(1),
+              backgroundColor: "#5DADE2",
+              borderRadius: __d(5)
             }}
           >
-            <Text style={{
-                color: '#fff',
-                fontSize: 15
-            }}>Join group</Text>
+            <Text
+              style={{
+                color: "#fff",
+                fontSize: __d(15)
+              }}
+            >
+              Join group
+            </Text>
           </TouchableOpacity>
         </Modal>
       </View>
@@ -155,58 +171,63 @@ export default class GroupList extends Component {
   }
 
   _renderItem(item, index) {
-    //console.log(Object.values(this.state.groupNameList));
-    let name = item.groupName.replace("%", ".");
-    let numberOfGroup = Object.values(item.groupMember).length;
+    console.log(Object.values(this.state.groupNameList));
+    let name = item.groupName.replace("%", ".") || item.groupName;
+    let numberOfGroup = item.groupMember !== null ? Object.values(item.groupMember).length : 0;
     return (
       <View key={"_key " + item} style={{}}>
         <TouchableOpacity
           onPress={() => {
             this._modalEnterPas.open();
             this.setState({
-                groupSelectedToJoin: item
-            })
+              groupSelectedToJoin: item
+            });
           }}
           style={{
-            width: width ,
-            height: 50,
+            width: width,
+            height: __d(50),
             justifyContent: "center",
-              alignItems: 'center',
+            alignItems: "center",
             borderBottomWidth: 1,
             borderBottomColor: "#e1e1e1",
-              backgroundColor: '#fff',
-              flexDirection: 'row'
+            backgroundColor: "#fff",
+            flexDirection: "row"
           }}
         >
-            <View style={{
-                width: 50,
-                height: 50,
-                backgroundColor: '#5DADE2',
-                justifyContent: 'center',
-                alignItems: 'center'
-            }}>
-                <View style={{
-                    width: 35,
-                    height: 35,
-                    borderRadius: 17.5,
-                    borderWidth: 1.5,
-                    borderColor: '#fff',
-                    justifyContent: 'center',
-                    alignItems: 'center'
-                }}>
-                    <Text style={{
-                        color: "#fff"
-                    }}>
-                        {numberOfGroup}
-                    </Text>
-                </View>
-
+          <View
+            style={{
+              width: __d(50),
+              height: __d(50),
+              backgroundColor: "#5DADE2",
+              justifyContent: "center",
+              alignItems: "center"
+            }}
+          >
+            <View
+              style={{
+                width: __d(36),
+                height: __d(36),
+                borderRadius: __d(18),
+                borderWidth: __d(1),
+                borderColor: "#fff",
+                justifyContent: "center",
+                alignItems: "center"
+              }}
+            >
+              <Text
+                style={{
+                  color: "#fff"
+                }}
+              >
+                {numberOfGroup}
+              </Text>
             </View>
+          </View>
           <Text
             style={{
-              fontSize: 15,
-                flex: 1,
-                paddingLeft: 10
+              fontSize: __d(15),
+              flex: 1,
+              paddingLeft: __d(10)
             }}
           >
             {name}
@@ -219,16 +240,14 @@ export default class GroupList extends Component {
   joinGroup() {
     let _id = this.User.user.id;
     let isJoined = false;
-    this.FirebaseApi.myGroup.map((v, i)=>{
-       v === this.state.groupSelectedToJoin.groupName ? isJoined = true : null
+    this.FirebaseApi.myGroup.map((v, i) => {
+      v === this.state.groupSelectedToJoin.groupName ? (isJoined = true) : null;
     });
-    console.log(this.state.groupSelectedToJoin);
     _id === this.state.groupSelectedToJoin.createdGroupBy || isJoined // if user joined this group
       ? Alert.alert("Warning!", "You joined this group!")
       : this.state.groupPass === "" // if password is empty
         ? Alert.alert("Warning!", "Password is not empty!")
-        : this.state.groupPass ===
-        this.state.groupSelectedToJoin.groupPass // if password is true
+        : this.state.groupPass === this.state.groupSelectedToJoin.groupPass // if password is true
           ? (
               this.itemRefs
                 .child("Group")
@@ -242,12 +261,27 @@ export default class GroupList extends Component {
                 .child("Account")
                 .child(this.User.user.id)
                 .child("MyGroup")
-                  .child(this.state.groupSelectedToJoin.key)
+                .child(this.state.groupSelectedToJoin.key)
                 .update({
-                    groupName: this.state.groupSelectedToJoin.groupName
+                  groupName: this.state.groupSelectedToJoin.groupName
                 }),
               this._modalEnterPas.close()
             )
           : Alert.alert("Warning!", "Invalid password!");
+  }
+  async filterGroupData() {
+    let _this = this;
+    let groupData = this.state.groupNameList;
+      await this.FirebaseApi.myGroup.map((v, i) => {
+      groupData = _.find(groupData, function(o) {
+        return o.groupName !== v.groupName;
+      });
+      console.log(groupData)
+    });
+      //console.log(groupData);
+    groupData ?
+        this.setState({
+            groupNameList: groupData
+        }) : []
   }
 }

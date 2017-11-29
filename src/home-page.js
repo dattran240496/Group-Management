@@ -184,7 +184,7 @@ export default class Homepage extends Component {
               borderColor: "#e1e1e1",
               borderWidth: 1,
               backgroundColor: "#fff",
-                paddingTop: 15
+              paddingTop: 15
             }}
           >
             <Image
@@ -193,13 +193,13 @@ export default class Homepage extends Component {
                 flex: 1,
                 width: 40,
                 height: 40,
-                resizeMode: "contain",
+                resizeMode: "contain"
               }}
             />
             <Text
               style={{
                 flex: 1,
-                paddingTop: 5,
+                paddingTop: 5
               }}
             >
               New Group
@@ -220,7 +220,7 @@ export default class Homepage extends Component {
               borderWidth: 1,
               marginLeft: 10,
               backgroundColor: "#fff",
-                paddingTop: 15
+              paddingTop: 15
             }}
           >
             <Image
@@ -256,22 +256,26 @@ export default class Homepage extends Component {
               borderWidth: 1,
               marginTop: 10,
               backgroundColor: "#fff",
-                paddingTop: 15
+              paddingTop: 15
             }}
           >
-              <Image
-                  source={require("./images/home-page/my-group.png")}
-                  style={{
-                      width: 40,
-                      height: 40,
-                      resizeMode: "contain",
-                      flex: 1
-                  }}
-              />
-            <Text style={{
+            <Image
+              source={require("./images/home-page/my-group.png")}
+              style={{
+                width: 40,
+                height: 40,
+                resizeMode: "contain",
+                flex: 1
+              }}
+            />
+            <Text
+              style={{
                 flex: 1,
                 paddingTop: 5
-            }}>My Group</Text>
+              }}
+            >
+              My Group
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {}}
@@ -336,7 +340,7 @@ export default class Homepage extends Component {
           groupPass: child.child("groupPass").val(),
           groupName: child.child("groupName").val(),
           key: child.key,
-            groupMember: child.child("groupMember").val()
+          groupMember: child.child("groupMember").val()
         });
       });
       this.FirebaseApi.myGroup &&
