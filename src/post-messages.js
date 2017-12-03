@@ -30,7 +30,7 @@ export default class PostMessage extends Component {
     };
     this.Global = this.props.Global;
     this.FirebaseApi = this.props.FirebaseApi;
-      this.itemRefs = firebase.database().ref("app_expo");
+    this.itemRefs = firebase.database().ref("app_expo");
   }
   render() {
     return (
@@ -44,13 +44,15 @@ export default class PostMessage extends Component {
           placeholder="Message..."
           placeholderStyle={{ color: "#e1e1e1" }}
           style={{
-            width: width,
+            width: width - 30,
             height: 100,
             padding: 10,
-            fontSize: 15,
+            fontSize: 13,
             borderColor: "#e1e1e1",
             borderWidth: 1,
-            fontStyle: this.state.message !== "" ? "normal" : "italic"
+            fontStyle: this.state.message !== "" ? "normal" : "italic",
+            borderRadius: 5,
+            marginTop: 15
           }}
           onChangeText={message => {
             this.setState({
@@ -62,10 +64,9 @@ export default class PostMessage extends Component {
         />
         <TouchableOpacity
           onPress={() => {
-            this.state.message !== "" ? this.postMessage()
-                : (
-                    Alert.alert("Warning!", "Message is not empty!")
-                )
+            this.state.message !== ""
+              ? this.postMessage()
+              : Alert.alert("Warning!", "Message is not empty!");
           }}
           style={{
             justifyContent: "center",
@@ -75,16 +76,24 @@ export default class PostMessage extends Component {
             marginTop: 20,
             borderRadius: 5,
             borderColor: "#e1e1e1",
-            borderWidth: 1
+            borderWidth: 1,
+            backgroundColor: "#5DADE2"
           }}
         >
-          <Text>Post Message</Text>
+          <Text
+            style={{
+              color: "#fff",
+              fontSize: 15
+            }}
+          >
+            Post Message
+          </Text>
         </TouchableOpacity>
       </View>
     );
   }
   postMessage() {
-      // send notification
+    // send notification
     Object.values(this.FirebaseApi.members).map((v, i) => {
       fetch(this.Global.urlPushNoti, {
         method: "POST",
@@ -105,17 +114,32 @@ export default class PostMessage extends Component {
     });
     let timeAtPost = new Date(); // get time at post
     let hours = timeAtPost.getHours().toString().length === 1 ? "0" : ""; // if hour < 10 => add "0" previous
-    let minutes = timeAtPost.getMinutes().toString().length === 1 ? "0"  : ""; // if minute < 10 => add "0" previous
+    let minutes = timeAtPost.getMinutes().toString().length === 1 ? "0" : ""; // if minute < 10 => add "0" previous
 
-      // format time: dd/mm/yyyy - hh:mm
-    let formatTime = timeAtPost.getDate() + "/" + (timeAtPost.getMonth() + 1) + "/" + timeAtPost.getFullYear() +
-    " - " + hours + timeAtPost.getHours() + ":" + minutes + timeAtPost.getMinutes();
+    // format time: dd/mm/yyyy - hh:mm
+    let formatTime =
+      timeAtPost.getDate() +
+      "/" +
+      (timeAtPost.getMonth() + 1) +
+      "/" +
+      timeAtPost.getFullYear() +
+      " - " +
+      hours +
+      timeAtPost.getHours() +
+      ":" +
+      minutes +
+      timeAtPost.getMinutes();
 
     // post message + time
-    this.itemRefs.child("Group").child(this.Global.groupKey).child("postedMessages").push().set({
+    this.itemRefs
+      .child("Group")
+      .child(this.Global.groupKey)
+      .child("postedMessages")
+      .push()
+      .set({
         message: this.state.message,
         timeAtPost: formatTime
-    });
-      Actions.pop();
+      });
+    Actions.pop();
   }
 }

@@ -20,14 +20,14 @@ import firebase from "./api/api";
 import Modal from "react-native-modalbox";
 import Icon from "react-native-vector-icons/FontAwesome";
 const { width, height } = Dimensions.get("window");
-
+import { __d } from "./components/helpers/index";
 @autobind
 @observer
 export default class CheckAttendance extends Component {
   @observable name = null;
-  @observable info = null;
   @observable isChecking = false;
   @observable isEdit = false;
+  @observable info = null;
   constructor(props) {
     super(props);
     this.User = this.props.User;
@@ -41,17 +41,9 @@ export default class CheckAttendance extends Component {
     };
   }
   componentWillMount() {
-    //this.setState({});
-      let idAdmin = "";
-      this.itemRefs.child("Group").child(this.Global.groupKey).child("createdGroupBy").on("value", dataSnapshot =>{
-          idAdmin = dataSnapshot.val()
-      });
-      this.itemRefs.child("Group").child(this.Global.groupKey).child("groupName").on("value", dataSnapshot =>{
-          this.Global.groupName = dataSnapshot.val()
-      });
-      this.info = this.FirebaseApi.accountData[idAdmin];
-      this.getMembers();
-      this.getMessage();
+    this.getInfoAdminAndGroup();
+    this.getMembers();
+    this.getMessage();
   }
   componentDidMount() {
     this.itemRefs
@@ -69,95 +61,113 @@ export default class CheckAttendance extends Component {
             : (this.Global.modalType = false);
         });
       });
-
   }
   render() {
     return (
       <View
         style={{
-          flex: 1
+          flex: 1,
+          backgroundColor: "#fff"
         }}
       >
         <View
           style={{
-            flex: 0.7,
-            borderBottomColor: "#e1e1e1",
-            borderBottomWidth: 1,
+            width: width,
+            height: 64,
+            backgroundColor: "#5DADE2",
+            flexDirection: "row",
+            alignItems: "center",
             justifyContent: "center",
-            paddingLeft: 10,
             zIndex: 1
           }}
         >
+          <TouchableOpacity
+            onPress={() => {
+              Actions.pop({ type: "refresh" });
+            }}
+            style={{
+              left: 15,
+              top: 20,
+              position: "absolute"
+            }}
+          >
+            <Icon name="angle-left" size={32} color="#fff" />
+          </TouchableOpacity>
           <Text
             style={{
-              fontSize: 15,
-              fontWeight: "bold"
+              color: "#fff",
+              fontSize: 20,
+              marginTop: 10
             }}
           >
-            Group: {this.Global.groupName.toString().replace("%", ".")}
+            {this.Global.groupName.toString().replace("%", ".")}
           </Text>
-          <TouchableOpacity
-            style={{
-              position: "absolute",
-              right: 10
-            }}
-            onPress={() => {
-              this.isEdit = !this.isEdit;
-            }}
-          >
-            {this.isEdit
-              ? <View
-                  style={{
-                    width: 150,
-                    height: 50,
-                    position: "absolute",
-                    backgroundColor: "#fff",
-                    borderWidth: 1,
-                    borderColor: "#e1e1e1",
-                    top: 20,
-                    right: 5
-                  }}
-                >
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.isEdit = false;
-                      Actions.editGroup({
-                        title: "Change group name",
-                        typeEdit: "name"
-                      });
-                    }}
+          {this.info &&
+            this.info.email === this.User.user.email &&
+            <TouchableOpacity
+              style={{
+                position: "absolute",
+                right: 15,
+                top: 27
+              }}
+              onPress={() => {
+                this.isEdit = !this.isEdit;
+              }}
+            >
+              {this.isEdit
+                ? <View
                     style={{
                       width: 150,
-                      height: 25,
-                      justifyContent: "center",
-                      alignItems: "center",
-                      borderBottomWidth: 1,
-                      borderBottomColor: "#e1e1e1"
+                      height: 50,
+                      position: "absolute",
+                      backgroundColor: "#fff",
+                      borderWidth: 1,
+                      borderColor: "#e1e1e1",
+                      top: 20,
+                      right: 5,
+                      zIndex: 1
                     }}
                   >
-                    <Text>Change group name</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.isEdit = false;
-                      Actions.editGroup({
-                        title: "Change password",
-                        typeEdit: "password"
-                      });
-                    }}
-                    style={{
-                      width: 150,
-                      height: 25,
-                      justifyContent: "center",
-                      alignItems: "center"
-                    }}
-                  >
-                    <Text>Change password</Text>
-                  </TouchableOpacity>
-                </View>
-              : null}
-            <Icon name="cog" size={20} color="#000" />
-          </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => {
+                        this.isEdit = false;
+                        Actions.editGroup({
+                          title: "Change group name",
+                          typeEdit: "name"
+                        });
+                      }}
+                      style={{
+                        width: 150,
+                        height: 25,
+                        justifyContent: "center",
+                        alignItems: "center",
+                        borderBottomWidth: 1,
+                        borderBottomColor: "#e1e1e1"
+                      }}
+                    >
+                      <Text>Change group name</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => {
+                        this.isEdit = false;
+                        Actions.editGroup({
+                          title: "Change password",
+                          typeEdit: "password"
+                        });
+                      }}
+                      style={{
+                        width: 150,
+                        height: 25,
+                        justifyContent: "center",
+                        alignItems: "center"
+                      }}
+                    >
+                      <Text>Change password</Text>
+                    </TouchableOpacity>
+                  </View>
+                : null}
+              <Icon name="cog" size={20} color="#fff" />
+            </TouchableOpacity>}
         </View>
 
         <View
@@ -165,80 +175,103 @@ export default class CheckAttendance extends Component {
             flex: 2.5,
             borderBottomColor: "#e1e1e1",
             borderBottomWidth: 1,
-            flexDirection: "row",
-            alignItems: "center",
-            paddingLeft: 10,
-            zIndex: 0
+            padding: 10,
+            zIndex: 0,
+            borderTopColor: "#e1e1e1",
+            borderTopWidth: 1,
+            justifyContent: "center"
           }}
         >
-          <Image
-            source={{ uri: this.info.picture }}
+          <View
             style={{
-              width: 100,
-              height: 100,
-              borderRadius: 50,
-              resizeMode: "contain"
+              backgroundColor: "#5DADE2",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
+              borderRadius: 15,
+              padding: 10
             }}
-          />
+          >
+            <Image
+              source={this.info ? { uri: this.info.picture } : null}
+              style={{
+                width: 100,
+                height: 100,
+                borderRadius: 50,
+                resizeMode: "contain"
+              }}
+            />
 
-          <View>
-            <View style={{ paddingLeft: 20, flexDirection: "row" }}>
-              <Text
-                style={{
-                  fontSize: 20,
-                  width: 100
-                }}
-              >
-                Name
-              </Text>
-              <Text
-                style={{
-                  fontSize: 20
-                }}
-              >
-                :
-              </Text>
-              <Text
-                style={{
-                  fontSize: 20,
-                  paddingLeft: 5
-                }}
-              >
-                {this.info.name}
-              </Text>
-            </View>
-            <View style={{ paddingLeft: 20, flexDirection: "row" }}>
-              <Text
-                style={{
-                  fontSize: 20,
-                  width: 100
-                }}
-              >
-                Position
-              </Text>
-              <Text
-                style={{
-                  fontSize: 20
-                }}
-              >
-                :
-              </Text>
-              <Text
-                style={{
-                  fontSize: 20,
-                  paddingLeft: 5
-                }}
-              >
-                Lecture
-              </Text>
+            <View style={{ flex: 1, paddingLeft: 10 }}>
+              <View style={{ flexDirection: "row" }}>
+                <Text
+                  style={{
+                    fontSize: 13,
+                    width: 50,
+                    color: "#fff"
+                  }}
+                >
+                  Name
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 13,
+                    color: "#fff"
+                  }}
+                >
+                  :
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 15,
+                    paddingLeft: 5,
+                    color: "#FFF"
+                  }}
+                >
+                  {this.info ? this.info.name : ""}
+                </Text>
+              </View>
+              <View style={{ flexDirection: "row" }}>
+                <Text
+                  style={{
+                    fontSize: 13,
+                    width: 50,
+                    color: "#fff"
+                  }}
+                >
+                  Email
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 13,
+                    color: "#fff"
+                  }}
+                >
+                  :
+                </Text>
+                <Text
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                  style={{
+                    fontSize: 15,
+                    marginLeft: 5,
+                    color: "#fff",
+                    flex: 1
+                  }}
+                >
+                  {this.info ? this.info.email : ""}
+                </Text>
+              </View>
             </View>
           </View>
         </View>
+
         <View
           style={{
-            flex: 3,
+            flex: 5,
             borderBottomColor: "#e1e1e1",
-            borderBottomWidth: 1
+            borderBottomWidth: 1,
+            backgroundColor: "#FFF"
           }}
         >
           <FlatList
@@ -253,7 +286,6 @@ export default class CheckAttendance extends Component {
           />
           <View
             style={{
-              width: width,
               height: 10
             }}
           />
@@ -261,29 +293,35 @@ export default class CheckAttendance extends Component {
 
         <View
           style={{
-            flex: 5,
-            borderBottomColor: "#e1e1e1",
-            borderBottomWidth: 1,
+            width: width,
+            height: 190,
+            flexWrap: "wrap",
+            flexDirection: "row",
             justifyContent: "center",
-            alignItems: "center"
+              alignItems: "center"
           }}
         >
-          {this.info.email === this.User.user.email &&
+          {this.info &&
+            this.info.email === this.User.user.email &&
             <TouchableOpacity
               onPress={() => {
                 this.Global.modalType = "check-attendance";
               }}
               style={{
                 width: 150,
-                height: 50,
+                height: 80,
                 justifyContent: "center",
                 alignItems: "center",
                 borderRadius: 5,
                 borderColor: "#e1e1e1",
-                borderWidth: 1
+                borderWidth: 1,
+                backgroundColor: "#5DADE2"
               }}
             >
-              <Text style={{ fontSize: 15 }}>Check Attendance</Text>
+              <Icon name="check-circle-o" color="#fff" size={40} />
+              {/*<Text style={{ fontSize: 15, color: "#fff", paddingTop: 5 }}>*/}
+              {/*Check Attendance*/}
+              {/*</Text>*/}
             </TouchableOpacity>}
 
           <TouchableOpacity
@@ -292,57 +330,96 @@ export default class CheckAttendance extends Component {
             }}
             style={{
               width: 150,
-              height: 50,
+              height: 80,
               justifyContent: "center",
               alignItems: "center",
               borderRadius: 5,
               borderColor: "#e1e1e1",
               borderWidth: 1,
-              marginTop: 10
+              backgroundColor: "#5DADE2",
+              marginLeft: 10
             }}
           >
-            <Text style={{ fontSize: 15 }}>Members</Text>
+            <Icon name="users" color="#fff" size={40} />
+            {/*<Text style={{ fontSize: 15, color: "#fff" }}>Members</Text>*/}
           </TouchableOpacity>
 
-          {this.info.email === this.User.user.email &&
+          {this.info &&
+            this.info.email === this.User.user.email &&
             <TouchableOpacity
               style={{
                 width: 150,
-                height: 50,
+                height: 80,
                 justifyContent: "center",
                 alignItems: "center",
                 borderRadius: 5,
                 borderColor: "#e1e1e1",
                 borderWidth: 1,
+                backgroundColor: "#5DADE2",
                 marginTop: 10
               }}
               onPress={() => {
                 Actions.postMessage();
               }}
             >
-              <Text style={{ fontSize: 15 }}>Post Message</Text>
+              <Icon name="commenting-o" color="#fff" size={40} />
+              {/*<Text*/}
+              {/*style={{*/}
+              {/*fontSize: 15,*/}
+              {/*color: "#fff"*/}
+              {/*}}*/}
+              {/*>*/}
+              {/*Post Message*/}
+              {/*</Text>*/}
             </TouchableOpacity>}
-          {this.info.email === this.User.user.email &&
+          {this.info &&
+            this.info.email === this.User.user.email &&
             <TouchableOpacity
               style={{
                 width: 150,
-                height: 50,
+                height: 80,
                 justifyContent: "center",
                 alignItems: "center",
                 borderRadius: 5,
                 borderColor: "#e1e1e1",
                 borderWidth: 1,
+                backgroundColor: "#5DADE2",
+                marginLeft: 10,
                 marginTop: 10
               }}
               onPress={() => {
                 Actions.createPoll();
               }}
             >
-              <Text style={{ fontSize: 15 }}>Create Poll</Text>
+              <Icon name="flag" color="#fff" size={40} />
+              {/*<Text style={{ fontSize: 15, color: "#fff" }}>Create Poll</Text>*/}
             </TouchableOpacity>}
         </View>
       </View>
     );
+  }
+  getInfoAdminAndGroup() {
+    let _this = this;
+    let idAdmin = "";
+    this.itemRefs
+      .child("Group")
+      .child(this.Global.groupKey)
+      .child("createdGroupBy")
+      .on("value", dataSnapshot => {
+        idAdmin = dataSnapshot.val();
+        this.info = _this.FirebaseApi.accountData[dataSnapshot.val()];
+        this.info && this.Global.modalType === "loading"
+          ? (this.Global.modalType = false)
+          : null;
+      });
+
+    this.itemRefs
+      .child("Group")
+      .child(this.Global.groupKey)
+      .child("groupName")
+      .on("value", dataSnapshot => {
+        this.Global.groupName = dataSnapshot.val();
+      });
   }
   getMembers() {
     let key = {};
@@ -457,7 +534,7 @@ export default class CheckAttendance extends Component {
             height: 20,
             fontSize: 13,
             paddingLeft: 5,
-              fontStyle: 'italic'
+            fontStyle: "italic"
           }}
         >
           {item.timeAtPost}

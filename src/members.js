@@ -41,18 +41,25 @@ export default class Members extends Component {
   }
   render() {
     return (
-      <View style={{ flex: 1 }}>
+      <View
+        style={{
+          flex: 1,
+          alignItems: "center"
+        }}
+      >
         <TextInput
           placeholder="Email..."
           placeholderStyle={{ color: "#e1e1e1" }}
           style={{
-            width: width,
-            height: 50,
+            width: width - 30,
+            height: 40,
             paddingLeft: 10,
             borderWidth: 1,
             borderColor: "#e1e1e1",
-            fontSize: 15,
-            fontStyle: this.state.email !== "" ? "normal" : "italic"
+            fontSize: 13,
+            fontStyle: this.state.email !== "" ? "normal" : "italic",
+            borderRadius: 5,
+            marginTop: 20
           }}
           onChangeText={name => {
             this.setState({ email: name });
@@ -61,12 +68,19 @@ export default class Members extends Component {
         />
         <Text
           style={{
-            padding: 10
+            padding: 10,
+            alignItems: "flex-start",
+            width: width
           }}
         >
           Total members: {this.members.length}
         </Text>
         <FlatList
+          style={{
+            borderTopWidth: 1,
+            borderTopColor: "#e1e1e1",
+            marginTop: 10
+          }}
           ref={ref => (this.flatListMem = ref)}
           keyExtractor={(item, index) => index}
           data={this.members}

@@ -27,6 +27,7 @@ import CreatePoll from "./create-poll";
 import VotePoll from "./vote-poll";
 import EditGroup from "./edit-group";
 import Member from "./members";
+import Account from "./account";
 import ModalBox from "./components/index";
 import User from "./models/user";
 import Global from "./models/global";
@@ -59,32 +60,35 @@ export default class App extends Component {
 
   render() {
     return (
-      <Drawer
-        ref={ref => (this._drawer = ref)}
-        type="static"
-        content={<SideMenu User={this.User} closeDrawer={this.closeDrawer} />}
-        acceptDoubleTap
-        styles={{
-          main: { shadowColor: "#000000", shadowOpacity: 0.8, shadowRadius: 15 }
-        }}
-        onOpen={() => {
-          this.setState({ drawerOpen: true });
-        }}
-        onClose={() => {
-          this.setState({ drawerOpen: false });
-        }}
-        captureGestures={"open"}
-        tweenDuration={100}
-        panThreshold={0.08}
-        disabled={this.state.drawerDisabled}
-        openDrawerOffset={0.2}
-        closedDrawerOffset={0}
-        panOpenMask={0.2}
-        tapToClose={true}
-        negotiatePan
-        tweenHandler={ratio => ({
-          main: { opacity: (2 - ratio) / 2 }
-        })}
+      <View
+        // ref={ref => (this._drawer = ref)}
+        // type="static"
+        // content={<SideMenu User={this.User} closeDrawer={this.closeDrawer} />}
+        // acceptDoubleTap
+        // styles={{
+        //   main: { shadowColor: "#000000", shadowOpacity: 0.8, shadowRadius: 15 }
+        // }}
+        // onOpen={() => {
+        //   this.setState({ drawerOpen: true });
+        // }}
+        // onClose={() => {
+        //   this.setState({ drawerOpen: false });
+        // }}
+        // captureGestures={"open"}
+        // tweenDuration={100}
+        // panThreshold={0.08}
+        // disabled={this.state.drawerDisabled}
+        // openDrawerOffset={0.2}
+        // closedDrawerOffset={0}
+        // panOpenMask={0.2}
+        // tapToClose={true}
+        // negotiatePan
+        // tweenHandler={ratio => ({
+        //   main: { opacity: (2 - ratio) / 2 }
+        // })}
+          style={{
+              flex: 1
+          }}
       >
         <Router
           sceneStyle={{
@@ -102,6 +106,9 @@ export default class App extends Component {
           drawerMenuPress={() => {
             !this.state.drawerOpen && this.openDrawer();
             this.state.drawerOpen && this.closeDrawer();
+          }}
+          onSceneChange={props => {
+            Actions.pop({ type: "refresh" });
           }}
           User={this.User}
           FirebaseApi={this.FirebaseApi}
@@ -131,9 +138,12 @@ export default class App extends Component {
             schema="modal"
             direction="vertical"
             component={Homepage}
-            hideNavBar={false}
+            hideNavBar={true}
             navigationBarStyle={{
-                backgroundColor: "#fff"
+              backgroundColor: "#fff"
+            }}
+            sceneStyle={{
+              paddingTop: 0
             }}
           />
           <Scene
@@ -142,7 +152,10 @@ export default class App extends Component {
             component={GroupList}
             hideNavBar={false}
             navigationBarStyle={{
-                backgroundColor: "#fff"
+              backgroundColor: "#5DADE2"
+            }}
+            titleStyle={{
+              color: "#fff"
             }}
           />
           <Scene
@@ -151,7 +164,10 @@ export default class App extends Component {
             component={MyGroup}
             hideNavBar={false}
             navigationBarStyle={{
-                backgroundColor: "#fff"
+              backgroundColor: "#5DADE2"
+            }}
+            titleStyle={{
+              color: "#fff"
             }}
           />
           <Scene
@@ -160,16 +176,25 @@ export default class App extends Component {
             component={EnterGroupName}
             hideNavBar={false}
             navigationBarStyle={{
-                backgroundColor: "#fff"
+              backgroundColor: "#5DADE2"
+            }}
+            titleStyle={{
+              color: "#fff"
             }}
           />
           <Scene
+            sceneStyle={{
+              paddingTop: 0
+            }}
             key="checkAttendance"
             title="Check Attendance"
             component={CheckAttendance}
-            hideNavBar={false}
+            hideNavBar={true}
             navigationBarStyle={{
-                backgroundColor: "#fff"
+              backgroundColor: "#5DADE2"
+            }}
+            titleStyle={{
+              color: "#fff"
             }}
           />
           <Scene
@@ -178,7 +203,10 @@ export default class App extends Component {
             component={Member}
             hideNavBar={false}
             navigationBarStyle={{
-                backgroundColor: "#fff"
+              backgroundColor: "#5DADE2"
+            }}
+            titleStyle={{
+              color: "#fff"
             }}
           />
           <Scene
@@ -187,7 +215,10 @@ export default class App extends Component {
             component={PostMessage}
             hideNavBar={false}
             navigationBarStyle={{
-                backgroundColor: "#fff"
+              backgroundColor: "#5DADE2"
+            }}
+            titleStyle={{
+              color: "#fff"
             }}
           />
           <Scene
@@ -196,7 +227,10 @@ export default class App extends Component {
             component={DetailMessage}
             hideNavBar={false}
             navigationBarStyle={{
-                backgroundColor: "#fff"
+              backgroundColor: "#5DADE2"
+            }}
+            titleStyle={{
+              color: "#fff"
             }}
           />
           <Scene
@@ -205,7 +239,10 @@ export default class App extends Component {
             component={CreatePoll}
             hideNavBar={false}
             navigationBarStyle={{
-                backgroundColor: "#fff"
+              backgroundColor: "#5DADE2"
+            }}
+            titleStyle={{
+              color: "#fff"
             }}
           />
           <Scene
@@ -214,17 +251,35 @@ export default class App extends Component {
             component={VotePoll}
             hideNavBar={false}
             navigationBarStyle={{
-                backgroundColor: "#fff"
+              backgroundColor: "#5DADE2"
+            }}
+            titleStyle={{
+              color: "#fff"
             }}
           />
           <Scene
-              key="editGroup"
-              title=""
-              component={EditGroup}
-              hideNavBar={false}
-              navigationBarStyle={{
-                  backgroundColor: "#fff"
-              }}
+            key="editGroup"
+            title=""
+            component={EditGroup}
+            hideNavBar={false}
+            navigationBarStyle={{
+              backgroundColor: "#5DADE2"
+            }}
+            titleStyle={{
+              color: "#fff"
+            }}
+          />
+          <Scene
+            key="account"
+            title="Account"
+            component={Account}
+            hideNavBar={false}
+            navigationBarStyle={{
+              backgroundColor: "#5DADE2"
+            }}
+            titleStyle={{
+              color: "#fff"
+            }}
           />
         </Router>
         <ModalBox
@@ -232,7 +287,7 @@ export default class App extends Component {
           Firebase={this.FirebaseApi}
           User={this.User}
         />
-      </Drawer>
+      </View>
     );
   }
 }

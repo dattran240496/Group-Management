@@ -102,7 +102,6 @@ export default class VotePoll extends Component {
           });
         });
         this.optionsPoll = options;
-        console.log(options)
       });
     //console.log(this.state.messages);
     // if members and messages got, turn off modal loading

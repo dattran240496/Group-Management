@@ -16,103 +16,7 @@ import Loading from "./loading";
 import { _ } from "lodash";
 import firebase from "./api/api";
 import { __d } from "./components/helpers/index";
-async function setData(item, token) {
-  try {
-    await AsyncStorage.setItem("@user:key", JSON.stringify(item));
-  } catch (error) {
-    console.log(error);
-  }
-}
-async function registerForPushNotificationsAsync() {
-  // Android remote notification permissions are granted during the app
-  // install, so this will only ask on iOS
-  const { Permissions } = Expo;
-  let { status } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
-  //
 
-  // Stop here if the user did not grant permissions
-  if (status !== "granted") {
-    alert(
-      "Hey! You might want to enable notifications for my app, they are good."
-    );
-
-    return;
-  }
-
-  let token = await Notifications.getExpoPushTokenAsync();
-
-  return token;
-}
-async function getUserInfo(accessToken, itemRefs) {
-  let _this = this;
-  let userInfoResponse = await fetch(
-    "https://www.googleapis.com/userinfo/v2/me",
-    {
-      method: "GET",
-      headers: { Authorization: `Bearer ${accessToken}` },
-      "Content-Type": "application/json",
-      Accept: "application/json"
-    }
-  )
-    .then(response => response.json())
-    .then(responseJS => {
-      let register = registerForPushNotificationsAsync();
-      let token = "";
-      token !== ""
-        ? register.then(function(o) {
-            token = o;
-            itemRefs.child("Account").child(responseJS.id).update({
-              token: token,
-              infoAccount: responseJS
-            });
-            responseJS["token"] = token;
-            setData(responseJS);
-            return Actions.homePage({ user: responseJS, type: "replace" });
-          })
-        : setData(responseJS);
-      itemRefs.child("Account").child(responseJS.id).update({
-        token: token,
-        infoAccount: responseJS
-      });
-      return Actions.homePage({ user: responseJS, type: "replace" });
-    })
-    .catch(error => {
-      console.error(error);
-    });
-}
-async function signInWithGoogleAsync(itemRefs) {
-  let _this = this;
-  try {
-    const result = await Expo.Google.logInAsync({
-      androidClientId:
-        "796165831117-gvkmjfc8fo2756b3cascvufksetoh0rk.apps.googleusercontent.com",
-      iosClientId:
-        "796165831117-gcqiquek4o7a6mh2pbqovt7tnb1diphb.apps.googleusercontent.com",
-      scopes: ["profile", "email"]
-    });
-    if (result.type === "success") {
-      return getUserInfo(result.accessToken, itemRefs);
-    } else {
-      return Actions.login({ type: "replace" });
-    }
-  } catch (e) {
-    return Actions.login({ type: "replace" });
-  }
-}
-async function fetchAsync(itemRefs) {
-  //Actions.loading({ type: "replace" });
-  try {
-    let value = await AsyncStorage.getItem("@user:key");
-    value = JSON.parse(value);
-    if (value !== null) {
-      return Actions.homePage({ user: value, type: "replace" });
-    } else {
-      return signInWithGoogleAsync(itemRefs);
-    }
-  } catch (error) {
-    return false;
-  }
-}
 @autobind
 @observer
 export default class Login extends Component {
@@ -167,8 +71,8 @@ export default class Login extends Component {
             style={{
               width: __d(250),
               height: __d(50),
-              borderRadius: 5,
-              borderWidth: 1,
+              borderRadius: __d(5),
+              borderWidth: __d(1),
               borderColor: "#e1e1e1",
               justifyContent: "center",
               alignItems: "center",
@@ -176,14 +80,14 @@ export default class Login extends Component {
             }}
             onPress={() => {
               this.Global.modalType = "loading";
-              fetchAsync(this.itemRefs);
+              this.fetchAsync(this.itemRefs);
             }}
           >
             <Image
               source={require("./images/login/googleBtn.png")}
               style={{
-                width: 50,
-                height: 40,
+                width: __d(50),
+                height: __d(40),
                 resizeMode: "contain"
               }}
             />
@@ -192,7 +96,7 @@ export default class Login extends Component {
                 fontSize: __d(18),
                 color: "#fff",
                 paddingLeft: __d(5),
-                  fontWeight: 'bold'
+                fontWeight: "bold"
               }}
             >
               Login with Google
@@ -201,6 +105,113 @@ export default class Login extends Component {
         </View>
       </View>
     );
+  }
+
+  // set user data into local
+  async setData(item, token) {
+    try {
+      await AsyncStorage.setItem("@user:key", JSON.stringify(item));
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // get token of device to notification func
+  async registerForPushNotificationsAsync() {
+    // Android remote notification permissions are granted during the app
+    // install, so this will only ask on iOS
+    const { Permissions } = Expo;
+    let { status } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+    //
+
+    // Stop here if the user did not grant permissions
+    if (status !== "granted") {
+      alert(
+        "Hey! You might want to enable notifications for my app, they are good."
+      );
+
+      return;
+    }
+
+    let token = await Notifications.getExpoPushTokenAsync();
+
+    return token;
+  }
+  // get user info in local
+  async getUserInfo(accessToken, itemRefs) {
+    let _this = this;
+    let userInfoResponse = await fetch(
+      "https://www.googleapis.com/userinfo/v2/me",
+      {
+        method: "GET",
+        headers: { Authorization: `Bearer ${accessToken}` },
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      }
+    )
+      .then(response => response.json())
+      .then(responseJS => {
+        let register = _this.registerForPushNotificationsAsync();
+        let token = "";
+        token !== ""
+          ? register.then(function(o) {
+              token = o;
+              itemRefs.child("Account").child(responseJS.id).update({
+                token: token,
+                infoAccount: responseJS
+              });
+              responseJS["token"] = token;
+              _this.setData(responseJS);
+              return Actions.homePage({ user: responseJS, type: "replace" });
+            })
+          : this.setData(responseJS);
+        itemRefs.child("Account").child(responseJS.id).update({
+          token: token,
+          infoAccount: responseJS
+        });
+          this.Global.modalType = false;
+        return Actions.homePage({ user: responseJS, type: "replace" });
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+
+  // sign google
+  async signInWithGoogleAsync(itemRefs) {
+    let _this = this;
+    try {
+      const result = await Expo.Google.logInAsync({
+        androidClientId:
+          "796165831117-gvkmjfc8fo2756b3cascvufksetoh0rk.apps.googleusercontent.com",
+        iosClientId:
+          "796165831117-gcqiquek4o7a6mh2pbqovt7tnb1diphb.apps.googleusercontent.com",
+        scopes: ["profile", "email"]
+      });
+      if (result.type === "success") {
+        return this.getUserInfo(result.accessToken, itemRefs);
+      } else {
+        return Actions.login({ type: "replace" });
+      }
+    } catch (e) {
+        this.Global.modalType = false;
+        return Actions.login({ type: "replace" });
+    }
+  }
+
+  async fetchAsync(itemRefs) {
+    //Actions.loading({ type: "replace" });
+    try {
+      let value = await AsyncStorage.getItem("@user:key");
+      value = JSON.parse(value);
+      if (value !== null) {
+        return Actions.homePage({ user: value, type: "replace" });
+      } else {
+        return this.signInWithGoogleAsync(itemRefs);
+      }
+    } catch (error) {
+      return false;
+    }
   }
 }
 

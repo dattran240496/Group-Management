@@ -7,13 +7,8 @@ import { observer } from "mobx-react/native";
 import {Permissions, Notifications} from 'expo'
 import firebase from "firebase"
 @autobind
-class FirebaseApi {
-  @observable groupData = null; // info currently group
-  @observable accountData = null; // info user
-  @observable myGroup = null; // list group
-  @observable members = null; //
+class GroupList {
+    @observable groupDataList;
 }
-
-
-const firebaseApi = new FirebaseApi();
-export default firebaseApi;
+const groupList = new GroupList();
+export default groupList;

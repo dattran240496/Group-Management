@@ -98,13 +98,15 @@ export default class CreatePoll extends Component {
           placeholder="Ask something..."
           placeholderStyle={{ color: "#e1e1e1" }}
           style={{
-            width: width,
+            width: width - 30,
             height: 100,
             padding: 10,
             fontSize: 15,
             borderColor: "#e1e1e1",
             borderWidth: 1,
-            fontStyle: this.state.message !== "" ? "normal" : "italic"
+            fontStyle: this.state.message !== "" ? "normal" : "italic",
+              marginTop: 15,
+              borderRadius: 5
           }}
           onChangeText={message => {
             this.setState({
@@ -116,8 +118,8 @@ export default class CreatePoll extends Component {
         />
         <View
           style={{
-            width: width,
-            height: 100
+            width: width - 30,
+            height: 150
           }}
         >
           <ScrollView>
@@ -184,11 +186,15 @@ export default class CreatePoll extends Component {
             height: 50,
             marginTop: 20,
             borderRadius: 5,
-            borderColor: "#e1e1e1",
-            borderWidth: 1
+            borderColor: "#fff",
+            borderWidth: 1,
+              backgroundColor: "#5DADE2"
           }}
         >
-          <Text>Create Poll</Text>
+          <Text style={{
+              color: "#fff",
+              fontSize:  15
+          }}>Create Poll</Text>
         </TouchableOpacity>
       </View>
     );

@@ -53,7 +53,7 @@ export default class CheckAttendanceModal extends Component {
             backgroundColor: "#fff"
           }}
         >
-          <Icon name="times" color="#000" size={15} />
+          <Icon name="times" color="#5DADE2" size={15} />
         </TouchableOpacity>
         {!this.isChecking
           ? <TouchableOpacity
@@ -131,12 +131,15 @@ export default class CheckAttendanceModal extends Component {
                 justifyContent: "center",
                 alignItems: "center",
                 borderRadius: 5,
-                backgroundColor: "#fff",
-                borderColor: "#e1e1e1",
+                backgroundColor: "#5DADE2",
+                borderColor: "#fff",
                 borderWidth: 1
               }}
             >
-              <Text>Check attendance</Text>
+              <Text style={{
+                  fontSize: 13,
+                  color: "#fff"
+              }}>Check attendance</Text>
             </TouchableOpacity>
           : <Text>Members have already checked: {this.checkedMembers}</Text>}
 
@@ -161,13 +164,16 @@ export default class CheckAttendanceModal extends Component {
             justifyContent: "center",
             alignItems: "center",
             borderRadius: 5,
-            backgroundColor: "#fff",
+            backgroundColor: "#5DADE2",
             borderColor: "#e1e1e1",
             borderWidth: 1,
             marginTop: 10
           }}
         >
-          <Text>Done</Text>
+          <Text style={{
+            fontSize: 13,
+              color: "#fff"
+          }}>Done</Text>
         </TouchableOpacity>
       </View>
     );

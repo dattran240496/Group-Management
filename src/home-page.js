@@ -24,6 +24,7 @@ import { Permissions, Notifications } from "expo";
 const { width, height } = Dimensions.get("window");
 import { _ } from "lodash";
 import Swiper from "react-native-swiper";
+import { __d } from "./components/helpers/index";
 //import registerForPushNotificationsAsync from "./api/registerForPushNotificationsAsync"
 const PUSH_ENDPOINT = "https://exponent-push-server.herokuapp.com/tokens";
 @autobind
@@ -65,269 +66,121 @@ export default class Homepage extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View
-          style={{
-            width: width,
-            height: 200
-          }}
-        >
+        <View style={styles.swiper}>
           <Swiper>
-            <View
-              style={{
-                backgroundColor: "#5DADE2",
-                width: width,
-                height: 200,
-                justifyContent: "center",
-                alignItems: "center"
-              }}
-            >
-              <Text
-                style={{
-                  color: "#fff",
-                  fontSize: 18,
-                  fontWeight: "bold"
-                }}
-              >
-                CLASS MANAGEMANT IS SIMPLE
+            <View style={styles.swiper_view}>
+              <Text style={styles.swiper_title_txt}>
+                CLASS MANAGEMNT IS SIMPLE
               </Text>
-              <Text
-                style={{
-                  color: "#fff",
-                  fontSize: 16,
-                  textAlign: "center",
-                  paddingTop: 5
-                }}
-              >
+
+              <Text style={styles.swiper_info_txt}>
                 Make class management easier with the application.
               </Text>
             </View>
-            <View
-              style={{
-                backgroundColor: "#5DADE2",
-                width: width,
-                height: 200,
-                justifyContent: "center",
-                alignItems: "center"
-              }}
-            >
-              <Text
-                style={{
-                  color: "#fff",
-                  fontSize: 18,
-                  fontWeight: "bold"
-                }}
-              >
-                CLASS MANAGEMANT IS SIMPLE
+
+            <View style={styles.swiper_view}>
+              <Text style={styles.swiper_title_txt}>
+                CLASS MANAGEMNT IS SIMPLE
               </Text>
-              <Text
-                style={{
-                  color: "#fff",
-                  fontSize: 16,
-                  textAlign: "center",
-                  paddingTop: 5
-                }}
-              >
+
+              <Text style={styles.swiper_info_txt}>
                 Make class management easier with the application.
               </Text>
             </View>
-            <View
-              style={{
-                backgroundColor: "#5DADE2",
-                width: width,
-                height: 200,
-                justifyContent: "center",
-                alignItems: "center"
-              }}
-            >
-              <Text
-                style={{
-                  color: "#fff",
-                  fontSize: 18,
-                  fontWeight: "bold"
-                }}
-              >
-                CLASS MANAGEMANT IS SIMPLE
+
+            <View style={styles.swiper_view}>
+              <Text style={styles.swiper_title_txt}>
+                CLASS MANAGEMENT IS SIMPLE
               </Text>
-              <Text
-                style={{
-                  color: "#fff",
-                  fontSize: 16,
-                  textAlign: "center",
-                  paddingTop: 5
-                }}
-              >
+
+              <Text style={styles.swiper_info_txt}>
                 Make class management easier with the application.
               </Text>
             </View>
           </Swiper>
         </View>
 
-        <View
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            paddingTop: 30,
-            flexWrap: "wrap",
-            flexDirection: "row"
-          }}
-        >
+        <View style={styles.body_view}>
           <TouchableOpacity
             onPress={() => {
               Actions.enterGroupName();
             }}
-            style={{
-              width: 130,
-              height: 130,
-              borderRadius: 10,
-              justifyContent: "center",
-              alignItems: "center",
-              borderColor: "#e1e1e1",
-              borderWidth: 1,
-              backgroundColor: "#fff",
-              paddingTop: 15
-            }}
+            style={styles.body_btn_view}
           >
             <Image
               source={require("./images/home-page/new-group.png")}
-              style={{
-                flex: 1,
-                width: 40,
-                height: 40,
-                resizeMode: "contain"
-              }}
+              style={styles.body_btn_img}
             />
-            <Text
-              style={{
-                flex: 1,
-                paddingTop: 5
-              }}
-            >
-              New Group
-            </Text>
+            <Text style={styles.body_btn_txt}>New Group</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             onPress={() => {
+              this.FirebaseApi.groupData = null;
+              this.Global.modalType = "loading";
               Actions.groupList();
             }}
-            style={{
-              width: 130,
-              height: 130,
-              borderRadius: 10,
-              justifyContent: "center",
-              alignItems: "center",
-              borderColor: "#e1e1e1",
-              borderWidth: 1,
-              marginLeft: 10,
-              backgroundColor: "#fff",
-              paddingTop: 15
-            }}
+            style={[
+              styles.body_btn_view,
+              {
+                marginLeft: __d(10)
+              }
+            ]}
           >
             <Image
               source={require("./images/home-page/group-list.png")}
-              style={{
-                width: 60,
-                height: 60,
-                resizeMode: "contain",
-                flex: 1
-              }}
+              style={[
+                styles.body_btn_img,
+                {
+                  width: __d(60),
+                  height: __d(60)
+                }
+              ]}
             />
-            <Text
-              style={{
-                flex: 1,
-                paddingTop: 5
-              }}
-            >
-              Find Group
-            </Text>
+            <Text style={styles.body_btn_txt}>Find Group</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             onPress={() => {
               Actions.myGroup();
             }}
-            style={{
-              width: 130,
-              height: 130,
-              borderRadius: 10,
-              justifyContent: "center",
-              alignItems: "center",
-              borderColor: "#e1e1e1",
-              borderWidth: 1,
-              marginTop: 10,
-              backgroundColor: "#fff",
-              paddingTop: 15
-            }}
+            style={[
+              styles.body_btn_view,
+              {
+                marginTop: __d(10)
+              }
+            ]}
           >
             <Image
               source={require("./images/home-page/my-group.png")}
-              style={{
-                width: 40,
-                height: 40,
-                resizeMode: "contain",
-                flex: 1
-              }}
+              style={styles.body_btn_img}
             />
-            <Text
-              style={{
-                flex: 1,
-                paddingTop: 5
-              }}
-            >
-              My Group
-            </Text>
+            <Text style={styles.body_btn_txt}>My Group</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => {}}
-            style={{
-              width: 130,
-              height: 130,
-              borderRadius: 10,
-              justifyContent: "center",
-              alignItems: "center",
-              borderColor: "#e1e1e1",
-              borderWidth: 1,
-              marginLeft: 10,
-              marginTop: 10,
-              backgroundColor: "#fff"
-            }}
-          >
-            <Text>NULL</Text>
-          </TouchableOpacity>
-        </View>
-        <View
-          style={{
-            position: "absolute",
-            bottom: 10,
-            justifyContent: "center",
-            alignItems: "center",
-            width: width
-          }}
-        >
-          <TouchableOpacity
-            style={{
-              width: 100,
-              height: 30,
-              backgroundColor: "#e1e1e1",
-              justifyContent: "center",
-              alignItems: "center",
-              borderRadius: 3
-            }}
             onPress={() => {
-              this.FirebaseApi.groupData = null;
-              this.FirebaseApi.accountData = null;
-              this.FirebaseApi.myGroup = null;
-              AsyncStorage.removeItem("@user:key");
-              Actions.login({ type: "replace" });
+              Actions.account();
             }}
+            style={[
+              styles.body_btn_view,
+              {
+                marginLeft: __d(10),
+                marginTop: __d(10)
+              }
+            ]}
           >
-            <Text>Sign Out</Text>
+            <Image
+              source={require("./images/home-page/account.png")}
+              style={styles.body_btn_img}
+            />
+            <Text style={styles.body_btn_txt}>Account</Text>
           </TouchableOpacity>
         </View>
       </View>
     );
   }
 
+  // get all group on firebase
   getGroupName() {
     let group = {};
     let key = {};
@@ -335,13 +188,13 @@ export default class Homepage extends Component {
       this.FirebaseApi.groupData = [];
       dataSnapshot.forEach(child => {
         key = {};
-        this.FirebaseApi.groupData[child.key] = {
+        this.FirebaseApi.groupData.push({
           createdGroupBy: child.child("createdGroupBy").val(),
           groupPass: child.child("groupPass").val(),
           groupName: child.child("groupName").val(),
-          key: child.key,
+          groupKey: child.key,
           groupMember: child.child("groupMember").val()
-        };
+        });
       });
       this.FirebaseApi.myGroup &&
       this.FirebaseApi.groupData &&
@@ -352,6 +205,7 @@ export default class Homepage extends Component {
     });
   }
 
+  // get my group on firebase
   getMyGroup() {
     this.itemRefs
       .child("Account")
@@ -360,10 +214,10 @@ export default class Homepage extends Component {
       .on("value", dataSnapshot => {
         this.FirebaseApi.myGroup = [];
         dataSnapshot.forEach(child => {
-          this.FirebaseApi.myGroup[child.key] = {
+          this.FirebaseApi.myGroup.push({
             groupName: child.child("groupName").val(),
             groupKey: child.key
-          };
+          });
         });
         this.FirebaseApi.myGroup &&
         this.FirebaseApi.groupData &&
@@ -374,6 +228,7 @@ export default class Homepage extends Component {
       });
   }
 
+  // get all account on firebase
   getAccount() {
     this.itemRefs.child("Account").on("value", dataSnapshot => {
       this.FirebaseApi.accountData = [];
@@ -401,5 +256,55 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#e1e1e1"
+  },
+  swiper: {
+    width: width,
+    height: __d(250)
+  },
+  swiper_view: {
+    backgroundColor: "#5DADE2",
+    width: width,
+    height: __d(250),
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  swiper_title_txt: {
+    color: "#fff",
+    fontSize: __d(18),
+    fontWeight: "bold"
+  },
+  swiper_info_txt: {
+    color: "#fff",
+    fontSize: __d(16),
+    textAlign: "center",
+    paddingTop: __d(5)
+  },
+  body_view: {
+    flex: 1,
+    justifyContent: "center",
+    paddingTop: (height - __d(520)) / 2,
+    flexWrap: "wrap",
+    flexDirection: "row"
+  },
+  body_btn_view: {
+    width: __d(130),
+    height: __d(130),
+    borderRadius: __d(10),
+    justifyContent: "center",
+    alignItems: "center",
+    borderColor: "#e1e1e1",
+    borderWidth: __d(1),
+    backgroundColor: "#fff",
+    paddingTop: __d(15)
+  },
+  body_btn_img: {
+    width: __d(40),
+    height: __d(40),
+    resizeMode: "contain",
+    flex: 1
+  },
+  body_btn_txt: {
+    flex: 1,
+    paddingTop: __d(5)
   }
 });

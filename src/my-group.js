@@ -25,21 +25,19 @@ const { width, height } = Dimensions.get("window");
 @autobind
 @observer
 export default class MyGroup extends Component {
+  @observable numberGroupMem = 0;
   constructor(props) {
     super(props);
     this.User = this.props.User;
     this.Global = this.props.Global;
     this.FirebaseApi = this.props.FirebaseApi;
     this.itemRefs = firebase.database().ref("app_expo");
-    //this.getMyGroup();
     this.state = {
       myGroupName: "",
-      myGroupList: this.FirebaseApi.myGroup,
+      myGroupList: this.FirebaseApi.myGroup
     };
   }
   componentWillMount() {
-    this.setState({});
-
   }
   render() {
     return (
@@ -48,7 +46,7 @@ export default class MyGroup extends Component {
           flex: 1,
           justifyContent: "center",
           alignItems: "center",
-          backgroundColor: "#e1e1e1"
+          backgroundColor: "#fff"
         }}
       >
         <TextInput
@@ -67,8 +65,8 @@ export default class MyGroup extends Component {
             backgroundColor: "#fff"
           }}
           onChangeText={name => {
-              this.setState({ myGroupName: name });
-              this.filterGroupName(name);
+            this.setState({ myGroupName: name });
+            this.filterGroupName(name);
           }}
         />
         <FlatList
@@ -96,16 +94,20 @@ export default class MyGroup extends Component {
       .child("groupMember")
       .on("value", dataSnapshot => {
         groupMem = dataSnapshot.val();
+        index === this.FirebaseApi.myGroup.length - 1
+          ? (this.Global.modalType = false)
+          : null;
       });
     //console.log(Object.values(groupMem).length);
-      groupMem = groupMem ? Object.values(groupMem).length : 0;
+    groupMem = groupMem ? Object.values(groupMem).length : 0;
     return (
       <View key={"_key " + index} style={{}}>
         <TouchableOpacity
           onPress={() => {
             //this.state.groupName = Object.keys(item);
             this.Global.modalType = "loading";
-            (this.Global.groupKey = item.groupKey), Actions.checkAttendance();
+            this.Global.groupKey = item.groupKey;
+            Actions.checkAttendance();
           }}
           style={{
             width: width,
@@ -148,9 +150,9 @@ export default class MyGroup extends Component {
           </View>
           <Text
             style={{
-                fontSize: __d(15),
-                flex: 1,
-                paddingLeft: __d(10)
+              fontSize: __d(15),
+              flex: 1,
+              paddingLeft: __d(10)
             }}
           >
             {name}
@@ -159,15 +161,41 @@ export default class MyGroup extends Component {
       </View>
     );
   }
-    filterGroupName(name) {
-        let _this = this;
-        let groupData = this.FirebaseApi.myGroup;
-        groupData = _.filter(groupData, function(o) {
-            let regx = new RegExp(name.toLowerCase());
-            return regx.test(o.groupName.toString().toLowerCase());
-        });
-        this.setState({
-            myGroupList: groupData
-        });
-    }
+  filterGroupName(name) {
+    let _this = this;
+    let groupData = this.FirebaseApi.myGroup;
+    groupData = _.filter(groupData, function(o) {
+      let regx = new RegExp(name.toLowerCase());
+      return regx.test(o.groupName.toString().toLowerCase());
+    });
+    this.setState({
+      myGroupList: groupData
+    });
+  }
+  getMyGroup() {
+    // this.itemRefs
+    //   .child("Account")
+    //   .child(this.User.user.id)
+    //   .child("MyGroup")
+    //   .on("value", dataSnapshot => {
+    //     this.FirebaseApi.myGroup = [];
+    //     dataSnapshot.forEach(child => {
+    //       this.FirebaseApi.myGroup.push({
+    //         groupName: child.child("groupName").val(),
+    //         groupKey: child.key
+    //       });
+    //     });
+    //     !_.isEmpty(this.FirebaseApi.myGroup) &&
+    //     //this.FirebaseApi.groupData &&
+    //     //this.FirebaseApi.accountData &&
+    //     this.Global.modalType === "loading"
+    //       ? (
+    //           this.setState({
+    //             myGroupList: this.FirebaseApi.myGroup
+    //           }),
+    //           (this.Global.modalType = false)
+    //         )
+    //       : null;
+    //   });
+  }
 }

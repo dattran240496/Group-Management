@@ -25,13 +25,16 @@ import { __d } from "./components/helpers/index";
 @observer
 export default class GroupList extends Component {
   @observable group = [];
+  @observable groupFilter = [];
+  @observable groupNameList = [];
   constructor(props) {
     super(props);
     this.User = this.props.User;
     this.FirebaseApi = this.props.FirebaseApi;
+    this.Global = this.props.Global;
     this.state = {
       groupNameSearch: "",
-      groupNameList: this.FirebaseApi.groupData,
+      groupNameList: [],
       groupPass: "",
       groupSelectedToJoin: null,
       groupFilter: []
@@ -39,16 +42,18 @@ export default class GroupList extends Component {
     this.itemRefs = firebase.database().ref("app_expo");
   }
   componentWillMount() {
-    this.filterGroupData();
+    this.getGroupWithoutJoined();
+  }
+  componentDidMount() {
   }
   render() {
+    let dataGroupList = this.state.groupNameList;
     return (
       <View
         style={{
           flex: 1,
-          //justifyContent: "center",
           alignItems: "center",
-          backgroundColor: "#e1e1e1"
+          backgroundColor: "#fff"
         }}
       >
         <TextInput
@@ -71,29 +76,28 @@ export default class GroupList extends Component {
             this.filterGroupName(name);
           }}
         />
-          {
-              !_.isEmpty(this.state.groupNameList) ?
-                  <FlatList
-                      style={{
-                          borderTopWidth: 1,
-                          borderTopColor: "#e1e1e1",
-                          marginTop: __d(10)
-                      }}
-                      ref={ref => (this.flatList = ref)}
-                      keyExtractor={(item, index) => index}
-                      data={this.state.groupNameList}
-                      extraData={this.state}
-                      renderItem={({ item, index }) => this._renderItem(item, index)}
-                  />
-                  :
-                  <Text style={{
-                      marginTop: __d(10),
-                      //color: '#fff',
-                      fontSize: __d(18)
-                  }}>
-                      No group you can join!
-                  </Text>
-          }
+        {!_.isEmpty(this.state.groupNameList)
+          ? <FlatList
+              style={{
+                borderTopWidth: 1,
+                borderTopColor: "#e1e1e1",
+                marginTop: __d(10)
+              }}
+              ref={ref => (this.flatList = ref)}
+              keyExtractor={(item, index) => index}
+              data={dataGroupList}
+              extraData={this.state}
+              renderItem={({ item, index }) => this._renderItem(item, index)}
+            />
+          : <Text
+              style={{
+                marginTop: __d(10),
+                //color: '#fff',
+                fontSize: __d(18)
+              }}
+            >
+              No group you can join!
+            </Text>}
         <Modal
           ref={ref => (this._modalEnterPas = ref)}
           style={{
@@ -172,9 +176,11 @@ export default class GroupList extends Component {
 
   _renderItem(item, index) {
     let name = item.groupName.replace("%", ".");
-    let numberOfGroup = item.groupMember ? Object.values(item.groupMember).length : 0;
+    let numberOfGroup = item.groupMember
+      ? Object.values(item.groupMember).length
+      : 0;
     return (
-      <View key={"_key " + item} style={{}}>
+      <View key={"_key " + index} style={{}}>
         <TouchableOpacity
           onPress={() => {
             this._modalEnterPas.open();
@@ -250,7 +256,7 @@ export default class GroupList extends Component {
           ? (
               this.itemRefs
                 .child("Group")
-                .child(this.state.groupSelectedToJoin.key)
+                .child(this.state.groupSelectedToJoin.groupKey)
                 .child("groupMember")
                 .child(_id)
                 .update({
@@ -260,25 +266,62 @@ export default class GroupList extends Component {
                 .child("Account")
                 .child(this.User.user.id)
                 .child("MyGroup")
-                .child(this.state.groupSelectedToJoin.key)
+                .child(this.state.groupSelectedToJoin.groupKey)
                 .update({
                   groupName: this.state.groupSelectedToJoin.groupName
                 }),
-              this._modalEnterPas.close()
+              this._modalEnterPas.close(),
+              (this.Global.modalType = "loading"),
+              (this.Global.groupKey = this.state.groupSelectedToJoin.groupKey),
+              Actions.checkAttendance()
             )
           : Alert.alert("Warning!", "Invalid password!");
   }
-    filterGroupData() {
+  filterGroupData() {
     let _this = this;
-    let groupData = Object.values(this.FirebaseApi.groupData);
-          Object.values(this.FirebaseApi.myGroup).map((v, i) => {
+    let groupData = this.FirebaseApi.groupData;
+    this.FirebaseApi.myGroup.map((v, i) => {
       groupData = _.filter(groupData, function(o) {
-          return o.groupName !== v.groupName;
+        return o.groupName !== v.groupName;
       });
-       });
-        this.setState({
-            groupFilter: groupData,
-            groupNameList: groupData
-        })
+    });
+    this.setState({
+      groupFilter: groupData,
+      groupNameList: groupData
+    });
+    this.Global.modalType = false;
+  }
+
+  getGroupWithoutJoined() {
+    this.itemRefs
+      .child("Account")
+      .child(this.User.user.id)
+      .child("MyGroup")
+      .on("value", dataSnapshot => {
+        this.FirebaseApi.myGroup = [];
+        dataSnapshot.forEach(child => {
+          this.FirebaseApi.myGroup.push({
+            groupName: child.child("groupName").val(),
+            groupKey: child.key
+          });
+        });
+        this.itemRefs.child("Group").on("value", dataSnapshot => {
+          this.FirebaseApi.groupData = [];
+          dataSnapshot.forEach(child => {
+            key = {};
+            this.FirebaseApi.groupData.push({
+              createdGroupBy: child.child("createdGroupBy").val(),
+              groupPass: child.child("groupPass").val(),
+              groupName: child.child("groupName").val(),
+              groupKey: child.key,
+              groupMember: child.child("groupMember").val()
+            });
+          });
+
+          this.FirebaseApi.groupData !== null
+            ? this.filterGroupData()
+            : null;
+        });
+      });
   }
 }
