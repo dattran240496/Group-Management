@@ -64,70 +64,29 @@ export default class CheckAttendance extends Component {
   }
   render() {
     return (
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: "#fff"
-        }}
-      >
-        <View
-          style={{
-            width: width,
-            height: 64,
-            backgroundColor: "#5DADE2",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 1
-          }}
-        >
+      <View style={styles.container}>
+        <View style={styles.header_view}>
           <TouchableOpacity
             onPress={() => {
               Actions.pop({ type: "refresh" });
             }}
-            style={{
-              left: 15,
-              top: 20,
-              position: "absolute"
-            }}
+            style={styles.header_btn_back_view}
           >
-            <Icon name="angle-left" size={32} color="#fff" />
+            <Icon name="angle-left" size={__d(32)} color="#fff" />
           </TouchableOpacity>
-          <Text
-            style={{
-              color: "#fff",
-              fontSize: 20,
-              marginTop: 10
-            }}
-          >
+          <Text style={styles.header_txt}>
             {this.Global.groupName.toString().replace("%", ".")}
           </Text>
           {this.info &&
             this.info.email === this.User.user.email &&
             <TouchableOpacity
-              style={{
-                position: "absolute",
-                right: 15,
-                top: 27
-              }}
+              style={styles.header_btn_setting_view}
               onPress={() => {
                 this.isEdit = !this.isEdit;
               }}
             >
               {this.isEdit
-                ? <View
-                    style={{
-                      width: 150,
-                      height: 50,
-                      position: "absolute",
-                      backgroundColor: "#fff",
-                      borderWidth: 1,
-                      borderColor: "#e1e1e1",
-                      top: 20,
-                      right: 5,
-                      zIndex: 1
-                    }}
-                  >
+                ? <View style={styles.header_btn_setting_change_name_view}>
                     <TouchableOpacity
                       onPress={() => {
                         this.isEdit = false;
@@ -136,14 +95,7 @@ export default class CheckAttendance extends Component {
                           typeEdit: "name"
                         });
                       }}
-                      style={{
-                        width: 150,
-                        height: 25,
-                        justifyContent: "center",
-                        alignItems: "center",
-                        borderBottomWidth: 1,
-                        borderBottomColor: "#e1e1e1"
-                      }}
+                      style={styles.header_btn_setting_change_name_btn_view}
                     >
                       <Text>Change group name</Text>
                     </TouchableOpacity>
@@ -155,109 +107,47 @@ export default class CheckAttendance extends Component {
                           typeEdit: "password"
                         });
                       }}
-                      style={{
-                        width: 150,
-                        height: 25,
-                        justifyContent: "center",
-                        alignItems: "center"
-                      }}
+                      style={styles.header_btn_setting_change_pass_btn_view}
                     >
                       <Text>Change password</Text>
                     </TouchableOpacity>
                   </View>
                 : null}
-              <Icon name="cog" size={20} color="#fff" />
+              <Icon name="cog" size={__d(20)} color="#fff" />
             </TouchableOpacity>}
         </View>
 
-        <View
-          style={{
-            flex: 2.5,
-            borderBottomColor: "#e1e1e1",
-            borderBottomWidth: 1,
-            padding: 10,
-            zIndex: 0,
-            borderTopColor: "#e1e1e1",
-            borderTopWidth: 1,
-            justifyContent: "center"
-          }}
-        >
-          <View
-            style={{
-              backgroundColor: "#5DADE2",
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-              borderRadius: 15,
-              padding: 10
-            }}
-          >
+        <View style={styles.admin_info_view}>
+          <View style={styles.admin_info_bg_view}>
             <Image
               source={this.info ? { uri: this.info.picture } : null}
-              style={{
-                width: 100,
-                height: 100,
-                borderRadius: 50,
-                resizeMode: "contain"
-              }}
+              style={styles.admin_info_img}
             />
 
-            <View style={{ flex: 1, paddingLeft: 10 }}>
+            <View style={styles.admin_info}>
               <View style={{ flexDirection: "row" }}>
-                <Text
-                  style={{
-                    fontSize: 13,
-                    width: 50,
-                    color: "#fff"
-                  }}
-                >
-                  Name
-                </Text>
-                <Text
-                  style={{
-                    fontSize: 13,
-                    color: "#fff"
-                  }}
-                >
-                  :
-                </Text>
-                <Text
-                  style={{
-                    fontSize: 15,
-                    paddingLeft: 5,
-                    color: "#FFF"
-                  }}
-                >
+                <Text style={styles.txt_name}>Name</Text>
+                <Text style={styles.txt_name}>:</Text>
+                <Text style={styles.admin_info_name}>
                   {this.info ? this.info.name : ""}
                 </Text>
               </View>
               <View style={{ flexDirection: "row" }}>
                 <Text
-                  style={{
-                    fontSize: 13,
-                    width: 50,
-                    color: "#fff"
-                  }}
+                  style={[
+                    styles.txt_name,
+                    {
+                      width: __d(50)
+                    }
+                  ]}
                 >
                   Email
                 </Text>
-                <Text
-                  style={{
-                    fontSize: 13,
-                    color: "#fff"
-                  }}
-                >
-                  :
-                </Text>
+                <Text style={styles.txt_name}>:</Text>
                 <Text
                   numberOfLines={1}
                   ellipsizeMode="tail"
-                  style={{
-                    fontSize: 15,
-                    marginLeft: 5,
-                    color: "#fff",
-                    flex: 1
-                  }}
+                  style={styles.admin_info_email}
                 >
                   {this.info ? this.info.email : ""}
                 </Text>
@@ -266,17 +156,10 @@ export default class CheckAttendance extends Component {
           </View>
         </View>
 
-        <View
-          style={{
-            flex: 5,
-            borderBottomColor: "#e1e1e1",
-            borderBottomWidth: 1,
-            backgroundColor: "#FFF"
-          }}
-        >
+        <View style={styles.list_mess_view}>
           <FlatList
             style={{
-              padding: 5
+              padding: __d(5)
             }}
             ref={ref => (this.postMessage = ref)}
             keyExtractor={(item, index) => index}
@@ -291,108 +174,65 @@ export default class CheckAttendance extends Component {
           />
         </View>
 
-        <View
-          style={{
-            width: width,
-            height: 190,
-            flexWrap: "wrap",
-            flexDirection: "row",
-            justifyContent: "center",
-              alignItems: "center"
-          }}
-        >
+        <View style={[styles.func_view,{
+          paddingTop: this.info && this.info.email === this.User.user.email ? __d(10) : null,
+          alignItems: this.info && this.info.email !== this.User.user.email ? "center" : null,
+        }]}>
           {this.info &&
             this.info.email === this.User.user.email &&
             <TouchableOpacity
               onPress={() => {
                 this.Global.modalType = "check-attendance";
               }}
-              style={{
-                width: 150,
-                height: 80,
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: 5,
-                borderColor: "#e1e1e1",
-                borderWidth: 1,
-                backgroundColor: "#5DADE2"
-              }}
+              style={styles.func_btn_view}
             >
-              <Icon name="check-circle-o" color="#fff" size={40} />
-              {/*<Text style={{ fontSize: 15, color: "#fff", paddingTop: 5 }}>*/}
-              {/*Check Attendance*/}
-              {/*</Text>*/}
+              <Icon name="check-circle-o" color="#fff" size={__d(40)} />
             </TouchableOpacity>}
 
           <TouchableOpacity
             onPress={() => {
               Actions.members();
             }}
-            style={{
-              width: 150,
-              height: 80,
-              justifyContent: "center",
-              alignItems: "center",
-              borderRadius: 5,
-              borderColor: "#e1e1e1",
-              borderWidth: 1,
-              backgroundColor: "#5DADE2",
-              marginLeft: 10
-            }}
+            style={[
+              styles.func_btn_view,
+              {
+                marginLeft: __d(10)
+              }
+            ]}
           >
-            <Icon name="users" color="#fff" size={40} />
-            {/*<Text style={{ fontSize: 15, color: "#fff" }}>Members</Text>*/}
+            <Icon name="users" color="#fff" size={__d(40)} />
           </TouchableOpacity>
 
           {this.info &&
             this.info.email === this.User.user.email &&
             <TouchableOpacity
-              style={{
-                width: 150,
-                height: 80,
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: 5,
-                borderColor: "#e1e1e1",
-                borderWidth: 1,
-                backgroundColor: "#5DADE2",
-                marginTop: 10
-              }}
+              style={[
+                styles.func_btn_view,
+                {
+                  marginTop: __d(10)
+                }
+              ]}
               onPress={() => {
                 Actions.postMessage();
               }}
             >
-              <Icon name="commenting-o" color="#fff" size={40} />
-              {/*<Text*/}
-              {/*style={{*/}
-              {/*fontSize: 15,*/}
-              {/*color: "#fff"*/}
-              {/*}}*/}
-              {/*>*/}
-              {/*Post Message*/}
-              {/*</Text>*/}
+              <Icon name="commenting-o" color="#fff" size={__d(40)} />
             </TouchableOpacity>}
           {this.info &&
             this.info.email === this.User.user.email &&
             <TouchableOpacity
-              style={{
-                width: 150,
-                height: 80,
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: 5,
-                borderColor: "#e1e1e1",
-                borderWidth: 1,
-                backgroundColor: "#5DADE2",
-                marginLeft: 10,
-                marginTop: 10
-              }}
+              style={[
+                styles.func_btn_view,
+                {
+                  marginLeft: __d(10),
+                  marginTop: __d(10)
+                }
+              ]}
               onPress={() => {
                 Actions.createPoll();
               }}
             >
-              <Icon name="flag" color="#fff" size={40} />
-              {/*<Text style={{ fontSize: 15, color: "#fff" }}>Create Poll</Text>*/}
+              <Icon name="flag" color="#fff" size={__d(40)} />
             </TouchableOpacity>}
         </View>
       </View>
@@ -483,23 +323,13 @@ export default class CheckAttendance extends Component {
   }
   _renderMessages(item, index) {
     return (
-      <View
-        style={{
-          width: width,
-          height: 20,
-          justifyContent: "center",
-          flexDirection: "row"
-        }}
-      >
+      <View style={styles.child_mess_view}>
         {item.options
           ? <Icon
               name="flag"
               color="#e1e1e1"
-              size={15}
-              style={{
-                justifyContent: "center",
-                paddingRight: 5
-              }}
+              size={__d(15)}
+              style={styles.child_mess_poll_icon}
             />
           : null}
         <TouchableOpacity
@@ -513,33 +343,164 @@ export default class CheckAttendance extends Component {
               : Actions.detailMessage({ detailMessage: item });
           }}
           style={{
-            width: item.options ? width - 170 : width - 150,
-            height: 20
+            width: item.options ? width - __d(170) : width - __d(150),
+            height: __d(20)
           }}
         >
           <Text
             numberOfLines={1}
             ellipsizeMode="tail"
             style={{
-              fontSize: 13,
+              fontSize: __d(13),
               color: item.options ? "red" : null
             }}
           >
             {item.message}
           </Text>
         </TouchableOpacity>
-        <Text
-          style={{
-            width: 130,
-            height: 20,
-            fontSize: 13,
-            paddingLeft: 5,
-            fontStyle: "italic"
-          }}
-        >
+        <Text style={styles.child_mess_time_at_post}>
           {item.timeAtPost}
         </Text>
       </View>
     );
   }
 }
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff"
+  },
+  header_view: {
+    width: width,
+    height: __d(64),
+    backgroundColor: "#5DADE2",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 1
+  },
+  header_btn_back_view: {
+    left: __d(15),
+    top: __d(20),
+    position: "absolute"
+  },
+  header_txt: {
+    color: "#fff",
+    fontSize: __d(20),
+    marginTop: __d(10)
+  },
+  header_btn_setting_view: {
+    position: "absolute",
+    right: __d(15),
+    top: __d(27)
+  },
+  header_btn_setting_change_name_view: {
+    width: __d(150),
+    height: __d(50),
+    position: "absolute",
+    backgroundColor: "#fff",
+    borderWidth: __d(1),
+    borderColor: "#e1e1e1",
+    top: __d(20),
+    right: __d(5),
+    zIndex: 1
+  },
+  header_btn_setting_change_name_btn_view: {
+    width: __d(150),
+    height: __d(25),
+    justifyContent: "center",
+    alignItems: "center",
+    borderBottomWidth: __d(1),
+    borderBottomColor: "#e1e1e1"
+  },
+  header_btn_setting_change_pass_btn_view: {
+    width: __d(150),
+    height: __d(25),
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  admin_info_view: {
+    flex: 2.5,
+    borderBottomColor: "#e1e1e1",
+    borderBottomWidth: __d(1),
+    padding: __d(10),
+    zIndex: 0,
+    borderTopColor: "#e1e1e1",
+    borderTopWidth: __d(1),
+    justifyContent: "center"
+  },
+  admin_info_bg_view: {
+    backgroundColor: "#5DADE2",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: __d(15),
+    padding: __d(10)
+  },
+  admin_info_img: {
+    width: __d(100),
+    height: __d(100),
+    borderRadius: __d(50),
+    resizeMode: "contain"
+  },
+  admin_info: {
+    flex: 1,
+    paddingLeft: __d(10)
+  },
+  txt_name: {
+    fontSize: __d(13),
+    width: __d(50),
+    color: "#fff"
+  },
+  admin_info_name: {
+    fontSize: __d(15),
+    paddingLeft: __d(5),
+    color: "#FFF"
+  },
+  admin_info_email: {
+    fontSize: __d(15),
+    marginLeft: __d(5),
+    color: "#fff",
+    flex: 1
+  },
+  list_mess_view: {
+    flex: __d(5),
+    borderBottomColor: "#e1e1e1",
+    borderBottomWidth: __d(1),
+    backgroundColor: "#FFF"
+  },
+  child_mess_view: {
+    width: width,
+    height: __d(20),
+    justifyContent: "center",
+    flexDirection: "row"
+  },
+  child_mess_poll_icon: {
+    justifyContent: "center",
+    paddingRight: __d(5)
+  },
+  child_mess_time_at_post: {
+    width: __d(130),
+    height: __d(20),
+    fontSize: __d(13),
+    paddingLeft: __d(5),
+    fontStyle: "italic"
+  },
+  func_view: {
+    width: width,
+    height: __d(190),
+    flexWrap: "wrap",
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  func_btn_view: {
+    width: __d(150),
+    height: __d(80),
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: __d(5),
+    borderColor: "#e1e1e1",
+    borderWidth: __d(1),
+    backgroundColor: "#5DADE2"
+  }
+});

@@ -50,27 +50,14 @@ export default class GroupList extends Component {
     let dataGroupList = this.state.groupNameList;
     return (
       <View
-        style={{
-          flex: 1,
-          alignItems: "center",
-          backgroundColor: "#fff"
-        }}
+        style={styles.container}
       >
         <TextInput
           placeholder="Group name..."
           placeholderStyle={{ color: "#e1e1e1" }}
-          style={{
-            width: width - __d(30),
-            height: __d(40),
-            paddingLeft: __d(10),
-            borderWidth: 1,
-            borderColor: "#e1e1e1",
-            fontSize: __d(13),
-            fontStyle: this.state.groupNameSearch !== "" ? "normal" : "italic",
-            borderRadius: __d(5),
-            marginTop: __d(20),
-            backgroundColor: "#fff"
-          }}
+          style={[styles.txtInput_search, {
+              fontStyle: this.state.groupNameSearch !== "" ? "normal" : "italic",
+          }]}
           onChangeText={name => {
             this.setState({ groupNameSearch: name });
             this.filterGroupName(name);
@@ -78,11 +65,7 @@ export default class GroupList extends Component {
         />
         {!_.isEmpty(this.state.groupNameList)
           ? <FlatList
-              style={{
-                borderTopWidth: 1,
-                borderTopColor: "#e1e1e1",
-                marginTop: __d(10)
-              }}
+              style={styles.fl_view}
               ref={ref => (this.flatList = ref)}
               keyExtractor={(item, index) => index}
               data={dataGroupList}
@@ -90,25 +73,13 @@ export default class GroupList extends Component {
               renderItem={({ item, index }) => this._renderItem(item, index)}
             />
           : <Text
-              style={{
-                marginTop: __d(10),
-                //color: '#fff',
-                fontSize: __d(18)
-              }}
+              style={styles.txt_no_group}
             >
               No group you can join!
             </Text>}
         <Modal
           ref={ref => (this._modalEnterPas = ref)}
-          style={{
-            width: __d(300),
-            height: __d(150),
-            backgroundColor: "#fff",
-            borderRadius: __d(8),
-            justifyContent: "center",
-            alignItems: "center"
-            //flexDirection: "row"
-          }}
+          style={styles.modal_view}
           position={"center"}
           swipeToClose={false}
           coverScreen={true}
@@ -118,17 +89,9 @@ export default class GroupList extends Component {
             placeholderStyle={{
               color: "#e1e1e1"
             }}
-            style={{
-              marginTop: __d(5),
-              width: __d(250),
-              height: __d(40),
-              paddingLeft: __d(10),
-              borderRadius: __d(5),
-              borderWidth: __d(1),
-              borderColor: "#e1e1e1",
-              fontSize: __d(13),
-              fontStyle: this.state.groupPass !== "" ? "normal" : "italic"
-            }}
+            style={[styles.txt_input_pass,{
+                fontStyle: this.state.groupPass !== "" ? "normal" : "italic"
+            }]}
             onChangeText={txt => {
               this.setState({ groupPass: txt });
             }}
@@ -137,23 +100,10 @@ export default class GroupList extends Component {
             onPress={() => {
               this.joinGroup();
             }}
-            style={{
-              marginTop: __d(15),
-              width: __d(250),
-              height: __d(40),
-              justifyContent: "center",
-              alignItems: "center",
-              borderColor: "#e1e1e1",
-              borderWidth: __d(1),
-              backgroundColor: "#5DADE2",
-              borderRadius: __d(5)
-            }}
+            style={styles.btn_join_view}
           >
             <Text
-              style={{
-                color: "#fff",
-                fontSize: __d(15)
-              }}
+              style={styles.btn_join_txt}
             >
               Join group
             </Text>
@@ -188,52 +138,23 @@ export default class GroupList extends Component {
               groupSelectedToJoin: item
             });
           }}
-          style={{
-            width: width,
-            height: __d(50),
-            justifyContent: "center",
-            alignItems: "center",
-            borderBottomWidth: 1,
-            borderBottomColor: "#e1e1e1",
-            backgroundColor: "#fff",
-            flexDirection: "row"
-          }}
+          style={styles.btn_group_view}
         >
           <View
-            style={{
-              width: __d(50),
-              height: __d(50),
-              backgroundColor: "#5DADE2",
-              justifyContent: "center",
-              alignItems: "center"
-            }}
+            style={styles.btn_mem_number_view}
           >
             <View
-              style={{
-                width: __d(36),
-                height: __d(36),
-                borderRadius: __d(18),
-                borderWidth: __d(1),
-                borderColor: "#fff",
-                justifyContent: "center",
-                alignItems: "center"
-              }}
+              style={styles.btn_mem_number_circle_view}
             >
               <Text
-                style={{
-                  color: "#fff"
-                }}
+                style={styles.btn_mem_number_circle_txt}
               >
                 {numberOfGroup}
               </Text>
             </View>
           </View>
           <Text
-            style={{
-              fontSize: __d(15),
-              flex: 1,
-              paddingLeft: __d(10)
-            }}
+            style={styles.btn_group_txt}
           >
             {name}
           </Text>
@@ -271,12 +192,13 @@ export default class GroupList extends Component {
                   groupName: this.state.groupSelectedToJoin.groupName
                 }),
               this._modalEnterPas.close(),
-              (this.Global.modalType = "loading"),
-              (this.Global.groupKey = this.state.groupSelectedToJoin.groupKey),
+              this.Global.modalType = "loading",
+              this.Global.groupKey = this.state.groupSelectedToJoin.groupKey,
               Actions.checkAttendance()
             )
           : Alert.alert("Warning!", "Invalid password!");
   }
+
   filterGroupData() {
     let _this = this;
     let groupData = this.FirebaseApi.groupData;
@@ -308,7 +230,6 @@ export default class GroupList extends Component {
         this.itemRefs.child("Group").on("value", dataSnapshot => {
           this.FirebaseApi.groupData = [];
           dataSnapshot.forEach(child => {
-            key = {};
             this.FirebaseApi.groupData.push({
               createdGroupBy: child.child("createdGroupBy").val(),
               groupPass: child.child("groupPass").val(),
@@ -325,3 +246,99 @@ export default class GroupList extends Component {
       });
   }
 }
+const styles = StyleSheet.create({
+    container:{
+        flex: 1,
+        alignItems: "center",
+        backgroundColor: "#fff"
+    },
+    txtInput_search:{
+        width: width - __d(30),
+        height: __d(40),
+        paddingLeft: __d(10),
+        borderWidth: 1,
+        borderColor: "#e1e1e1",
+        fontSize: __d(13),
+        borderRadius: __d(5),
+        marginTop: __d(20),
+        backgroundColor: "#fff",
+    },
+    fl_view:{
+        borderTopWidth: 1,
+        borderTopColor: "#e1e1e1",
+        marginTop: __d(10)
+    },
+    txt_no_group:{
+        marginTop: __d(10),
+        //color: '#fff',
+        fontSize: __d(18)
+    },
+    modal_view:{
+        width: __d(300),
+        height: __d(150),
+        backgroundColor: "#fff",
+        borderRadius: __d(8),
+        justifyContent: "center",
+        alignItems: "center"
+        //flexDirection: "row"
+    },
+    txt_input_pass:{
+        marginTop: __d(5),
+        width: __d(250),
+        height: __d(40),
+        paddingLeft: __d(10),
+        borderRadius: __d(5),
+        borderWidth: __d(1),
+        borderColor: "#e1e1e1",
+        fontSize: __d(13),
+    },
+    btn_join_view:{
+        marginTop: __d(15),
+        width: __d(250),
+        height: __d(40),
+        justifyContent: "center",
+        alignItems: "center",
+        borderColor: "#e1e1e1",
+        borderWidth: __d(1),
+        backgroundColor: "#5DADE2",
+        borderRadius: __d(5)
+    },
+    btn_join_txt:{
+        color: "#fff",
+        fontSize: __d(15)
+    },
+    btn_group_view:{
+        width: width,
+        height: __d(50),
+        justifyContent: "center",
+        alignItems: "center",
+        borderBottomWidth: 1,
+        borderBottomColor: "#e1e1e1",
+        backgroundColor: "#fff",
+        flexDirection: "row"
+    },
+    btn_mem_number_view:{
+        width: __d(50),
+        height: __d(50),
+        backgroundColor: "#5DADE2",
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    btn_mem_number_circle_view:{
+        width: __d(36),
+        height: __d(36),
+        borderRadius: __d(18),
+        borderWidth: __d(1),
+        borderColor: "#fff",
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    btn_mem_number_circle_txt:{
+        color: "#fff"
+    },
+    btn_group_txt:{
+        fontSize: __d(15),
+        flex: 1,
+        paddingLeft: __d(10)
+    }
+});

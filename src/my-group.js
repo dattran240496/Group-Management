@@ -37,50 +37,71 @@ export default class MyGroup extends Component {
       myGroupList: this.FirebaseApi.myGroup
     };
   }
-  componentWillMount() {
-  }
+  componentWillMount() {}
   render() {
     return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: "#fff"
-        }}
-      >
+      <View style={styles.container}>
         <TextInput
           placeholder="Group name..."
           placeholderStyle={{ color: "#e1e1e1" }}
-          style={{
-            width: width - __d(30),
-            height: __d(40),
-            paddingLeft: __d(10),
-            borderWidth: 1,
-            borderColor: "#e1e1e1",
-            fontSize: __d(13),
-            fontStyle: this.state.myGroupName !== "" ? "normal" : "italic",
-            borderRadius: __d(5),
-            marginTop: __d(20),
-            backgroundColor: "#fff"
-          }}
+          style={[
+            styles.text_input_view,
+            {
+              fontStyle: this.state.myGroupName !== "" ? "normal" : "italic"
+            }
+          ]}
           onChangeText={name => {
             this.setState({ myGroupName: name });
             this.filterGroupName(name);
           }}
         />
-        <FlatList
-          style={{
-            borderTopWidth: 1,
-            borderTopColor: "#e1e1e1",
-            marginTop: __d(10)
-          }}
-          ref={ref => (this.flatListMyGroup = ref)}
-          keyExtractor={(item, index) => index}
-          data={this.state.myGroupList}
-          extraData={this.state}
-          renderItem={({ item, index }) => this._renderItem(item, index)}
-        />
+          {
+            !_.isEmpty(this.state.myGroupList) ? (
+                <FlatList
+                    style={styles.flat_list_view}
+                    ref={ref => (this.flatListMyGroup = ref)}
+                    keyExtractor={(item, index) => index}
+                    data={this.state.myGroupList}
+                    extraData={this.state}
+                    renderItem={({ item, index }) => this._renderItem(item, index)}
+                />
+              ) : (
+
+                  <View style={{
+                    paddingTop: __d(10),
+                      justifyContent: 'center',
+                      alignItems: 'center'
+                  }}>
+                    <Text style={{
+                      fontSize: __d(18)
+                    }}>
+                      You have not joined the group!
+                    </Text>
+                    <TouchableOpacity
+                        onPress={() => {
+                            this.FirebaseApi.groupData = null;
+                            this.Global.modalType = "loading";
+                            Actions.groupList();
+                        }}
+                        style={{
+                        marginTop: __d(10),
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backgroundColor: "#5DADE2",
+                        borderRadius: __d(5),
+                        width: __d(100),
+                        height: __d(40)
+                    }}>
+                      <Text style={{
+                        fontSize: __d(13),
+                          color: "#fff"
+                      }}>
+                        Search group
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+              )
+          }
       </View>
     );
   }
@@ -109,52 +130,16 @@ export default class MyGroup extends Component {
             this.Global.groupKey = item.groupKey;
             Actions.checkAttendance();
           }}
-          style={{
-            width: width,
-            height: __d(50),
-            alignItems: "center",
-            borderBottomWidth: 1,
-            borderBottomColor: "#e1e1e1",
-            backgroundColor: "#fff",
-            flexDirection: "row"
-          }}
+          style={styles.fl_child_view}
         >
-          <View
-            style={{
-              width: __d(50),
-              height: __d(50),
-              backgroundColor: "#5DADE2",
-              justifyContent: "center",
-              alignItems: "center"
-            }}
-          >
-            <View
-              style={{
-                width: __d(36),
-                height: __d(36),
-                borderRadius: __d(18),
-                borderWidth: __d(1),
-                borderColor: "#fff",
-                justifyContent: "center",
-                alignItems: "center"
-              }}
-            >
-              <Text
-                style={{
-                  color: "#fff"
-                }}
-              >
+          <View style={styles.fl_child_mem_view}>
+            <View style={styles.fl_child_mem_circle}>
+              <Text style={styles.fl_child_mem_number}>
                 {groupMem}
               </Text>
             </View>
           </View>
-          <Text
-            style={{
-              fontSize: __d(15),
-              flex: 1,
-              paddingLeft: __d(10)
-            }}
-          >
+          <Text style={styles.fl_child_mem_name}>
             {name}
           </Text>
         </TouchableOpacity>
@@ -172,30 +157,61 @@ export default class MyGroup extends Component {
       myGroupList: groupData
     });
   }
-  getMyGroup() {
-    // this.itemRefs
-    //   .child("Account")
-    //   .child(this.User.user.id)
-    //   .child("MyGroup")
-    //   .on("value", dataSnapshot => {
-    //     this.FirebaseApi.myGroup = [];
-    //     dataSnapshot.forEach(child => {
-    //       this.FirebaseApi.myGroup.push({
-    //         groupName: child.child("groupName").val(),
-    //         groupKey: child.key
-    //       });
-    //     });
-    //     !_.isEmpty(this.FirebaseApi.myGroup) &&
-    //     //this.FirebaseApi.groupData &&
-    //     //this.FirebaseApi.accountData &&
-    //     this.Global.modalType === "loading"
-    //       ? (
-    //           this.setState({
-    //             myGroupList: this.FirebaseApi.myGroup
-    //           }),
-    //           (this.Global.modalType = false)
-    //         )
-    //       : null;
-    //   });
-  }
 }
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+    backgroundColor: "#fff"
+  },
+  text_input_view: {
+    width: width - __d(30),
+    height: __d(40),
+    paddingLeft: __d(10),
+    borderWidth: __d(1),
+    borderColor: "#e1e1e1",
+    fontSize: __d(13),
+    borderRadius: __d(5),
+    marginTop: __d(20),
+    backgroundColor: "#fff"
+  },
+  flat_list_view: {
+    borderTopWidth: __d(1),
+    borderTopColor: "#e1e1e1",
+    marginTop: __d(10)
+  },
+  fl_child_view: {
+    width: width,
+    height: __d(50),
+    alignItems: "center",
+    borderBottomWidth: __d(1),
+    borderBottomColor: "#e1e1e1",
+    backgroundColor: "#fff",
+    flexDirection: "row"
+  },
+  fl_child_mem_view: {
+    width: __d(50),
+    height: __d(50),
+    backgroundColor: "#5DADE2",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  fl_child_mem_circle: {
+    width: __d(36),
+    height: __d(36),
+    borderRadius: __d(18),
+    borderWidth: __d(1),
+    borderColor: "#fff",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  fl_child_mem_number: {
+    color: "#fff",
+    fontSize: __d(13)
+  },
+  fl_child_mem_name: {
+    fontSize: __d(15),
+    flex: 1,
+    paddingLeft: __d(10)
+  }
+});

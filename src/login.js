@@ -52,7 +52,7 @@ export default class Login extends Component {
             style={{
               fontSize: __d(40),
               color: "#fff",
-              paddingLeft: __d(50),
+              paddingLeft: __d(45),
               fontStyle: "italic",
               fontFamily: "Georgia-BoldItalic"
             }}

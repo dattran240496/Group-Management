@@ -20,16 +20,20 @@ import { observer } from "mobx-react/native";
 import firebase from "./api/api";
 import Modal from "react-native-modalbox";
 import Icon from "react-native-vector-icons/FontAwesome";
+import { _ } from "lodash";
 const { width, height } = Dimensions.get("window");
 @autobind
 @observer
 export default class VotePoll extends Component {
   @observable info = null;
+  @observable arrOptions = [""];
   @observable optionsPoll = [];
   constructor(props) {
     super(props);
     this.state = {
-      poll: this.props.poll
+      poll: this.props.poll,
+      numberOptions: 1,
+      arrOptions: [""]
     };
     this.Global = this.props.Global;
     this.User = this.props.User;
@@ -49,6 +53,53 @@ export default class VotePoll extends Component {
     this.getOptionsPoll();
   }
   render() {
+    let arrOptions = [];
+    for (let i = 1; i <= this.state.numberOptions; i++) {
+      arrOptions.push(
+        <View
+          key={i}
+          style={{
+            width: width,
+            height: 30,
+            flexDirection: "row",
+            alignItems: "center",
+            paddingLeft: 5
+          }}
+        >
+          <Icon name="plus" color="#e1e1e1" size={15} />
+          <TextInput
+            placeholder="Add an option..."
+            placeholderStyle={{ color: "#e1e1e1" }}
+            style={{
+              width: width - 20,
+              height: 30,
+              fontSize: 15,
+              //fontStyle: this.state.message !== "" ? "normal" : "italic",
+              marginLeft: 5
+            }}
+            onChangeText={txtOption => {
+              let arr = this.arrOptions;
+              arr[i - 1] = txtOption;
+              this.arrOptions = arr;
+            }}
+            value={this.arrOptions[i - 1]}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+            onFocus={() => {
+              console.log(i === this.state.numberOptions);
+              if (i === this.state.numberOptions) {
+                let numbers = i;
+                numbers++;
+                this.setState({
+                  numberOptions: numbers
+                });
+                this.arrOptions.push("");
+              }
+            }}
+          />
+        </View>
+      );
+    }
     return (
       <View
         style={{
@@ -73,16 +124,67 @@ export default class VotePoll extends Component {
         >
           {this.state.poll.message}
         </Text>
-        {
-          <FlatList
-            style={{
-              paddingTop: 20
+        <ScrollView>
+          {!_.isEmpty(this.optionsPoll) &&
+            <FlatList
+              style={{
+                paddingTop: 20
+              }}
+              keyExtractor={(item, index) => index}
+              renderItem={({ item, index }) => this.renderOptions(item, index)}
+              data={this.optionsPoll}
+            />}
+          {this.info.email === this.User.user.email ? arrOptions : null}
+          <TouchableOpacity
+            onPress={() => {
+                for (let i = this.arrOptions.length - 1; i >= 0; i--) {
+                    if (this.arrOptions[i] === "") {
+                        this.arrOptions.splice(i, 1);
+                    }
+                }
+                this.arrOptions.map((v, i) => {
+                    let selected = [];
+                    selected.push(this.User.user.email);
+                    this.optionsPoll.push({
+                        option: v,
+                        selectedMems: selected
+                    });
+                });
+                console.log(this.optionsPoll);
+              this.itemRefs
+                .child("Group")
+                .child(this.Global.groupKey)
+                .child("postedMessages")
+                .child(this.state.poll.key)
+                .update({
+                    options: this.optionsPoll
+                });
+              this.arrOptions = [""];
+              this.setState({
+                numberOptions: 1
+              });
             }}
-            keyExtractor={(item, index) => index}
-            renderItem={({ item, index }) => this.renderOptions(item, index)}
-            data={this.optionsPoll}
-          />
-        }
+            style={{
+              width: 120,
+              height: 40,
+              backgroundColor: "#5DADE2",
+              justifyContent: "center",
+              alignItems: "center",
+              borderRadius: 5,
+              marginTop: 10,
+              marginLeft: (width - 120) / 2
+            }}
+          >
+            <Text
+              style={{
+                color: "#fff",
+                fontSize: 13
+              }}
+            >
+              Submit options
+            </Text>
+          </TouchableOpacity>
+        </ScrollView>
       </View>
     );
   }
@@ -119,6 +221,7 @@ export default class VotePoll extends Component {
             : null;
         })
       : null;
+    let arrayComponentOption = [];
     return (
       <View
         key={index}
@@ -157,18 +260,16 @@ export default class VotePoll extends Component {
                 let user = item.selectedMems || [];
                 user.push(this.User.user.email);
                 isChecked
-                  ? (
-                      this.itemRefs
-                        .child("Group")
-                        .child(this.Global.groupKey)
-                        .child("postedMessages")
-                        .child(this.state.poll.key)
-                        .child("options")
-                        .child(index)
-                        .child("selectedMems")
-                        .child(indexUser.toString())
-                        .remove()
-                    )
+                  ? this.itemRefs
+                      .child("Group")
+                      .child(this.Global.groupKey)
+                      .child("postedMessages")
+                      .child(this.state.poll.key)
+                      .child("options")
+                      .child(index)
+                      .child("selectedMems")
+                      .child(indexUser.toString())
+                      .remove()
                   : this.itemRefs
                       .child("Group")
                       .child(this.Global.groupKey)
@@ -177,7 +278,7 @@ export default class VotePoll extends Component {
                       .child("options")
                       .child(index)
                       .update({
-                          selectedMems : user
+                        selectedMems: user
                       });
               }}
               style={{

@@ -157,7 +157,7 @@ export default class EnterGroupName extends Component {
               groupName: groupName
             });
 
-          return Actions.pop({ type: "refresh" });
+          return Actions.pop();
         }
       } else {
         this.setState({});
