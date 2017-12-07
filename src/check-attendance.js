@@ -306,6 +306,9 @@ export default class CheckAttendance extends Component {
           child.child("options").val()
             ? (index["options"] = child.child("options").val())
             : null;
+            child.child("isPoll").val()
+                ? (index["isPoll"] = child.child("isPoll").val())
+                : null;
           arrMessage.push(index);
         });
         arrMessage.reverse();
@@ -324,7 +327,7 @@ export default class CheckAttendance extends Component {
   _renderMessages(item, index) {
     return (
       <View style={styles.child_mess_view}>
-        {item.options
+        {item.isPoll
           ? <Icon
               name="flag"
               color="#e1e1e1"

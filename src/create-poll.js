@@ -162,6 +162,7 @@ export default class CreatePoll extends Component {
                 .set({
                   message: this.state.message,
                   timeAtPost: formatTime,
+                    isPoll: "true",
                   options:
                     this.state.arrOptions.length !== 0
                       ? this.state.arrOptions.map((v, i) => {

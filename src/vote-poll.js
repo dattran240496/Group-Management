@@ -28,6 +28,7 @@ export default class VotePoll extends Component {
   @observable info = null;
   @observable arrOptions = [""];
   @observable optionsPoll = [];
+  @observable isChangePoll = false;
   constructor(props) {
     super(props);
     this.state = {
@@ -54,51 +55,53 @@ export default class VotePoll extends Component {
   }
   render() {
     let arrOptions = [];
-    for (let i = 1; i <= this.state.numberOptions; i++) {
-      arrOptions.push(
-        <View
-          key={i}
-          style={{
-            width: width,
-            height: 30,
-            flexDirection: "row",
-            alignItems: "center",
-            paddingLeft: 5
-          }}
-        >
-          <Icon name="plus" color="#e1e1e1" size={15} />
-          <TextInput
-            placeholder="Add an option..."
-            placeholderStyle={{ color: "#e1e1e1" }}
+    if (this.info.email === this.User.user.email) {
+      for (let i = 1; i <= this.state.numberOptions; i++) {
+        arrOptions.push(
+          <View
+            key={i}
             style={{
-              width: width - 20,
+              width: width,
               height: 30,
-              fontSize: 15,
-              //fontStyle: this.state.message !== "" ? "normal" : "italic",
-              marginLeft: 5
+              flexDirection: "row",
+              alignItems: "center",
+              paddingLeft: 5
             }}
-            onChangeText={txtOption => {
-              let arr = this.arrOptions;
-              arr[i - 1] = txtOption;
-              this.arrOptions = arr;
-            }}
-            value={this.arrOptions[i - 1]}
-            numberOfLines={1}
-            ellipsizeMode="tail"
-            onFocus={() => {
-              console.log(i === this.state.numberOptions);
-              if (i === this.state.numberOptions) {
-                let numbers = i;
-                numbers++;
-                this.setState({
-                  numberOptions: numbers
-                });
-                this.arrOptions.push("");
-              }
-            }}
-          />
-        </View>
-      );
+          >
+            <Icon name="plus" color="#e1e1e1" size={15} />
+            <TextInput
+              placeholder="Add an option..."
+              placeholderStyle={{ color: "#e1e1e1" }}
+              style={{
+                width: width - 20,
+                height: 30,
+                fontSize: 15,
+                //fontStyle: this.state.message !== "" ? "normal" : "italic",
+                marginLeft: 5
+              }}
+              onChangeText={txtOption => {
+                let arr = this.arrOptions;
+                arr[i - 1] = txtOption;
+                this.arrOptions = arr;
+              }}
+              value={this.arrOptions[i - 1]}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+              onFocus={() => {
+                console.log(i === this.state.numberOptions);
+                if (i === this.state.numberOptions) {
+                  let numbers = i;
+                  numbers++;
+                  this.setState({
+                    numberOptions: numbers
+                  });
+                  this.arrOptions.push("");
+                }
+              }}
+            />
+          </View>
+        );
+      }
     }
     return (
       <View
@@ -116,14 +119,29 @@ export default class VotePoll extends Component {
         >
           {this.state.poll.timeAtPost}
         </Text>
-        <Text
-          style={{
-            paddingTop: 5,
-            fontSize: 15
-          }}
-        >
-          {this.state.poll.message}
-        </Text>
+          <TextInput
+              style={{
+                  width: width - 30,
+                  height: 120,
+                  padding: 10,
+                  borderRadius: 10,
+                  borderColor: "#e1e1e1",
+                  borderWidth: 1,
+                  marginTop: 10,
+                  fontSize: 13
+              }}
+              editable={this.info.email === this.User.user.email ? true : false}
+              multiline={true}
+              value={this.state.poll.message}
+              onChangeText={txt => {
+                  let mess = this.state.poll;
+                  mess.message = txt;
+                  this.setState({
+                      poll: mess
+                  });
+                  this.isChangePoll = true;
+              }}
+          />
         <ScrollView>
           {!_.isEmpty(this.optionsPoll) &&
             <FlatList
@@ -135,55 +153,99 @@ export default class VotePoll extends Component {
               data={this.optionsPoll}
             />}
           {this.info.email === this.User.user.email ? arrOptions : null}
-          <TouchableOpacity
-            onPress={() => {
-                for (let i = this.arrOptions.length - 1; i >= 0; i--) {
-                    if (this.arrOptions[i] === "") {
-                        this.arrOptions.splice(i, 1);
-                    }
-                }
-                this.arrOptions.map((v, i) => {
+          {this.info.email === this.User.user.email
+            ? <TouchableOpacity
+                onPress={() => {
+                  // for (let i = this.arrOptions.length - 1; i >= 0; i--) {
+                  //   if (this.arrOptions[i] === "") {
+                  //     this.arrOptions.splice(i, 1);
+                  //   }
+                  // }
+                  this.arrOptions.map((v, i) => {
                     let selected = [];
                     selected.push(this.User.user.email);
                     this.optionsPoll.push({
-                        option: v,
-                        selectedMems: selected
+                      option: v,
+                      selectedMems: selected
                     });
-                });
-                console.log(this.optionsPoll);
-              this.itemRefs
-                .child("Group")
-                .child(this.Global.groupKey)
-                .child("postedMessages")
-                .child(this.state.poll.key)
-                .update({
-                    options: this.optionsPoll
-                });
-              this.arrOptions = [""];
-              this.setState({
-                numberOptions: 1
-              });
-            }}
-            style={{
-              width: 120,
-              height: 40,
-              backgroundColor: "#5DADE2",
-              justifyContent: "center",
-              alignItems: "center",
-              borderRadius: 5,
-              marginTop: 10,
-              marginLeft: (width - 120) / 2
-            }}
-          >
-            <Text
-              style={{
-                color: "#fff",
-                fontSize: 13
-              }}
-            >
-              Submit options
-            </Text>
-          </TouchableOpacity>
+                  });
+                  for (let i = this.optionsPoll.length - 1; i >= 0; i--) {
+                    if (this.optionsPoll[i].option === "") {
+                      this.optionsPoll.splice(i, 1);
+                    }
+                  }
+                  this.itemRefs
+                    .child("Group")
+                    .child(this.Global.groupKey)
+                    .child("postedMessages")
+                    .child(this.state.poll.key)
+                    .update({
+                      options: this.optionsPoll
+                    });
+                  if (this.isChangePoll){
+                      let timeAtPost = new Date(); // get time at post
+                      let hours =
+                          timeAtPost.getHours().toString().length === 1 ? "0" : ""; // if hour < 10 => add "0" previous
+                      let minutes =
+                          timeAtPost.getMinutes().toString().length === 1 ? "0" : ""; // if minute < 10 => add "0" previous
+
+                      // format time: dd/mm/yyyy - hh:mm
+                      let formatTime =
+                          timeAtPost.getDate() +
+                          "/" +
+                          (timeAtPost.getMonth() + 1) +
+                          "/" +
+                          timeAtPost.getFullYear() +
+                          " - " +
+                          hours +
+                          timeAtPost.getHours() +
+                          ":" +
+                          minutes +
+                          timeAtPost.getMinutes();
+                      let mess = this.state.poll;
+                      mess.timeAtPost = formatTime;
+                      this.setState({
+                          poll: mess
+                      });
+                      this.itemRefs
+                          .child("Group")
+                          .child(this.Global.groupKey)
+                          .child("postedMessages")
+                          .child(this.state.poll.key)
+                          .update({
+                              message: this.state.poll.message,
+                              timeAtPost: formatTime,
+                          });
+                      this.isChangePoll = false;
+                  }
+
+                  this.arrOptions = [""];
+                  this.setState({
+                    numberOptions: 1
+                  });
+
+                }}
+                style={{
+                  width: 120,
+                  height: 40,
+                  backgroundColor: "#5DADE2",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderRadius: 5,
+                  marginTop: 10,
+                  marginLeft: (width - 120) / 2
+                }}
+              >
+                <Text
+                  style={{
+                    color: "#fff",
+                    fontSize: 13
+                  }}
+                >
+                  Submit options
+                </Text>
+              </TouchableOpacity>
+            : null}
         </ScrollView>
       </View>
     );
@@ -215,7 +277,6 @@ export default class VotePoll extends Component {
     let indexUser = -1;
     item.selectedMems
       ? item.selectedMems.map((v, i) => {
-          console.log(v);
           v === this.User.user.email
             ? ((isChecked = true), (indexUser = i))
             : null;
@@ -297,17 +358,19 @@ export default class VotePoll extends Component {
                 : null}
             </TouchableOpacity>
           </View>
-          <Text
-            ellipsizeMode="tail"
-            numberOfLines={1}
+          <TextInput
+            editable={this.info.email === this.User.user.email ? true : false}
             style={{
               fontSize: 13,
               paddingLeft: 5,
               width: widthTxt
             }}
-          >
-            {item.option}
-          </Text>
+            value={item.option}
+            onChangeText={txt => {
+              this.optionsPoll[index].option = txt;
+              this.setState({});
+            }}
+          />
         </View>
         <View
           style={{

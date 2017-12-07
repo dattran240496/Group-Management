@@ -138,7 +138,7 @@ export default class PostMessage extends Component {
       .push()
       .set({
         message: this.state.message,
-        timeAtPost: formatTime
+        timeAtPost: formatTime,
       });
     Actions.pop();
   }
