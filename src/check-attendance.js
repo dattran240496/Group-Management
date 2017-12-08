@@ -9,7 +9,8 @@ import {
   TextInput,
   Alert,
   FlatList,
-  Image
+  Image,
+  TouchableHighlight
 } from "react-native";
 import Expo from "expo";
 import { Actions, Router, Scene } from "react-native-mobx";
@@ -18,6 +19,7 @@ import { autobind } from "core-decorators";
 import { observer } from "mobx-react/native";
 import firebase from "./api/api";
 import Modal from "react-native-modalbox";
+import Swipeout from "react-native-swipeout";
 import Icon from "react-native-vector-icons/FontAwesome";
 const { width, height } = Dimensions.get("window");
 import { __d } from "./components/helpers/index";
@@ -127,7 +129,7 @@ export default class CheckAttendance extends Component {
             <View style={styles.admin_info}>
               <View style={{ flexDirection: "row" }}>
                 <Text style={styles.txt_name}>Name</Text>
-                <Text style={styles.txt_name}>:</Text>
+                <Text style={[styles.txt_name, { width: 20 }]}>:</Text>
                 <Text style={styles.admin_info_name}>
                   {this.info ? this.info.name : ""}
                 </Text>
@@ -143,7 +145,7 @@ export default class CheckAttendance extends Component {
                 >
                   Email
                 </Text>
-                <Text style={styles.txt_name}>:</Text>
+                <Text style={[styles.txt_name, { width: 20 }]}>:</Text>
                 <Text
                   numberOfLines={1}
                   ellipsizeMode="tail"
@@ -158,9 +160,7 @@ export default class CheckAttendance extends Component {
 
         <View style={styles.list_mess_view}>
           <FlatList
-            style={{
-              padding: __d(5)
-            }}
+            style={{}}
             ref={ref => (this.postMessage = ref)}
             keyExtractor={(item, index) => index}
             data={this.state.messages}
@@ -174,10 +174,21 @@ export default class CheckAttendance extends Component {
           />
         </View>
 
-        <View style={[styles.func_view,{
-          paddingTop: this.info && this.info.email === this.User.user.email ? __d(10) : null,
-          alignItems: this.info && this.info.email !== this.User.user.email ? "center" : null,
-        }]}>
+        <View
+          style={[
+            styles.func_view,
+            {
+              paddingTop:
+                this.info && this.info.email === this.User.user.email
+                  ? __d(10)
+                  : null,
+              alignItems:
+                this.info && this.info.email !== this.User.user.email
+                  ? "center"
+                  : null
+            }
+          ]}
+        >
           {this.info &&
             this.info.email === this.User.user.email &&
             <TouchableOpacity
@@ -306,9 +317,9 @@ export default class CheckAttendance extends Component {
           child.child("options").val()
             ? (index["options"] = child.child("options").val())
             : null;
-            child.child("isPoll").val()
-                ? (index["isPoll"] = child.child("isPoll").val())
-                : null;
+          child.child("isPoll").val()
+            ? (index["isPoll"] = child.child("isPoll").val())
+            : null;
           arrMessage.push(index);
         });
         arrMessage.reverse();
@@ -325,46 +336,64 @@ export default class CheckAttendance extends Component {
       : null;
   }
   _renderMessages(item, index) {
+    let _this = this;
+    let swipeBtns = [
+      {
+        text: "Delete",
+        backgroundColor: "red",
+        underlayColor: "red",
+        onPress: () => {
+            let child = _this.itemRefs.child("Group").child(this.Global.groupKey).child("postedMessages").child(item.key);
+            child.remove();
+        }
+      }
+    ];
     return (
-      <View style={styles.child_mess_view}>
-        {item.isPoll
-          ? <Icon
-              name="flag"
-              color="#e1e1e1"
-              size={__d(15)}
-              style={styles.child_mess_poll_icon}
-            />
-          : null}
-        <TouchableOpacity
-          onPress={() => {
-            console.log(item);
-            //if option is poll, action to vote, else  action to message
-            item.options
-              ? Actions.votePoll({
-                  poll: item
-                })
-              : Actions.detailMessage({ detailMessage: item });
-          }}
-          style={{
-            width: item.options ? width - __d(170) : width - __d(150),
-            height: __d(20)
-          }}
-        >
-          <Text
-            numberOfLines={1}
-            ellipsizeMode="tail"
+      <Swipeout
+          right={swipeBtns}
+          backgroundColor="transparent"
+          autoClose={true}>
+        <View style={styles.child_mess_view}>
+          {item.isPoll
+            ? <Icon
+                name="flag"
+                color="#e1e1e1"
+                size={__d(15)}
+                style={styles.child_mess_poll_icon}
+              />
+            : null}
+          <TouchableHighlight
+            underlayColor="transparent"
+            onPress={() => {
+              console.log(item);
+              //if option is poll, action to vote, else  action to message
+              item.options
+                ? Actions.votePoll({
+                    poll: item
+                  })
+                : Actions.detailMessage({ detailMessage: item });
+            }}
             style={{
-              fontSize: __d(13),
-              color: item.options ? "red" : null
+              width: item.options ? width - __d(170) : width - __d(150),
+              height: __d(20)
             }}
           >
-            {item.message}
+            <Text
+              numberOfLines={1}
+              ellipsizeMode="tail"
+              style={{
+                fontSize: __d(13),
+                color: item.options ? "red" : null
+              }}
+            >
+              {item.message}
+            </Text>
+          </TouchableHighlight>
+          <Text style={styles.child_mess_time_at_post}>
+            {item.timeAtPost}
           </Text>
-        </TouchableOpacity>
-        <Text style={styles.child_mess_time_at_post}>
-          {item.timeAtPost}
-        </Text>
-      </View>
+        </View>
+      </Swipeout>
     );
   }
 }
@@ -457,12 +486,10 @@ const styles = StyleSheet.create({
   },
   admin_info_name: {
     fontSize: __d(15),
-    paddingLeft: __d(5),
     color: "#FFF"
   },
   admin_info_email: {
     fontSize: __d(15),
-    marginLeft: __d(5),
     color: "#fff",
     flex: 1
   },
@@ -474,9 +501,12 @@ const styles = StyleSheet.create({
   },
   child_mess_view: {
     width: width,
-    height: __d(20),
-    justifyContent: "center",
-    flexDirection: "row"
+    height: __d(50),
+    flexDirection: "row",
+    alignItems: "center",
+    paddingLeft: __d(10),
+    borderBottomColor: "#e1e1e1",
+    borderBottomWidth: 1
   },
   child_mess_poll_icon: {
     justifyContent: "center",
@@ -494,7 +524,7 @@ const styles = StyleSheet.create({
     height: __d(190),
     flexWrap: "wrap",
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "center"
   },
   func_btn_view: {
     width: __d(150),

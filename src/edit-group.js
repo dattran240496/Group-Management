@@ -22,7 +22,7 @@ const { width, height } = Dimensions.get("window");
 
 @autobind
 @observer
-export default class MyGroup extends Component {
+export default class EditGroup extends Component {
   @observable errors = {};
   constructor(props) {
     super(props);
@@ -41,36 +41,48 @@ export default class MyGroup extends Component {
       <View
         style={{
           flex: 1,
-          alignItems: "center"
+          alignItems: "center",
+          paddingTop: 10
         }}
       >
         <TextInput
-          placeholder="New group name..."
+          placeholder={
+            this.state.typeEdit === "name"
+              ? "New group name..."
+              : "New password..."
+          }
           placeholderStyle={{ color: "#e1e1e1" }}
           style={{
-            width: width,
+            width: width - 30,
             height: 40,
             paddingLeft: 10,
             borderWidth: 1.5,
             borderColor: "#e1e1e1",
             fontSize: 15,
-            fontStyle: this.state.newName !== "" ? "normal" : "italic"
+            fontStyle: this.state.newName !== "" ? "normal" : "italic",
+            borderRadius: 5
           }}
           onChangeText={txt => {
             this.setState({ newName: txt });
           }}
         />
         <TextInput
-          placeholder="Repeat group name..."
+          placeholder={
+            this.state.typeEdit === "name"
+              ? "Repeat group name..."
+              : "Repeat password..."
+          }
           placeholderStyle={{ color: "#e1e1e1" }}
           style={{
-            width: width,
+            width: width - 30,
             height: 40,
             paddingLeft: 10,
             borderWidth: 1.5,
             borderColor: "#e1e1e1",
             fontSize: 15,
-            fontStyle: this.state.repeatName !== "" ? "normal" : "italic"
+            fontStyle: this.state.repeatName !== "" ? "normal" : "italic",
+            marginTop: 10,
+            borderRadius: 5
           }}
           onChangeText={txt => {
             this.setState({ repeatName: txt });
@@ -82,85 +94,75 @@ export default class MyGroup extends Component {
           }}
           style={{
             width: 120,
-            height: 50,
+            height: 40,
             justifyContent: "center",
             alignItems: "center",
             marginTop: 30,
             borderColor: "#e1e1e1",
             borderWidth: 1,
-            borderRadius: 5
+            borderRadius: 5,
+            backgroundColor: "#5DADE2"
           }}
         >
-          <Text>Save</Text>
+          <Text
+            style={{
+              fontSize: 13,
+              color: "#fff"
+            }}
+          >
+            Update
+          </Text>
         </TouchableOpacity>
       </View>
     );
   }
   changeName() {
-    let isNameExisted = false;
-    let members = Object.keys(this.FirebaseApi.members);
+    if (this.state.typeEdit === "name") {
+      let isNameExisted = false;
+      let members = Object.keys(this.FirebaseApi.members);
 
-    let _this = this;
-    if (this.state.newName === this.state.repeatName) {
-      if (this.validate(this.state.newName)) {
-        this.errors = {};
-        let groupName = this.state.newName.replace(".", "%");
-        this.FirebaseApi.groupData.map((v, i) => {
-          if (Object.keys(v).toString() === groupName) {
-            isNameExisted = true;
-            return Alert.alert("Warning!", "Group name existed!");
-          }
-        });
-        if (!isNameExisted) {
-          let oldName = this.Global.groupName;
-          let child = _this.itemRefs.child("Group").child(oldName);
-          child.once("value", function(snapshot) {
-            _this.itemRefs
-              .child("Group")
-              .child(_this.state.newName)
-              .set(snapshot.val());
-            child.remove();
+      let _this = this;
+      if (this.state.newName === this.state.repeatName) {
+        if (this.validate(this.state.newName)) {
+          this.errors = {};
+          let groupName = this.state.newName.replace(".", "%");
+          this.FirebaseApi.groupData.map((v, i) => {
+            if (Object.keys(v).toString() === groupName) {
+              isNameExisted = true;
+              return Alert.alert("Warning!", "Group name existed!");
+            }
           });
-
-          let childAdmin = _this.itemRefs
-            .child("Account")
-            .child(this.User.user.id)
-            .child("MyGroup")
-            .child(oldName);
-          childAdmin.once("value", function(snapshot) {
-            _this.itemRefs
-              .child("Account")
-              .child(_this.User.user.id)
-              .child("MyGroup")
-              .child(_this.state.newName)
-              .set(snapshot.val());
-            childAdmin.remove();
-          });
-          let childMem = null;
-          members.map((v, i) => {
-            childMem = _this.itemRefs
-              .child("Account")
-              .child(v)
-              .child("MyGroup")
-              .child(oldName);
-            childMem.once("value", function(snapshot) {
-              _this.itemRefs
+          if (!isNameExisted) {
+            this.itemRefs.child("Group").child(this.Global.groupKey).update({
+              groupName: this.state.newName
+            });
+            members.map((v, i) => {
+              this.itemRefs
                 .child("Account")
                 .child(v)
                 .child("MyGroup")
-                .child(_this.state.newName)
-                .set(snapshot.val());
-              childMem.remove();
+                .child(this.Global.groupKey)
+                .update({
+                  groupName: this.state.newName
+                });
             });
-            this.Global.groupName = _this.state.newName;
-          });
-          return Actions.pop({type: "refresh"});
+            return Actions.pop({ type: "refresh" });
+          }
+        } else {
+          return (this.errors = "Group names can not have special characters!");
         }
       } else {
-        return (this.errors = "Group names can not have special characters!");
+        this.errors = "Must match the previous entry!";
       }
     } else {
-      this.errors = "Must match the previous entry!";
+      if (this.state.newName === this.state.repeatName) {
+        this.itemRefs.child("Group").child(this.Global.groupKey).update({
+          groupPass: this.state.newName
+        });
+        return Actions.pop({ type: "refresh" });
+      } else {
+        return (this.errors = "Must match the previous entry!");
+      }
     }
   }
   validate(value) {
