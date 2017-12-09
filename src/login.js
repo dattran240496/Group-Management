@@ -5,7 +5,8 @@ import {
   View,
   TouchableOpacity,
   AsyncStorage,
-  Image
+  Image,
+    Platform
 } from "react-native";
 import Expo, { Notifications, Permissions } from "expo";
 import { Actions, Router, Scene } from "react-native-mobx";
@@ -54,7 +55,7 @@ export default class Login extends Component {
               color: "#fff",
               paddingLeft: __d(45),
               fontStyle: "italic",
-              fontFamily: "Georgia-BoldItalic"
+              fontFamily: Platform.OS === "ios" ? "Georgia-BoldItalic" : null
             }}
           >
             Attendance
