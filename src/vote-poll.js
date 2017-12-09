@@ -21,6 +21,7 @@ import firebase from "./api/api";
 import Modal from "react-native-modalbox";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { _ } from "lodash";
+import { __d } from "./components/helpers/index";
 const { width, height } = Dimensions.get("window");
 @autobind
 @observer
@@ -60,25 +61,13 @@ export default class VotePoll extends Component {
         arrOptions.push(
           <View
             key={i}
-            style={{
-              width: width,
-              height: 30,
-              flexDirection: "row",
-              alignItems: "center",
-              paddingLeft: 5
-            }}
+            style={styles.option_view}
           >
-            <Icon name="plus" color="#e1e1e1" size={15} />
+            <Icon name="plus" color="#e1e1e1" size={__d(15)} />
             <TextInput
               placeholder="Add an option..."
               placeholderStyle={{ color: "#e1e1e1" }}
-              style={{
-                width: width - 20,
-                height: 30,
-                fontSize: 15,
-                //fontStyle: this.state.message !== "" ? "normal" : "italic",
-                marginLeft: 5
-              }}
+              style={styles.option_txt_input}
               onChangeText={txtOption => {
                 let arr = this.arrOptions;
                 arr[i - 1] = txtOption;
@@ -105,31 +94,15 @@ export default class VotePoll extends Component {
     }
     return (
       <View
-        style={{
-          flex: 1,
-          paddingLeft: 15
-        }}
+        style={styles.container}
       >
         <Text
-          style={{
-            paddingTop: 15,
-            fontSize: 13,
-            fontStyle: "italic"
-          }}
+          style={styles.timeAtPost_txt}
         >
           {this.state.poll.timeAtPost}
         </Text>
           <TextInput
-              style={{
-                  width: width - 30,
-                  height: 120,
-                  padding: 10,
-                  borderRadius: 10,
-                  borderColor: "#e1e1e1",
-                  borderWidth: 1,
-                  marginTop: 10,
-                  fontSize: 13
-              }}
+              style={styles.txt_input_poll}
               editable={this.info.email === this.User.user.email ? true : false}
               multiline={true}
               value={this.state.poll.message}
@@ -145,9 +118,7 @@ export default class VotePoll extends Component {
         <ScrollView>
           {!_.isEmpty(this.optionsPoll) &&
             <FlatList
-              style={{
-                paddingTop: 20
-              }}
+              style={styles.fl_view}
               keyExtractor={(item, index) => index}
               renderItem={({ item, index }) => this.renderOptions(item, index)}
               data={this.optionsPoll}
@@ -225,22 +196,10 @@ export default class VotePoll extends Component {
                   });
 
                 }}
-                style={{
-                  width: 120,
-                  height: 40,
-                  backgroundColor: "#5DADE2",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  borderRadius: 5,
-                  marginTop: 10,
-                  marginLeft: (width - 120) / 2
-                }}
+                style={styles.btn_submit_view}
               >
                 <Text
-                  style={{
-                    color: "#fff",
-                    fontSize: 13
-                  }}
+                  style={styles.btn_submit_txt}
                 >
                   Submit options
                 </Text>
@@ -272,7 +231,7 @@ export default class VotePoll extends Component {
   }
 
   renderOptions(item, index) {
-    let widthTxt = width / 1.5 - 45;
+    let widthTxt = width / 1.5 - __d(45);
     let isChecked = false;
     let indexUser = -1;
     item.selectedMems
@@ -286,35 +245,13 @@ export default class VotePoll extends Component {
     return (
       <View
         key={index}
-        style={{
-          width: width,
-          height: 35,
-          marginTop: 5,
-          flexDirection: "row",
-          alignItems: "center"
-        }}
+        style={styles.option_exist_view}
       >
         <View
-          style={{
-            width: width / 1.2,
-            height: 35,
-            flexDirection: "row",
-            borderWidth: 1,
-            borderColor: "#e1e1e1",
-            borderRadius: 5,
-            alignItems: "center"
-          }}
+          style={styles.option_exist_vote_view}
         >
           <View
-            style={{
-              width: 35,
-              height: 35,
-              justifyContent: "center",
-              alignItems: "center",
-              backgroundColor: "#e1e1e1",
-              borderTopLeftRadius: 5,
-              borderBottomLeftRadius: 5
-            }}
+            style={styles.option_exist_vote_check_view}
           >
             <TouchableOpacity
               onPress={() => {
@@ -342,29 +279,18 @@ export default class VotePoll extends Component {
                         selectedMems: user
                       });
               }}
-              style={{
-                width: 15,
-                height: 15,
-                backgroundColor: "#fff",
-                borderRadius: 3,
-                borderWidth: 1,
-                borderColor: "#e1e1e1",
-                justifyContent: "center",
-                alignItems: "center"
-              }}
+              style={styles.option_exist_vote_check_btn}
             >
               {isChecked
-                ? <Icon name="check" size={10} color="#85C1E9" />
+                ? <Icon name="check" size={__d(10)} color="#85C1E9" />
                 : null}
             </TouchableOpacity>
           </View>
           <TextInput
             editable={this.info.email === this.User.user.email ? true : false}
-            style={{
-              fontSize: 13,
-              paddingLeft: 5,
-              width: widthTxt
-            }}
+            style={[styles.option_exist_vote_txt,{
+                width: widthTxt
+            }]}
             value={item.option}
             onChangeText={txt => {
               this.optionsPoll[index].option = txt;
@@ -373,22 +299,10 @@ export default class VotePoll extends Component {
           />
         </View>
         <View
-          style={{
-            width: 30,
-            height: 30,
-            justifyContent: "center",
-            alignItems: "center",
-            borderRadius: 15,
-            backgroundColor: "#e1e1e1",
-            borderColor: "#fff",
-            borderWidth: 1,
-            marginLeft: 5
-          }}
+          style={styles.option_exist_number_mem_view}
         >
           <Text
-            style={{
-              color: "#fff"
-            }}
+            style={styles.option_exist_number_mem_txt}
           >
             {item.selectedMems ? item.selectedMems.length : 0}
           </Text>
@@ -397,3 +311,109 @@ export default class VotePoll extends Component {
     );
   }
 }
+const styles = StyleSheet.create({
+   container:{
+       flex: 1,
+       paddingLeft: __d(15)
+   },
+    timeAtPost_txt:{
+        paddingTop: __d(15),
+        fontSize: __d(13),
+        fontStyle: "italic"
+    },
+    txt_input_poll:{
+        width: width - __d(30),
+        height: __d(120),
+        padding: __d(10),
+        borderRadius: __d(10),
+        borderColor: "#e1e1e1",
+        borderWidth: __d(1),
+        marginTop: __d(10),
+        fontSize: __d(13)
+    },
+    fl_view:{
+        paddingTop: __d(20)
+    },
+    btn_submit_view:{
+        width: __d(120),
+        height: __d(40),
+        backgroundColor: "#5DADE2",
+        justifyContent: "center",
+        alignItems: "center",
+        borderRadius: __d(5),
+        marginTop: __d(10),
+        marginLeft: (width - __d(120)) / 2
+    },
+    btn_submit_txt:{
+        color: "#fff",
+        fontSize: __d(13)
+    },
+    option_view:{
+        width: width,
+        height: __d(30),
+        flexDirection: "row",
+        alignItems: "center",
+        paddingLeft: __d(5)
+    },
+    option_txt_input:{
+        width: width - __d(20),
+        height: __d(30),
+        fontSize: __d(15),
+        //fontStyle: this.state.message !== "" ? "normal" : "italic",
+        marginLeft: __d(5)
+    },
+    option_exist_view:{
+        width: width,
+        height: __d(35),
+        marginTop: __d(5),
+        flexDirection: "row",
+        alignItems: "center"
+    },
+    option_exist_vote_view:{
+        width: width / 1.2,
+        height: __d(35),
+        flexDirection: "row",
+        borderWidth: __d(1),
+        borderColor: "#e1e1e1",
+        borderRadius: __d(5),
+        alignItems: "center"
+    },
+    option_exist_vote_check_view:{
+        width: __d(35),
+        height: __d(35),
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#e1e1e1",
+        borderTopLeftRadius: __d(5),
+        borderBottomLeftRadius: __d(5)
+    },
+    option_exist_vote_check_btn:{
+        width: __d(15),
+        height: __d(15),
+        backgroundColor: "#fff",
+        borderRadius: __d(3),
+        borderWidth: __d(1),
+        borderColor: "#e1e1e1",
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    option_exist_vote_txt:{
+        fontSize: __d(13),
+        paddingLeft: __d(5),
+    },
+    option_exist_number_mem_view:{
+        width: __d(30),
+        height: __d(30),
+        justifyContent: "center",
+        alignItems: "center",
+        borderRadius: __d(15),
+        backgroundColor: "#e1e1e1",
+        borderColor: "#fff",
+        borderWidth: __d(1),
+        marginLeft: __d(5)
+    },
+    option_exist_number_mem_txt:{
+        color: "#fff",
+        fontSize: __d(13)
+    }
+});

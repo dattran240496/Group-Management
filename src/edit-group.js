@@ -16,6 +16,7 @@ import { observable } from "mobx";
 import { autobind } from "core-decorators";
 import { observer } from "mobx-react/native";
 import firebase from "./api/api";
+import { __d } from "./components/helpers/index";
 import Modal from "react-native-modalbox";
 import Icon from "react-native-vector-icons/FontAwesome";
 const { width, height } = Dimensions.get("window");
@@ -39,11 +40,7 @@ export default class EditGroup extends Component {
   render() {
     return (
       <View
-        style={{
-          flex: 1,
-          alignItems: "center",
-          paddingTop: 10
-        }}
+        style={styles.container}
       >
         <TextInput
           placeholder={
@@ -52,16 +49,9 @@ export default class EditGroup extends Component {
               : "New password..."
           }
           placeholderStyle={{ color: "#e1e1e1" }}
-          style={{
-            width: width - 30,
-            height: 40,
-            paddingLeft: 10,
-            borderWidth: 1.5,
-            borderColor: "#e1e1e1",
-            fontSize: 15,
-            fontStyle: this.state.newName !== "" ? "normal" : "italic",
-            borderRadius: 5
-          }}
+          style={[styles.txt_input_new_view, {
+              fontStyle: this.state.newName !== "" ? "normal" : "italic",
+          }]}
           onChangeText={txt => {
             this.setState({ newName: txt });
           }}
@@ -73,17 +63,10 @@ export default class EditGroup extends Component {
               : "Repeat password..."
           }
           placeholderStyle={{ color: "#e1e1e1" }}
-          style={{
-            width: width - 30,
-            height: 40,
-            paddingLeft: 10,
-            borderWidth: 1.5,
-            borderColor: "#e1e1e1",
-            fontSize: 15,
+          style={[styles.txt_input_new_view, {
             fontStyle: this.state.repeatName !== "" ? "normal" : "italic",
             marginTop: 10,
-            borderRadius: 5
-          }}
+          }]}
           onChangeText={txt => {
             this.setState({ repeatName: txt });
           }}
@@ -92,23 +75,10 @@ export default class EditGroup extends Component {
           onPress={() => {
             this.changeName();
           }}
-          style={{
-            width: 120,
-            height: 40,
-            justifyContent: "center",
-            alignItems: "center",
-            marginTop: 30,
-            borderColor: "#e1e1e1",
-            borderWidth: 1,
-            borderRadius: 5,
-            backgroundColor: "#5DADE2"
-          }}
+          style={styles.btn_update_view}
         >
           <Text
-            style={{
-              fontSize: 13,
-              color: "#fff"
-            }}
+            style={styles.btn_update_txt}
           >
             Update
           </Text>
@@ -170,3 +140,34 @@ export default class EditGroup extends Component {
     return regx.test(value);
   }
 }
+const styles = StyleSheet.create({
+   container:{
+       flex: 1,
+       alignItems: "center",
+       paddingTop: __d(10)
+   },
+    txt_input_new_view:{
+        width: width - __d(30),
+        height: __d(40),
+        paddingLeft: __d(10),
+        borderWidth: __d(1.5),
+        borderColor: "#e1e1e1",
+        fontSize: __d(15),
+        borderRadius: __d(5)
+    },
+    btn_update_view:{
+        width: __d(120),
+        height: __d(40),
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: __d(30),
+        borderColor: "#e1e1e1",
+        borderWidth: __d(1),
+        borderRadius: __d(5),
+        backgroundColor: "#5DADE2"
+    },
+    btn_update_txt:{
+        fontSize: __d(13),
+        color: "#fff"
+    }
+});

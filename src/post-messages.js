@@ -17,6 +17,7 @@ import { observable } from "mobx";
 import { autobind } from "core-decorators";
 import { observer } from "mobx-react/native";
 import firebase from "./api/api";
+import { __d } from "./components/helpers/index";
 import Modal from "react-native-modalbox";
 import Icon from "react-native-vector-icons/FontAwesome";
 const { width, height } = Dimensions.get("window");
@@ -35,25 +36,15 @@ export default class PostMessage extends Component {
   render() {
     return (
       <View
-        style={{
-          flex: 1,
-          alignItems: "center"
-        }}
+        style={styles.container}
       >
         <TextInput
           placeholder="Message..."
           placeholderStyle={{ color: "#e1e1e1" }}
-          style={{
-            width: width - 30,
-            height: 100,
-            padding: 10,
-            fontSize: 13,
-            borderColor: "#e1e1e1",
-            borderWidth: 1,
-            fontStyle: this.state.message !== "" ? "normal" : "italic",
-            borderRadius: 5,
-            marginTop: 15
-          }}
+          underlineColorAndroid="transparent"
+          style={[styles.txt_input_mess, {
+              fontStyle: this.state.message !== "" ? "normal" : "italic",
+          }]}
           onChangeText={message => {
             this.setState({
               message: message
@@ -68,23 +59,10 @@ export default class PostMessage extends Component {
               ? this.postMessage()
               : Alert.alert("Warning!", "Message is not empty!");
           }}
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            width: 150,
-            height: 50,
-            marginTop: 20,
-            borderRadius: 5,
-            borderColor: "#e1e1e1",
-            borderWidth: 1,
-            backgroundColor: "#5DADE2"
-          }}
+          style={styles.btn_post_mess_view}
         >
           <Text
-            style={{
-              color: "#fff",
-              fontSize: 15
-            }}
+            style={styles.btn_post_mess_txt}
           >
             Post Message
           </Text>
@@ -143,3 +121,34 @@ export default class PostMessage extends Component {
     Actions.pop();
   }
 }
+const styles = StyleSheet.create({
+   container:{
+       flex: 1,
+       alignItems: "center"
+   },
+    txt_input_mess:{
+        width: width - __d(30),
+        height: __d(100),
+        padding: __d(10),
+        fontSize: __d(13),
+        borderColor: "#e1e1e1",
+        borderWidth: __d(1),
+        borderRadius: __d(5),
+        marginTop: __d(15)
+    },
+    btn_post_mess_view:{
+        justifyContent: "center",
+        alignItems: "center",
+        width: __d(150),
+        height: __d(50),
+        marginTop: __d(20),
+        borderRadius: __d(5),
+        borderColor: "#e1e1e1",
+        borderWidth: __d(1),
+        backgroundColor: "#5DADE2"
+    },
+    btn_post_mess_txt:{
+        color: "#fff",
+        fontSize: __d(13)
+    }
+});

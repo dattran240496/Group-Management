@@ -20,6 +20,7 @@ import firebase from "./api/api";
 import Modal from "react-native-modalbox";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { _ } from "lodash";
+import { __d } from "./components/helpers/index";
 const { width, height } = Dimensions.get("window");
 
 @autobind
@@ -41,46 +42,26 @@ export default class Members extends Component {
   }
   render() {
     return (
-      <View
-        style={{
-          flex: 1,
-          alignItems: "center"
-        }}
-      >
+      <View style={styles.container}>
         <TextInput
           placeholder="Email..."
           placeholderStyle={{ color: "#e1e1e1" }}
-          style={{
-            width: width - 30,
-            height: 40,
-            paddingLeft: 10,
-            borderWidth: 1,
-            borderColor: "#e1e1e1",
-            fontSize: 13,
-            fontStyle: this.state.email !== "" ? "normal" : "italic",
-            borderRadius: 5,
-            marginTop: 20
-          }}
+          style={[
+            styles.txt_input_view,
+            {
+              fontStyle: this.state.email !== "" ? "normal" : "italic"
+            }
+          ]}
           onChangeText={name => {
             this.setState({ email: name });
             this._filterEmail(name);
           }}
         />
-        <Text
-          style={{
-            padding: 10,
-            alignItems: "flex-start",
-            width: width
-          }}
-        >
+        <Text style={styles.total_mem_txt}>
           Total members: {this.members.length}
         </Text>
         <FlatList
-          style={{
-            borderTopWidth: 1,
-            borderTopColor: "#e1e1e1",
-            marginTop: 10
-          }}
+          style={styles.fl_mem_view}
           ref={ref => (this.flatListMem = ref)}
           keyExtractor={(item, index) => index}
           data={this.members}
@@ -104,22 +85,8 @@ export default class Members extends Component {
   _renderItem(item, index) {
     return (
       <View key={"_key " + item} style={{}}>
-        <TouchableOpacity
-          onPress={() => {}}
-          style={{
-            width: width,
-            height: 50,
-            justifyContent: "center",
-            paddingLeft: 10,
-            borderBottomWidth: 1,
-            borderBottomColor: "#e1e1e1"
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 15
-            }}
-          >
+        <TouchableOpacity onPress={() => {}} style={styles.btn_mem_view}>
+          <Text style={styles.btn_mem_email_txt}>
             {item.email}
           </Text>
         </TouchableOpacity>
@@ -127,3 +94,40 @@ export default class Members extends Component {
     );
   }
 }
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center"
+  },
+  txt_input_view: {
+    width: width - __d(30),
+    height: __d(40),
+    paddingLeft: __d(10),
+    borderWidth: __d(1),
+    borderColor: "#e1e1e1",
+    fontSize: __d(13),
+    borderRadius: __d(5),
+    marginTop: __d(20)
+  },
+  total_mem_txt: {
+    padding: __d(10),
+    alignItems: "flex-start",
+    width: width
+  },
+  fl_mem_view: {
+    borderTopWidth: __d(1),
+    borderTopColor: "#e1e1e1",
+    marginTop: __d(10)
+  },
+  btn_mem_view: {
+    width: width,
+    height: __d(50),
+    justifyContent: "center",
+    paddingLeft: __d(10),
+    borderBottomWidth: __d(1),
+    borderBottomColor: "#e1e1e1"
+  },
+  btn_mem_email_txt: {
+    fontSize: __d(13)
+  }
+});

@@ -47,8 +47,8 @@ export default class EnterGroupName extends Component {
           style={[
             styles.text_input_view,
             {
-              borderTopLeftRadius: 5,
-              borderTopRightRadius: 5,
+              borderTopLeftRadius: __d(5),
+              borderTopRightRadius: __d(5),
               fontStyle: this.state.groupName !== "" ? "normal" : "italic"
             }
           ]}
@@ -69,8 +69,6 @@ export default class EnterGroupName extends Component {
           style={[
             styles.text_input_view,
             {
-              borderTopWidth: 1.5,
-              borderTopColor: "#e1e1e1",
               fontStyle: this.state.groupPass !== "" ? "normal" : "italic"
             }
           ]}
@@ -86,10 +84,7 @@ export default class EnterGroupName extends Component {
           style={[
             styles.text_input_view,
             {
-              borderTopWidth: 1.5,
-              borderTopColor: "#e1e1e1",
-              fontStyle:
-                this.state.confirmGroupPass !== "" ? "normal" : "italic"
+              fontStyle: this.state.confirmGroupPass !== "" ? "normal" : "italic"
             }
           ]}
           onChangeText={txt => {
@@ -180,30 +175,32 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     backgroundColor: "#e1e1e1",
-    paddingTop: 20
+    paddingTop: __d(20)
   },
   error_txt: {
     color: "red",
-    marginTop: 5
+    marginTop: __d(5)
   },
   text_input_view: {
-    width: width - 30,
-    height: 40,
-    paddingLeft: 10,
-    fontSize: 15,
-    backgroundColor: "#fff"
+    width: width - __d(30),
+    height: __d(40),
+    paddingLeft: __d(10),
+    fontSize: __d(15),
+    backgroundColor: "#fff",
+      borderTopWidth: __d(1.5),
+      borderTopColor: "#e1e1e1",
   },
   btn_add_new_group: {
-    width: width - 30,
-    height: 50,
-    borderBottomLeftRadius: 5,
-    borderBottomRightRadius: 5,
+    width: width - __d(30),
+    height: __d(50),
+    borderBottomLeftRadius: __d(5),
+    borderBottomRightRadius: __d(5),
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#5DADE2"
   },
   btn_add_new_group_txt: {
     color: "#fff",
-    fontSize: 20
+    fontSize: __d(20)
   }
 });

@@ -71,16 +71,10 @@ export default class MyGroup extends Component {
               renderItem={({ item, index }) => this._renderItem(item, index)}
             />
           : <View
-              style={{
-                paddingTop: __d(10),
-                justifyContent: "center",
-                alignItems: "center"
-              }}
+              style={styles.noti_no_group_view}
             >
               <Text
-                style={{
-                  fontSize: __d(18)
-                }}
+                style={styles.noti_no_group_txt}
               >
                 You have not joined the group!
               </Text>
@@ -90,21 +84,10 @@ export default class MyGroup extends Component {
                   this.Global.modalType = "loading";
                   Actions.groupList();
                 }}
-                style={{
-                  marginTop: __d(10),
-                  justifyContent: "center",
-                  alignItems: "center",
-                  backgroundColor: "#5DADE2",
-                  borderRadius: __d(5),
-                  width: __d(100),
-                  height: __d(40)
-                }}
+                style={styles.btn_search_group_view}
               >
                 <Text
-                  style={{
-                    fontSize: __d(13),
-                    color: "#fff"
-                  }}
+                  style={styles.btn_search_group_txt}
                 >
                   Search group
                 </Text>
@@ -270,5 +253,26 @@ const styles = StyleSheet.create({
     fontSize: __d(15),
     flex: 1,
     paddingLeft: __d(10)
-  }
+  },
+    noti_no_group_view:{
+        paddingTop: __d(10),
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    noti_no_group_txt:{
+        fontSize: __d(18)
+    },
+    btn_search_group_view:{
+        marginTop: __d(10),
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#5DADE2",
+        borderRadius: __d(5),
+        width: __d(100),
+        height: __d(40)
+    },
+    btn_search_group_txt:{
+        fontSize: __d(13),
+        color: "#fff"
+    }
 });

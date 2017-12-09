@@ -18,6 +18,7 @@ import { observable } from "mobx";
 import { autobind } from "core-decorators";
 import { observer } from "mobx-react/native";
 import firebase from "./api/api";
+import { __d } from "./components/helpers/index";
 import Modal from "react-native-modalbox";
 import Icon from "react-native-vector-icons/FontAwesome";
 const { width, height } = Dimensions.get("window");
@@ -48,30 +49,16 @@ export default class DetailMessage extends Component {
   render() {
     return (
       <View
-        style={{
-          flex: 1,
-          padding: 10
-        }}
+        style={styles.container}
       >
         <Text
-          style={{
-            fontSize: 13,
-            fontStyle: "italic"
-          }}
+          style={styles.timeAtPost_txt}
         >
           {this.state.message.timeAtPost}
         </Text>
         <TextInput
-          style={{
-            width: width - 30,
-            height: 120,
-            padding: 10,
-            borderRadius: 10,
-            borderColor: "#e1e1e1",
-            borderWidth: 1,
-            marginTop: 10,
-            fontSize: 13
-          }}
+            underlineColorAndroid="transparent"
+          style={styles.txt_input_mess}
           editable={this.info.email === this.User.user.email ? true : false}
           multiline={true}
           value={this.state.message.message}
@@ -121,22 +108,10 @@ export default class DetailMessage extends Component {
                     timeAtPost: formatTime
                   });
               }}
-              style={{
-                width: 120,
-                height: 40,
-                backgroundColor: "#5DADE2",
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: 5,
-                marginTop: 15,
-                marginLeft: (width - 120) / 2
-              }}
+              style={styles.btn_update_view}
             >
               <Text
-                style={{
-                  color: "#fff",
-                  fontSize: 13
-                }}
+                style={styles.btn_update_txt}
               >
                 Submit Message
               </Text>
@@ -146,3 +121,37 @@ export default class DetailMessage extends Component {
     );
   }
 }
+const styles = StyleSheet.create({
+   container:{
+       flex: 1,
+       padding: __d(10)
+   },
+    timeAtPost_txt:{
+        fontSize: __d(13),
+        fontStyle: "italic"
+    },
+    txt_input_mess:{
+        width: width - __d(30),
+        height: __d(120),
+        padding: __d(10),
+        borderRadius: __d(10),
+        borderColor: "#e1e1e1",
+        borderWidth: __d(1),
+        marginTop: __d(10),
+        fontSize: __d(13)
+    },
+    btn_update_view:{
+        width: __d(120),
+        height: __d(40),
+        backgroundColor: "#5DADE2",
+        justifyContent: "center",
+        alignItems: "center",
+        borderRadius: __d(5),
+        marginTop: __d(15),
+        marginLeft: (width - __d(120)) / 2
+    },
+    btn_update_txt:{
+        color: "#fff",
+        fontSize: __d(13)
+    }
+});

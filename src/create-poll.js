@@ -20,6 +20,7 @@ import { observer } from "mobx-react/native";
 import firebase from "./api/api";
 import Modal from "react-native-modalbox";
 import Icon from "react-native-vector-icons/FontAwesome";
+import { __d } from "./components/helpers/index";
 const { width, height } = Dimensions.get("window");
 @autobind
 @observer
@@ -42,25 +43,16 @@ export default class CreatePoll extends Component {
       arrayComponentOption.push(
         <View
           key={i}
-          style={{
-            width: width,
-            height: 30,
-            flexDirection: "row",
-            alignItems: "center",
-            paddingLeft: 5
-          }}
+          style={styles.option_view}
         >
-          <Icon name="plus" color="#e1e1e1" size={15} />
+          <Icon name="plus" color="#e1e1e1" size={__d(15)} />
           <TextInput
             placeholder="Add an option..."
             placeholderStyle={{ color: "#e1e1e1" }}
-            style={{
-              width: width - 20,
-              height: 30,
-              fontSize: 15,
-              fontStyle: this.state.message !== "" ? "normal" : "italic",
-              marginLeft: 5
-            }}
+            underlineColorAndroid="transparent"
+            style={[styles.option_btn_view, {
+                fontStyle: this.state.message !== "" ? "normal" : "italic",
+            }]}
             onChangeText={txtOption => {
               let arr = this.state.arrOptions;
               arr[i - 1] = txtOption;
@@ -89,25 +81,14 @@ export default class CreatePoll extends Component {
     }
     return (
       <View
-        style={{
-          flex: 1,
-          alignItems: "center"
-        }}
+        style={styles.container}
       >
         <TextInput
           placeholder="Ask something..."
           placeholderStyle={{ color: "#e1e1e1" }}
-          style={{
-            width: width - 30,
-            height: 100,
-            padding: 10,
-            fontSize: 15,
-            borderColor: "#e1e1e1",
-            borderWidth: 1,
-            fontStyle: this.state.message !== "" ? "normal" : "italic",
-              marginTop: 15,
-              borderRadius: 5
-          }}
+          style={[styles.txt_input_poll, {
+              fontStyle: this.state.message !== "" ? "normal" : "italic",
+          }]}
           onChangeText={message => {
             this.setState({
               message: message
@@ -117,10 +98,7 @@ export default class CreatePoll extends Component {
           multiline={true}
         />
         <View
-          style={{
-            width: width - 30,
-            height: 150
-          }}
+          style={styles.scrll_poll_view}
         >
           <ScrollView>
             {arrayComponentOption}
@@ -180,24 +158,60 @@ export default class CreatePoll extends Component {
               Alert.alert("Warning!", "Poll is not empty!");
             }
           }}
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            width: 150,
-            height: 50,
-            marginTop: 20,
-            borderRadius: 5,
-            borderColor: "#fff",
-            borderWidth: 1,
-              backgroundColor: "#5DADE2"
-          }}
+          style={styles.btn_update_view}
         >
-          <Text style={{
-              color: "#fff",
-              fontSize:  15
-          }}>Create Poll</Text>
+          <Text style={styles.btn_update_txt}>Create Poll</Text>
         </TouchableOpacity>
       </View>
     );
   }
 }
+const styles = StyleSheet.create({
+   container:  {
+       flex: 1,
+       alignItems: "center"
+   },
+    txt_input_poll:{
+        width: width - __d(30),
+        height: __d(100),
+        padding: __d(10),
+        fontSize: __d(15),
+        borderColor: "#e1e1e1",
+        borderWidth: __d(1),
+        marginTop: __d(15),
+        borderRadius: __d(5)
+    },
+    scrll_poll_view:{
+        width: width - __d(30),
+        height: __d(150)
+    },
+    btn_update_view:{
+        justifyContent: "center",
+        alignItems: "center",
+        width: __d(150),
+        height: __d(50),
+        marginTop: __d(20),
+        borderRadius: __d(5),
+        borderColor: "#fff",
+        borderWidth: __d(1),
+        backgroundColor: "#5DADE2"
+    },
+    btn_update_txt:{
+        color: "#fff",
+        fontSize:  __d(15)
+    },
+    option_view:{
+        width: width,
+        height: __d(30),
+        flexDirection: "row",
+        alignItems: "center",
+        paddingLeft: __d(5)
+    },
+    option_btn_view:{
+        width: width - __d(20),
+        height: __d(30),
+        fontSize: __d(13),
+        marginLeft: __d(5),
+    }
+
+});

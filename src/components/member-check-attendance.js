@@ -13,6 +13,7 @@ import { observable } from "mobx";
 import { autobind } from "core-decorators";
 import { observer } from "mobx-react/native";
 import Icon from "react-native-vector-icons/FontAwesome";
+import { __d } from "./helpers/index";
 const { width, height } = Dimensions.get("window");
 import firebase from "../api/api";
 import moment from "moment";
@@ -64,16 +65,7 @@ export default class MemberCheckAttendanceModal extends Component {
           onPress={() => {
             this._getLocationAsync();
           }}
-          style={{
-            width: 150,
-            height: 40,
-            borderWidth: 1,
-            borderRadius: 5,
-            backgroundColor: "#fff",
-            borderColor: "#e1e1e1",
-            justifyContent: "center",
-            alignItems: "center"
-          }}
+          style={styles.btn_attendance_view}
         >
           <Text>Attendant</Text>
         </TouchableOpacity>
@@ -81,17 +73,7 @@ export default class MemberCheckAttendanceModal extends Component {
           onPress={() => {
             this.Global.modalType = false;
           }}
-          style={{
-            width: 150,
-            height: 40,
-            borderWidth: 1,
-            borderRadius: 5,
-            backgroundColor: "#fff",
-            borderColor: "#e1e1e1",
-            justifyContent: "center",
-            alignItems: "center",
-            marginTop: 10
-          }}
+          style={styles.btn_close_view}
         >
           <Text>Close</Text>
         </TouchableOpacity>
@@ -135,49 +117,36 @@ export default class MemberCheckAttendanceModal extends Component {
   memberCheckedAttendance() {
     this._getLocationAsync();
     this.setState({});
-
-    // navigator.geolocation.getCurrentPosition(
-    //   position => {
-    //       let location = position.coords;
-    //     console.log("user location: ");
-    //     console.log(location.latitude);
-    //     console.log(location.longitude);
-    //
-    //       console.log("admin location: ");
-    //       console.log(this.admin.latitude);
-    //       console.log(this.admin.longitude);
-    //
-    //     distance = geolib.getDistance(
-    //       {
-    //         latitude: position.coords.latitude,
-    //         longitude: position.coords.longitude
-    //       },
-    //       {
-    //         latitude: this.admin.latitude,
-    //         longitude: this.admin.longitude
-    //       }
-    //     );
-    //     console.log("distance");
-    //     console.log(distance);
-    //   },
-    //   error => {
-    //     console.log(error);
-    //   },
-    //   {
-    //       enableHighAccuracy: true,
-    //       timeout: 20000,
-    //       maximumAge: 0
-    //   }
-    // );
   }
 }
 const styles = StyleSheet.create({
   container: {
-    width: width - 20,
-    height: 250,
+    width: width - __d(20),
+    height: __d(250),
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#fff",
-    borderRadius: 10
+    borderRadius: __d(10)
+  },
+  btn_attendance_view: {
+    width: __d(150),
+    height: __d(40),
+    borderWidth: __d(1),
+    borderRadius: __d(5),
+    backgroundColor: "#fff",
+    borderColor: "#e1e1e1",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  btn_close_view: {
+    width: __d(150),
+    height: __d(40),
+    borderWidth: __d(1),
+    borderRadius: __d(5),
+    backgroundColor: "#fff",
+    borderColor: "#e1e1e1",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: __d(10)
   }
 });
