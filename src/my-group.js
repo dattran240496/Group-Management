@@ -28,6 +28,7 @@ const { width, height } = Dimensions.get("window");
 export default class MyGroup extends Component {
   @observable numberGroupMem = 0;
   @observable info = null;
+  @observable myGroupList = this.props.FirebaseApi.myGroup;
   constructor(props) {
     super(props);
     this.User = this.props.User;
@@ -44,7 +45,7 @@ export default class MyGroup extends Component {
 
   }
   render() {
-    let myGroupData = this.state.myGroupList;
+    let myGroupData = this.myGroupList;
     return (
       <View style={styles.container}>
         <TextInput
@@ -61,7 +62,7 @@ export default class MyGroup extends Component {
             this.filterGroupName(name);
           }}
         />
-        {!_.isEmpty(this.state.myGroupList)
+        {!_.isEmpty(this.myGroupList)
           ? <FlatList
               style={styles.flat_list_view}
               ref={ref => (this.flatListMyGroup = ref)}
@@ -112,34 +113,7 @@ export default class MyGroup extends Component {
       });
     groupMem = groupMem ? Object.values(groupMem).length : 0;
     let _this = this;
-    let swipeBtns = [
-      {
-        text: "Delete",
-        backgroundColor: "red",
-        underlayColor: "red",
-        onPress: () => {
-            let idAdmin = "";
-            this.itemRefs
-                .child("Group")
-                .child(item.groupKey)
-                .child("createdGroupBy")
-                .on("value", dataSnapshot => {
-                    idAdmin = dataSnapshot.val();
-                });
-            this.info = this.FirebaseApi.accountData[idAdmin];
-            console.log(this.info);
-            if (this.info.email === this.User.user.email){
-
-            }
-        }
-      }
-    ];
     return (
-      <Swipeout
-        right={swipeBtns}
-        backgroundColor="transparent"
-        autoClose={true}
-      >
         <View key={"_key " + index} style={{}}>
           <TouchableOpacity
             onPress={() => {
@@ -162,7 +136,6 @@ export default class MyGroup extends Component {
             </Text>
           </TouchableOpacity>
         </View>
-      </Swipeout>
     );
   }
   filterGroupName(name) {
@@ -189,9 +162,7 @@ export default class MyGroup extends Component {
             groupKey: child.key,
           });
         });
-        this.setState({
-          myGroupList: this.FirebaseApi.myGroup
-        });
+          this.myGroupList = this.FirebaseApi.myGroup
         this.FirebaseApi.myGroup && this.Global.modalType === "loading"
           ? (this.Global.modalType = false)
           : null;

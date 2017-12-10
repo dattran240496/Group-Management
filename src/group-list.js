@@ -47,7 +47,7 @@ export default class GroupList extends Component {
   componentDidMount() {
   }
   render() {
-    let dataGroupList = this.state.groupNameList;
+    let dataGroupList = this.groupNameList;
     return (
       <View
         style={styles.container}
@@ -63,7 +63,7 @@ export default class GroupList extends Component {
             this.filterGroupName(name);
           }}
         />
-        {!_.isEmpty(this.state.groupNameList)
+        {!_.isEmpty(this.groupNameList)
           ? <FlatList
               style={styles.fl_view}
               ref={ref => (this.flatList = ref)}
@@ -114,14 +114,12 @@ export default class GroupList extends Component {
   }
   filterGroupName(name) {
     let _this = this;
-    let groupData = this.state.groupFilter;
+    let groupData = this.groupFilter;
     groupData = _.filter(groupData, function(o) {
       let regx = new RegExp(name.toLowerCase());
       return regx.test(o.groupName.toString().toLowerCase());
     });
-    this.setState({
-      groupNameList: groupData
-    });
+      this.groupNameList = groupData
   }
 
   _renderItem(item, index) {
@@ -207,10 +205,8 @@ export default class GroupList extends Component {
         return o.groupName !== v.groupName;
       });
     });
-    this.setState({
-      groupFilter: groupData,
-      groupNameList: groupData
-    });
+      this.groupFilter = groupData,
+      this.groupNameList = groupData
     this.Global.modalType = false;
   }
 
