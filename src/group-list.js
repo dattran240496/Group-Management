@@ -44,20 +44,21 @@ export default class GroupList extends Component {
   componentWillMount() {
     this.getGroupWithoutJoined();
   }
-  componentDidMount() {
-  }
+  componentDidMount() {}
   render() {
     let dataGroupList = this.groupNameList;
     return (
-      <View
-        style={styles.container}
-      >
+      <View style={styles.container}>
         <TextInput
           placeholder="Group name..."
           placeholderStyle={{ color: "#e1e1e1" }}
-          style={[styles.txtInput_search, {
-              fontStyle: this.state.groupNameSearch !== "" ? "normal" : "italic",
-          }]}
+          underlineColorAndroid="transparent"
+          style={[
+            styles.txtInput_search,
+            {
+              fontStyle: this.state.groupNameSearch !== "" ? "normal" : "italic"
+            }
+          ]}
           onChangeText={name => {
             this.setState({ groupNameSearch: name });
             this.filterGroupName(name);
@@ -72,11 +73,7 @@ export default class GroupList extends Component {
               extraData={this.state}
               renderItem={({ item, index }) => this._renderItem(item, index)}
             />
-          : <Text
-              style={styles.txt_no_group}
-            >
-              No group you can join!
-            </Text>}
+          : <Text style={styles.txt_no_group}>No group you can join!</Text>}
         <Modal
           ref={ref => (this._modalEnterPas = ref)}
           style={styles.modal_view}
@@ -85,13 +82,18 @@ export default class GroupList extends Component {
           coverScreen={true}
         >
           <TextInput
+            underlineColorAndroid="transparent"
+            secureTextEntry={true}
             placeholder="Group pass..."
             placeholderStyle={{
               color: "#e1e1e1"
             }}
-            style={[styles.txt_input_pass,{
+            style={[
+              styles.txt_input_pass,
+              {
                 fontStyle: this.state.groupPass !== "" ? "normal" : "italic"
-            }]}
+              }
+            ]}
             onChangeText={txt => {
               this.setState({ groupPass: txt });
             }}
@@ -102,11 +104,7 @@ export default class GroupList extends Component {
             }}
             style={styles.btn_join_view}
           >
-            <Text
-              style={styles.btn_join_txt}
-            >
-              Join group
-            </Text>
+            <Text style={styles.btn_join_txt}>Join group</Text>
           </TouchableOpacity>
         </Modal>
       </View>
@@ -119,7 +117,7 @@ export default class GroupList extends Component {
       let regx = new RegExp(name.toLowerCase());
       return regx.test(o.groupName.toString().toLowerCase());
     });
-      this.groupNameList = groupData
+    this.groupNameList = groupData;
   }
 
   _renderItem(item, index) {
@@ -138,22 +136,14 @@ export default class GroupList extends Component {
           }}
           style={styles.btn_group_view}
         >
-          <View
-            style={styles.btn_mem_number_view}
-          >
-            <View
-              style={styles.btn_mem_number_circle_view}
-            >
-              <Text
-                style={styles.btn_mem_number_circle_txt}
-              >
+          <View style={styles.btn_mem_number_view}>
+            <View style={styles.btn_mem_number_circle_view}>
+              <Text style={styles.btn_mem_number_circle_txt}>
                 {numberOfGroup}
               </Text>
             </View>
           </View>
-          <Text
-            style={styles.btn_group_txt}
-          >
+          <Text style={styles.btn_group_txt}>
             {name}
           </Text>
         </TouchableOpacity>
@@ -190,8 +180,8 @@ export default class GroupList extends Component {
                   groupName: this.state.groupSelectedToJoin.groupName
                 }),
               this._modalEnterPas.close(),
-              this.Global.modalType = "loading",
-              this.Global.groupKey = this.state.groupSelectedToJoin.groupKey,
+              (this.Global.modalType = "loading"),
+              (this.Global.groupKey = this.state.groupSelectedToJoin.groupKey),
               Actions.checkAttendance()
             )
           : Alert.alert("Warning!", "Invalid password!");
@@ -205,8 +195,7 @@ export default class GroupList extends Component {
         return o.groupName !== v.groupName;
       });
     });
-      this.groupFilter = groupData,
-      this.groupNameList = groupData
+    (this.groupFilter = groupData), (this.groupNameList = groupData);
     this.Global.modalType = false;
   }
 
@@ -235,106 +224,104 @@ export default class GroupList extends Component {
             });
           });
 
-          this.FirebaseApi.groupData !== null
-            ? this.filterGroupData()
-            : null;
+          this.FirebaseApi.groupData !== null ? this.filterGroupData() : null;
         });
       });
   }
 }
 const styles = StyleSheet.create({
-    container:{
-        flex: 1,
-        alignItems: "center",
-        backgroundColor: "#fff"
-    },
-    txtInput_search:{
-        width: width - __d(30),
-        height: __d(40),
-        paddingLeft: __d(10),
-        borderWidth: 1,
-        borderColor: "#e1e1e1",
-        fontSize: __d(13),
-        borderRadius: __d(5),
-        marginTop: __d(20),
-        backgroundColor: "#fff",
-    },
-    fl_view:{
-        borderTopWidth: 1,
-        borderTopColor: "#e1e1e1",
-        marginTop: __d(10)
-    },
-    txt_no_group:{
-        marginTop: __d(10),
-        //color: '#fff',
-        fontSize: __d(18)
-    },
-    modal_view:{
-        width: __d(300),
-        height: __d(150),
-        backgroundColor: "#fff",
-        borderRadius: __d(8),
-        justifyContent: "center",
-        alignItems: "center"
-        //flexDirection: "row"
-    },
-    txt_input_pass:{
-        marginTop: __d(5),
-        width: __d(250),
-        height: __d(40),
-        paddingLeft: __d(10),
-        borderRadius: __d(5),
-        borderWidth: __d(1),
-        borderColor: "#e1e1e1",
-        fontSize: __d(13),
-    },
-    btn_join_view:{
-        marginTop: __d(15),
-        width: __d(250),
-        height: __d(40),
-        justifyContent: "center",
-        alignItems: "center",
-        borderColor: "#e1e1e1",
-        borderWidth: __d(1),
-        backgroundColor: "#5DADE2",
-        borderRadius: __d(5)
-    },
-    btn_join_txt:{
-        color: "#fff",
-        fontSize: __d(15)
-    },
-    btn_group_view:{
-        width: width,
-        height: __d(50),
-        justifyContent: "center",
-        alignItems: "center",
-        borderBottomWidth: 1,
-        borderBottomColor: "#e1e1e1",
-        backgroundColor: "#fff",
-        flexDirection: "row"
-    },
-    btn_mem_number_view:{
-        width: __d(50),
-        height: __d(50),
-        backgroundColor: "#5DADE2",
-        justifyContent: "center",
-        alignItems: "center"
-    },
-    btn_mem_number_circle_view:{
-        width: __d(36),
-        height: __d(36),
-        borderRadius: __d(18),
-        borderWidth: __d(1),
-        borderColor: "#fff",
-        justifyContent: "center",
-        alignItems: "center"
-    },
-    btn_mem_number_circle_txt:{
-        color: "#fff"
-    },
-    btn_group_txt:{
-        fontSize: __d(15),
-        flex: 1,
-        paddingLeft: __d(10)
-    }
+  container: {
+    flex: 1,
+    alignItems: "center",
+    backgroundColor: "#fff"
+  },
+  txtInput_search: {
+    width: width - __d(30),
+    height: __d(40),
+    paddingLeft: __d(10),
+    borderWidth: 1,
+    borderColor: "#e1e1e1",
+    fontSize: __d(13),
+    borderRadius: __d(5),
+    marginTop: __d(20),
+    backgroundColor: "#fff"
+  },
+  fl_view: {
+    borderTopWidth: 1,
+    borderTopColor: "#e1e1e1",
+    marginTop: __d(10)
+  },
+  txt_no_group: {
+    marginTop: __d(10),
+    //color: '#fff',
+    fontSize: __d(18)
+  },
+  modal_view: {
+    width: __d(300),
+    height: __d(150),
+    backgroundColor: "#fff",
+    borderRadius: __d(8),
+    justifyContent: "center",
+    alignItems: "center"
+    //flexDirection: "row"
+  },
+  txt_input_pass: {
+    marginTop: __d(5),
+    width: __d(250),
+    height: __d(40),
+    paddingLeft: __d(10),
+    borderRadius: __d(5),
+    borderWidth: __d(1),
+    borderColor: "#e1e1e1",
+    fontSize: __d(13)
+  },
+  btn_join_view: {
+    marginTop: __d(15),
+    width: __d(250),
+    height: __d(40),
+    justifyContent: "center",
+    alignItems: "center",
+    borderColor: "#e1e1e1",
+    borderWidth: __d(1),
+    backgroundColor: "#5DADE2",
+    borderRadius: __d(5)
+  },
+  btn_join_txt: {
+    color: "#fff",
+    fontSize: __d(15)
+  },
+  btn_group_view: {
+    width: width,
+    height: __d(50),
+    justifyContent: "center",
+    alignItems: "center",
+    borderBottomWidth: 1,
+    borderBottomColor: "#e1e1e1",
+    backgroundColor: "#fff",
+    flexDirection: "row"
+  },
+  btn_mem_number_view: {
+    width: __d(50),
+    height: __d(50),
+    backgroundColor: "#5DADE2",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  btn_mem_number_circle_view: {
+    width: __d(36),
+    height: __d(36),
+    borderRadius: __d(18),
+    borderWidth: __d(1),
+    borderColor: "#fff",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  btn_mem_number_circle_txt: {
+    color: "#fff"
+  },
+  btn_group_txt: {
+    fontSize: __d(15),
+    flex: 1,
+    paddingLeft: __d(10)
+  }
 });

@@ -30,6 +30,7 @@ export default class CheckAttendance extends Component {
   @observable isChecking = false;
   @observable isEdit = false;
   @observable info = null;
+  @observable indexSelected = -1;
   constructor(props) {
     super(props);
     this.User = this.props.User;
@@ -46,143 +47,153 @@ export default class CheckAttendance extends Component {
     this.getInfoAdminAndGroup();
     this.getMembers();
     this.getMessage();
-      this.itemRefs
-          .child("Group")
-          .child(this.Global.groupKey)
-          .child("checkedAttendance")
-          .child("isChecking")
-          .on("value", dataSnapshot => {
-              dataSnapshot.forEach(child => {
-                  this.isChecking = child.val();
-                  this.isChecking === "true"
-                      ? this.info.email !== this.User.user.email
-                      ? (this.Global.modalType = "member-check-attendance")
-                      : null
-                      : (this.Global.modalType = false);
-              });
-          });
+    this.itemRefs
+      .child("Group")
+      .child(this.Global.groupKey)
+      .child("checkedAttendance")
+      .child("isChecking")
+      .on("value", dataSnapshot => {
+        dataSnapshot.forEach(child => {
+          this.isChecking = child.val();
+          this.isChecking === "true"
+            ? this.info && this.info.email !== this.User.user.email
+              ? (this.Global.modalType = "member-check-attendance")
+              : null
+            : null;
+        });
+      });
   }
   componentDidMount() {
-
+    this.info &&
+    this.FirebaseApi.members &&
+    this.state.messages &&
+    this.Global.modalType === "loading"
+      ? (this.Global.modalType = false)
+      : null;
   }
+
   render() {
-    let isAdmin = this.info && this.info.email === this.User.user.email ? true : false;
+    let isAdmin =
+      this.info && this.info.email === this.User.user.email ? true : false;
     return (
       <View style={styles.container}>
         <View style={styles.header_view}>
           <TouchableOpacity
             onPress={() => {
+              this.state.messages = null;
+              this.FirebaseApi.members = null;
+              this.info = null;
               Actions.pop({ type: "refresh" });
             }}
             style={styles.header_btn_back_view}
           >
-            <Icon name="angle-left" size={__d(32)} color="#fff" />
+            <Icon name="angle-left" size={__d(35)} color="#fff" />
           </TouchableOpacity>
           <Text style={styles.header_txt}>
             {this.Global.groupName.toString().replace("%", ".")}
           </Text>
-            <TouchableOpacity
-              style={styles.header_btn_setting_view}
-              onPress={() => {
-                this.isEdit = !this.isEdit;
-              }}
-            >
-              {this.isEdit
-                ? <View style={[styles.header_btn_setting_change_name_view,{
-                  height: isAdmin ? __d(75) : __d(25)
-                  }]}>
-                      {
-                        isAdmin ?
-                            <TouchableOpacity
-                                onPress={() => {
-                                    this.isEdit = false;
-                                    Actions.editGroup({
-                                        title: "Change group name",
-                                        typeEdit: "name"
-                                    });
-                                }}
-                                style={[
-                                    styles.header_btn_setting_change_name_btn_view,
-                                    {}
-                                ]}
-                            >
-                              <Text>Change group name</Text>
-                            </TouchableOpacity>
-                            : null
-                      }
-                      {
-                        isAdmin ?
-                            <TouchableOpacity
-                                onPress={() => {
-                                    this.isEdit = false;
-                                    Actions.editGroup({
-                                        title: "Change password",
-                                        typeEdit: "password"
-                                    });
-                                }}
-                                style={styles.header_btn_setting_change_name_btn_view}
-                            >
-                              <Text>Change password</Text>
-                            </TouchableOpacity>
-                            : null
-                      }
-                    <TouchableOpacity
-                      onPress={() => {
-                          Actions.pop();
-                          if (!isAdmin) {
-                          let deleteInMygroup = this.itemRefs
+          <TouchableOpacity
+            style={styles.header_btn_setting_view}
+            onPress={() => {
+              this.isEdit = !this.isEdit;
+            }}
+          >
+            {this.isEdit
+              ? <View
+                  style={[
+                    styles.header_btn_setting_change_name_view,
+                    {
+                      height: isAdmin ? __d(75) : __d(25)
+                    }
+                  ]}
+                >
+                  {isAdmin
+                    ? <TouchableOpacity
+                        onPress={() => {
+                          this.isEdit = false;
+                          Actions.editGroup({
+                            title: "Change group name",
+                            typeEdit: "name"
+                          });
+                        }}
+                        style={[
+                          styles.header_btn_setting_change_name_btn_view,
+                          {}
+                        ]}
+                      >
+                        <Text>Change group name</Text>
+                      </TouchableOpacity>
+                    : null}
+                  {isAdmin
+                    ? <TouchableOpacity
+                        onPress={() => {
+                          this.isEdit = false;
+                          Actions.editGroup({
+                            title: "Change password",
+                            typeEdit: "password"
+                          });
+                        }}
+                        style={styles.header_btn_setting_change_name_btn_view}
+                      >
+                        <Text>Change password</Text>
+                      </TouchableOpacity>
+                    : null}
+                  <TouchableOpacity
+                    onPress={() => {
+                      Actions.pop();
+                      if (!isAdmin) {
+                        let deleteInMygroup = this.itemRefs
+                          .child("Account")
+                          .child(this.User.user.id)
+                          .child("MyGroup")
+                          .child(this.Global.groupKey);
+                        deleteInMygroup.remove();
+                        let deleteInGroup = this.itemRefs
+                          .child("Group")
+                          .child(this.Global.groupKey)
+                          .child("groupMember")
+                          .child(this.User.user.id);
+                        deleteInGroup.remove();
+                      } else {
+                        let groupMem = [];
+                        this.itemRefs
+                          .child("Group")
+                          .child(this.Global.groupKey)
+                          .child("groupMember")
+                          .on("value", dataSnapshot => {
+                            groupMem = dataSnapshot.val();
+                          });
+                        Object.keys(groupMem).map((v, i) => {
+                          let childMyGroup = this.itemRefs
                             .child("Account")
-                            .child(this.User.user.id)
+                            .child(v)
                             .child("MyGroup")
                             .child(this.Global.groupKey);
-                            deleteInMygroup.remove();
-                          let deleteInGroup = this.itemRefs
-                            .child("Group")
-                            .child(this.Global.groupKey)
-                            .child("groupMember")
-                            .child(this.User.user.id);
-                            deleteInGroup.remove();
-                        } else {
-                            let groupMem = [];
-                            this.itemRefs
-                                .child("Group")
-                                .child(this.Global.groupKey)
-                                .child("groupMember")
-                                .on("value", dataSnapshot => {
-                                    groupMem = dataSnapshot.val();
-                                });
-                            Object.keys(groupMem).map((v, i)=>{
-                                let childMyGroup = this.itemRefs
-                                    .child("Account")
-                                    .child(v)
-                                    .child("MyGroup")
-                                    .child(this.Global.groupKey);
-                                childMyGroup.remove();
-                            });
-                            let deleteGroup = this.itemRefs.child("Group").child(this.Global.groupKey);
-                            deleteGroup.remove();
-                            this.Global.groupKey = "";
-                            this.Global.groupName = "";
-
-                        }
-                      }}
-                      style={[
-                        styles.header_btn_setting_change_name_btn_view,
-                        {
-                          borderBottomWidth: 0
-                        }
-                      ]}
-                    >
-                      <Text>
-                        {isAdmin
-                          ? "Delete group"
-                          : "Leave group"}
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                : null}
-              <Icon name="cog" size={__d(20)} color="#fff" />
-            </TouchableOpacity>
+                          childMyGroup.remove();
+                        });
+                        let deleteGroup = this.itemRefs
+                          .child("Group")
+                          .child(this.Global.groupKey);
+                        deleteGroup.remove();
+                        this.Global.groupKey = "";
+                        this.Global.groupName = "";
+                      }
+                    }}
+                    style={[
+                      styles.header_btn_setting_change_name_btn_view,
+                      {
+                        borderBottomWidth: 0
+                      }
+                    ]}
+                  >
+                    <Text>
+                      {isAdmin ? "Delete group" : "Leave group"}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              : null}
+            <Icon name="cog" size={__d(20)} color="#fff" />
+          </TouchableOpacity>
         </View>
 
         <View style={styles.admin_info_view}>
@@ -240,9 +251,7 @@ export default class CheckAttendance extends Component {
           />
         </View>
 
-        <View
-          style={[styles.func_view]}
-        >
+        <View style={[styles.func_view]}>
           {this.info &&
             isAdmin &&
             <TouchableOpacity
@@ -256,7 +265,11 @@ export default class CheckAttendance extends Component {
                 }
               ]}
             >
-              <Icon name="check-circle-o" color="#fff" size={__d(20)} />
+              <Icon
+                name="check"
+                color={this.indexSelected === 1 ? "#5DADE2" : "#b3b3b3"}
+                size={__d(35)}
+              />
             </TouchableOpacity>}
 
           <TouchableOpacity
@@ -270,11 +283,15 @@ export default class CheckAttendance extends Component {
               }
             ]}
           >
-            <Icon name="users" color="#fff" size={__d(20)} />
+            <Icon
+              name="users"
+              color={this.indexSelected === 2 ? "#5DADE2" : "#b3b3b3"}
+              size={__d(35)}
+            />
           </TouchableOpacity>
 
           {this.info &&
-          isAdmin &&
+            isAdmin &&
             <TouchableOpacity
               style={[
                 styles.func_btn_view,
@@ -286,10 +303,14 @@ export default class CheckAttendance extends Component {
                 Actions.postMessage();
               }}
             >
-              <Icon name="commenting-o" color="#fff" size={__d(20)} />
+              <Icon
+                name="commenting-o"
+                color={this.indexSelected === 3 ? "#5DADE2" : "#b3b3b3"}
+                size={__d(35)}
+              />
             </TouchableOpacity>}
           {this.info &&
-          isAdmin &&
+            isAdmin &&
             <TouchableOpacity
               style={[
                 styles.func_btn_view,
@@ -302,7 +323,11 @@ export default class CheckAttendance extends Component {
                 Actions.createPoll();
               }}
             >
-              <Icon name="flag" color="#fff" size={__d(20)} />
+              <Icon
+                name="flag"
+                color={this.indexSelected === 4 ? "#5DADE2" : "#b3b3b3"}
+                size={__d(35)}
+              />
             </TouchableOpacity>}
         </View>
       </View>
@@ -318,8 +343,10 @@ export default class CheckAttendance extends Component {
       .on("value", dataSnapshot => {
         idAdmin = dataSnapshot.val();
         this.info = _this.FirebaseApi.accountData[dataSnapshot.val()];
-        this.info && this.Global.modalType === "loading"
-          ? (this.Global.modalType = false)
+        this.FirebaseApi.members &&
+        this.state.messages &&
+        this.Global.modalType === "loading"
+          ? ((this.Global.modalType = false), this.setState({}))
           : null;
       });
 
@@ -344,15 +371,15 @@ export default class CheckAttendance extends Component {
             email: child.child("email").val(),
             token: child.child("token").val()
           };
+          this.info &&
+          this.state.messages &&
+          this.Global.modalType === "loading"
+            ? ((this.Global.modalType = false), this.setState({}))
+            : null;
         });
       });
 
     // if members and messages got, turn off modal loading
-    this.FirebaseApi.members &&
-    this.state.messages &&
-    this.Global.modalType === "loading"
-      ? (this.Global.modalType = false)
-      : null;
   }
   getMessage() {
     let arrMessage = [];
@@ -385,14 +412,14 @@ export default class CheckAttendance extends Component {
         this.setState({
           messages: arrMessage
         });
+        this.info &&
+        this.FirebaseApi.members &&
+        this.Global.modalType === "loading"
+          ? ((this.Global.modalType = false), this.setState({}))
+          : null;
       });
     //console.log(this.state.messages);
     // if members and messages got, turn off modal loading
-    this.FirebaseApi.members &&
-    this.state.messages &&
-    this.Global.modalType === "loading"
-      ? (this.Global.modalType = false)
-      : null;
   }
   _renderMessages(item, index) {
     let _this = this;
@@ -486,9 +513,14 @@ const styles = StyleSheet.create({
     zIndex: 1
   },
   header_btn_back_view: {
-    left: __d(15),
-    top: __d(20),
-    position: "absolute"
+    position: "absolute",
+    width: __d(64),
+    height: __d(64),
+    justifyContent: "center",
+    left: 0,
+    top: 0,
+    paddingLeft: __d(10),
+    paddingTop: __d(10)
   },
   header_txt: {
     color: "#fff",
@@ -523,7 +555,7 @@ const styles = StyleSheet.create({
   admin_info_view: {
     flex: 2.5,
     borderBottomColor: "#e1e1e1",
-    borderBottomWidth: __d(1),
+    borderBottomWidth: __d(2),
     padding: __d(10),
     zIndex: 0,
     borderTopColor: "#e1e1e1",
@@ -592,7 +624,11 @@ const styles = StyleSheet.create({
     width: width,
     height: __d(50),
     flexDirection: "row",
-    justifyContent: "center"
+    justifyContent: "center",
+    backgroundColor: "#fff",
+    zIndex: 0,
+    borderTopColor: "#e1e1e1",
+    borderTopWidth: __d(1)
   },
   func_btn_view: {
     flex: 1,
@@ -600,8 +636,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     //borderRadius: __d(5),
-    borderLeftColor: "#e1e1e1",
-    borderLeftWidth: __d(1),
-    backgroundColor: "#5DADE2"
+    //borderLeftColor: "#e1e1e1",
+    //borderLeftWidth: __d(1),
+    //backgroundColor: "#5DADE2",
+    zIndex: 1
   }
 });

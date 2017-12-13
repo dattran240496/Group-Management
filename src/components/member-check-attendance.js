@@ -5,7 +5,8 @@ import {
   View,
   TouchableOpacity,
   AsyncStorage,
-  Dimensions
+  Dimensions,
+    Alert
 } from "react-native";
 import Expo from "expo";
 import { Actions, Router, Scene } from "react-native-mobx";
@@ -20,6 +21,7 @@ import moment from "moment";
 let geolib = require("geolib");
 import { Constants, Location, Permissions } from "expo";
 
+const DISTANCE = 50; // max distance to check attendance
 @autobind
 @observer
 export default class MemberCheckAttendanceModal extends Component {
@@ -99,9 +101,7 @@ export default class MemberCheckAttendanceModal extends Component {
         longitude: this.admin.longitude
       }
     );
-
-    if (distance < 20) {
-      console.log(this.newUpdate);
+    if (distance < DISTANCE) {
       this.itemRefs
         .child("Group")
         .child(this.Global.groupKey)
@@ -110,8 +110,14 @@ export default class MemberCheckAttendanceModal extends Component {
         .child("members")
         .child(this.User.user.id)
         .update({
-          email: this.User.user.email
+          email: this.User.user.email,
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude
         });
+      this.Global.modalType = false;
+    }else{
+      console.log(distance);
+      Alert.alert("Warning!", "You can not check attendance!")
     }
   }
   memberCheckedAttendance() {

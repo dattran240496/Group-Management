@@ -25,13 +25,18 @@ export default class LoadingModal extends Component {
   constructor(props) {
     super(props);
   }
+
+  componentDidMount(){
+
+  }
   render() {
     return (
       <View style={styles.container}>
         <Image
             source={require("../images/loading/loadinganimation.gif")}
             style={{
-              flex:1
+                width: width,
+                height: height,
             }}
         />
       </View>
@@ -41,7 +46,6 @@ export default class LoadingModal extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     width: width,
     height: height,
     alignItems: "center",

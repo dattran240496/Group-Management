@@ -44,6 +44,9 @@ export default class MyGroup extends Component {
     this.getMyGroup();
 
   }
+  componentDidMount(){
+
+  }
   render() {
     let myGroupData = this.myGroupList;
     return (
@@ -118,9 +121,10 @@ export default class MyGroup extends Component {
           <TouchableOpacity
             onPress={() => {
               //this.state.groupName = Object.keys(item);
-              this.Global.modalType = "loading";
               this.Global.groupKey = item.groupKey;
-              Actions.checkAttendance();
+                this.FirebaseApi.members = null;
+                this.Global.modalType = "loading";
+                Actions.checkAttendance();
             }}
             style={styles.fl_child_view}
           >

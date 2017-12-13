@@ -44,7 +44,7 @@ export default class Login extends Component {
               fontSize: __d(40),
               color: "#fff",
               fontStyle: "italic",
-              fontFamily: "Georgia-BoldItalic"
+              fontFamily: Platform.OS === "ios" ? "Georgia-BoldItalic" : "sans-serif"
             }}
           >
             Check
@@ -55,7 +55,7 @@ export default class Login extends Component {
               color: "#fff",
               paddingLeft: __d(45),
               fontStyle: "italic",
-              fontFamily: Platform.OS === "ios" ? "Georgia-BoldItalic" : null
+              fontFamily: Platform.OS === "ios" ? "Georgia-BoldItalic" : "sans-serif"
             }}
           >
             Attendance
@@ -154,7 +154,7 @@ export default class Login extends Component {
       .then(responseJS => {
         let register = _this.registerForPushNotificationsAsync();
         let token = "";
-        token !== ""
+          register !== ""
           ? register.then(function(o) {
               token = o;
               itemRefs.child("Account").child(responseJS.id).update({

@@ -110,6 +110,8 @@ export default class ModalBox extends Component {
               backgroundColor: 'transparent'
           }, this.Global.modalType === "loading" ? {width: width, height: height} : null]}
           ref={ref => (this.modal = ref)}
+          swipeToClose={false}
+          backdropPressToClose={false}
           position={"center"}
           onClosed={this._onClose}
           onOpened={this._onOpen}

@@ -30,6 +30,7 @@ export default class Account extends Component {
     this.Global = this.props.Global;
     this.FirebaseApi = this.props.FirebaseApi;
     this.User = this.props.User;
+      this.itemRefs = firebase.database().ref("app_expo");
     this.state = {};
   }
   render() {
@@ -52,6 +53,9 @@ export default class Account extends Component {
               this.FirebaseApi.accountData = null;
               this.FirebaseApi.myGroup = null;
               AsyncStorage.removeItem("@user:key");
+              this.itemRefs.child("Account").child(this.User.user.id).update({
+                  token: ""
+              });
               Actions.login({ type: "replace" });
             }}
           >

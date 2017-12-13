@@ -17,7 +17,16 @@
       "assetExts": ["ttf", "mp4"]
     },
     "ios": {
+      "bundleIdentifier": "com.yourcompany.yourappname",
       "supportsTablet": true
+    },
+    "android": {
+      "package": "com.yourcompany.yourappname",
+      "config": {
+        "googleMaps": {
+          "apiKey": "796165831117-gvkmjfc8fo2756b3cascvufksetoh0rk.apps.googleusercontent.com"
+        }
+      }
     }
   }
 }
