@@ -14,9 +14,9 @@ import { observable } from "mobx";
 import { autobind } from "core-decorators";
 import { observer } from "mobx-react/native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { __d } from "./helpers/index";
+import { __d } from "../helpers/index";
 import Modal from "react-native-modalbox";
-import firebase from "../api/api";
+import firebase from "../../api/api.js";
 import moment from "moment";
 import { Constants, Location, Permissions, FileSystem, MapView } from "expo";
 const { width, height } = Dimensions.get("window");
@@ -60,7 +60,7 @@ export default class CheckAttendanceModal extends Component {
       .on("value", dataSnapshot => {
         this.newUpdate = dataSnapshot.val();
       });
-    this.itemRefs
+    this.newUpdate && this.itemRefs
       .child("Group")
       .child(this.Global.groupKey)
       .child("checkedAttendance")

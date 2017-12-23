@@ -141,7 +141,8 @@ export default class EnterGroupName extends Component {
             .child("groupMember")
             .child(this.User.user.id)
             .update({
-              email: this.User.user.email
+              email: this.User.user.email,
+                name: this.User.user.name
             });
           this.itemRefs
             .child("Account")

@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   AsyncStorage,
   Image,
-    Platform
+  Platform
 } from "react-native";
 import Expo, { Notifications, Permissions } from "expo";
 import { Actions, Router, Scene } from "react-native-mobx";
@@ -17,10 +17,12 @@ import Loading from "./loading";
 import { _ } from "lodash";
 import firebase from "./api/api";
 import { __d } from "./components/helpers/index";
+const PUSH_ENDPOINT = 'https://your-server.com/users/push-token';
 
 @autobind
 @observer
 export default class Login extends Component {
+    @observable register = null;
   constructor(props) {
     super(props);
 
@@ -29,7 +31,8 @@ export default class Login extends Component {
     this.Global = this.props.Global;
     this.itemRefs = firebase.database().ref("app_expo");
   }
-  componentWillMount() {}
+    componentWillMount() {
+    }
   render() {
     return (
       <View style={styles.container}>
@@ -44,7 +47,8 @@ export default class Login extends Component {
               fontSize: __d(40),
               color: "#fff",
               fontStyle: "italic",
-              fontFamily: Platform.OS === "ios" ? "Georgia-BoldItalic" : "sans-serif"
+              fontFamily:
+                Platform.OS === "ios" ? "Georgia-BoldItalic" : "sans-serif"
             }}
           >
             Check
@@ -55,7 +59,8 @@ export default class Login extends Component {
               color: "#fff",
               paddingLeft: __d(45),
               fontStyle: "italic",
-              fontFamily: Platform.OS === "ios" ? "Georgia-BoldItalic" : "sans-serif"
+              fontFamily:
+                Platform.OS === "ios" ? "Georgia-BoldItalic" : "sans-serif"
             }}
           >
             Attendance
@@ -111,7 +116,7 @@ export default class Login extends Component {
   // set user data into local
   async setData(item, token) {
     try {
-      await AsyncStorage.setItem("@user:key", JSON.stringify(item));
+      await AsyncStorage.setItem("@user:key", JSON.stringify(item.id));
     } catch (error) {
       console.log(error);
     }
@@ -121,18 +126,26 @@ export default class Login extends Component {
   async registerForPushNotificationsAsync() {
     // Android remote notification permissions are granted during the app
     // install, so this will only ask on iOS
-    const { Permissions } = Expo;
-    let { status } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
-    //
-
-    // Stop here if the user did not grant permissions
-    if (status !== "granted") {
-      alert(
-        "Hey! You might want to enable notifications for my app, they are good."
+      const { status: existingStatus } = await Permissions.getAsync(
+          Permissions.NOTIFICATIONS
       );
+      let finalStatus = existingStatus;
 
-      return;
-    }
+      // only ask if permissions have not already been determined, because
+      // iOS won't necessarily prompt the user a second time.
+      if (existingStatus !== 'granted') {
+          // Android remote notification permissions are granted during the app
+          // install, so this will only ask on iOS
+          const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+          finalStatus = status;
+      }
+
+      // Stop here if the user did not grant permissions
+      if (finalStatus !== 'granted') {
+          return;
+      }
+
+      // Get the token that uniquely identifies this device
 
     let token = await Notifications.getExpoPushTokenAsync();
 
@@ -141,6 +154,8 @@ export default class Login extends Component {
   // get user info in local
   async getUserInfo(accessToken, itemRefs) {
     let _this = this;
+    let isLogin = false;
+
     let userInfoResponse = await fetch(
       "https://www.googleapis.com/userinfo/v2/me",
       {
@@ -152,26 +167,35 @@ export default class Login extends Component {
     )
       .then(response => response.json())
       .then(responseJS => {
+        this.itemRefs.child("Account").on("value", dataSnapshot => {
+          dataSnapshot.forEach(child => {
+            if (child.key === responseJS.id) {
+              isLogin = true;
+            }
+          });
+        });
         let register = _this.registerForPushNotificationsAsync();
         let token = "";
-          register !== ""
-          ? register.then(function(o) {
-              token = o;
-              itemRefs.child("Account").child(responseJS.id).update({
-                token: token,
-                infoAccount: responseJS
-              });
-              responseJS["token"] = token;
-              _this.setData(responseJS);
-              return Actions.homePage({ user: responseJS, type: "replace" });
-            })
-          : this.setData(responseJS);
-        itemRefs.child("Account").child(responseJS.id).update({
-          token: token,
-          infoAccount: responseJS
+        register.then(function(o) {
+          token = o;
+          console.log(token);
+          token
+            ? (
+                itemRefs.child("Account").child(responseJS.id).update({
+                  token: token
+                }),
+                (responseJS["token"] = token)
+              )
+            : null;
         });
-          this.Global.modalType = false;
-        return Actions.homePage({ user: responseJS, type: "replace" });
+        !isLogin
+          ? itemRefs.child("Account").child(responseJS.id).update({
+              infoAccount: responseJS
+            })
+          : null;
+        this.setData(responseJS);
+        Actions.homePage({ user: responseJS.id, type: "replace" });
+        this.Global.modalType = false;
       })
       .catch(error => {
         console.error(error);
@@ -195,8 +219,8 @@ export default class Login extends Component {
         return Actions.login({ type: "replace" });
       }
     } catch (e) {
-        this.Global.modalType = false;
-        return Actions.login({ type: "replace" });
+      this.Global.modalType = false;
+      return Actions.login({ type: "replace" });
     }
   }
 
@@ -205,6 +229,7 @@ export default class Login extends Component {
     try {
       let value = await AsyncStorage.getItem("@user:key");
       value = JSON.parse(value);
+      console.log(value);
       if (value !== null) {
         return Actions.homePage({ user: value, type: "replace" });
       } else {

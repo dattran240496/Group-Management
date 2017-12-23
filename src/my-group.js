@@ -42,16 +42,14 @@ export default class MyGroup extends Component {
   }
   componentWillMount() {
     this.getMyGroup();
-
   }
-  componentDidMount(){
-
-  }
+  componentDidMount() {}
   render() {
     let myGroupData = this.myGroupList;
     return (
       <View style={styles.container}>
         <TextInput
+          underlineColorAndroid="transparent"
           placeholder="Group name..."
           placeholderStyle={{ color: "#e1e1e1" }}
           style={[
@@ -74,12 +72,8 @@ export default class MyGroup extends Component {
               extraData={this.state}
               renderItem={({ item, index }) => this._renderItem(item, index)}
             />
-          : <View
-              style={styles.noti_no_group_view}
-            >
-              <Text
-                style={styles.noti_no_group_txt}
-              >
+          : <View style={styles.noti_no_group_view}>
+              <Text style={styles.noti_no_group_txt}>
                 You have not joined the group!
               </Text>
               <TouchableOpacity
@@ -90,11 +84,7 @@ export default class MyGroup extends Component {
                 }}
                 style={styles.btn_search_group_view}
               >
-                <Text
-                  style={styles.btn_search_group_txt}
-                >
-                  Search group
-                </Text>
+                <Text style={styles.btn_search_group_txt}>Search group</Text>
               </TouchableOpacity>
             </View>}
       </View>
@@ -117,29 +107,30 @@ export default class MyGroup extends Component {
     groupMem = groupMem ? Object.values(groupMem).length : 0;
     let _this = this;
     return (
-        <View key={"_key " + index} style={{}}>
-          <TouchableOpacity
-            onPress={() => {
-              //this.state.groupName = Object.keys(item);
-              this.Global.groupKey = item.groupKey;
-                this.FirebaseApi.members = null;
-                this.Global.modalType = "loading";
-                Actions.checkAttendance();
-            }}
-            style={styles.fl_child_view}
-          >
-            <View style={styles.fl_child_mem_view}>
-              <View style={styles.fl_child_mem_circle}>
-                <Text style={styles.fl_child_mem_number}>
-                  {groupMem}
-                </Text>
-              </View>
+      <View key={"_key " + index} style={{}}>
+        <TouchableOpacity
+          onPress={() => {
+            //this.state.groupName = Object.keys(item);
+            this.Global.groupKey = item.groupKey;
+            this.FirebaseApi.members = null;
+            this.Global.modalType = "loading";
+            this.Global.isFooter = true;
+            Actions.checkAttendance();
+          }}
+          style={styles.fl_child_view}
+        >
+          <View style={styles.fl_child_mem_view}>
+            <View style={styles.fl_child_mem_circle}>
+              <Text style={styles.fl_child_mem_number}>
+                {groupMem}
+              </Text>
             </View>
-            <Text style={styles.fl_child_mem_name}>
-              {name}
-            </Text>
-          </TouchableOpacity>
-        </View>
+          </View>
+          <Text style={styles.fl_child_mem_name}>
+            {name}
+          </Text>
+        </TouchableOpacity>
+      </View>
     );
   }
   filterGroupName(name) {
@@ -163,10 +154,10 @@ export default class MyGroup extends Component {
         dataSnapshot.forEach(child => {
           this.FirebaseApi.myGroup.push({
             groupName: child.child("groupName").val(),
-            groupKey: child.key,
+            groupKey: child.key
           });
         });
-          this.myGroupList = this.FirebaseApi.myGroup
+        this.myGroupList = this.FirebaseApi.myGroup;
         this.FirebaseApi.myGroup && this.Global.modalType === "loading"
           ? (this.Global.modalType = false)
           : null;
@@ -229,25 +220,25 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingLeft: __d(10)
   },
-    noti_no_group_view:{
-        paddingTop: __d(10),
-        justifyContent: "center",
-        alignItems: "center"
-    },
-    noti_no_group_txt:{
-        fontSize: __d(18)
-    },
-    btn_search_group_view:{
-        marginTop: __d(10),
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "#5DADE2",
-        borderRadius: __d(5),
-        width: __d(100),
-        height: __d(40)
-    },
-    btn_search_group_txt:{
-        fontSize: __d(13),
-        color: "#fff"
-    }
+  noti_no_group_view: {
+    paddingTop: __d(10),
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  noti_no_group_txt: {
+    fontSize: __d(18)
+  },
+  btn_search_group_view: {
+    marginTop: __d(10),
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#5DADE2",
+    borderRadius: __d(5),
+    width: __d(100),
+    height: __d(40)
+  },
+  btn_search_group_txt: {
+    fontSize: __d(13),
+    color: "#fff"
+  }
 });

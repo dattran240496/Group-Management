@@ -87,7 +87,7 @@ export default class Members extends Component {
       <View key={"_key " + item} style={{}}>
         <TouchableOpacity onPress={() => {}} style={styles.btn_mem_view}>
           <Text style={styles.btn_mem_email_txt}>
-            {item.email}
+            {item.name} ({item.email.slice(0, item.email.indexOf("@"))})
           </Text>
         </TouchableOpacity>
       </View>

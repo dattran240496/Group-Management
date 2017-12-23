@@ -45,16 +45,14 @@ export default class Homepage extends Component {
   }
   componentWillMount() {
     //this.Global.modalType = "loading";
-    this.props.user ? (this.User.user = this.props.user) : null;
+    this.props.user ? this.getUserInfo(this.props.user) : null;
     !this.FirebaseApi.groupData
       ? this.getGroupName()
-      : (this.Global.modalType = false);
-    !this.FirebaseApi.myGroup
-      ? this.getMyGroup()
       : (this.Global.modalType = false);
     !this.FirebaseApi.accessToken
       ? this.getAccount()
       : (this.Global.modalType = false);
+
     //this.isDisable = !!(this.FirebaseApi.groupData && this.FirebaseApi.myGroup);
     //this.isDisable ? this.Global.modalType = false : null;
   }
@@ -199,6 +197,7 @@ export default class Homepage extends Component {
       this.FirebaseApi.myGroup &&
       this.FirebaseApi.groupData &&
       this.FirebaseApi.accountData &&
+      this.User.user &&
       this.Global.modalType === "loading"
         ? (this.Global.modalType = false)
         : null;
@@ -222,6 +221,7 @@ export default class Homepage extends Component {
         this.FirebaseApi.myGroup &&
         this.FirebaseApi.groupData &&
         this.FirebaseApi.accountData &&
+        this.User.user &&
         this.Global.modalType === "loading"
           ? (this.Global.modalType = false)
           : null;
@@ -235,8 +235,8 @@ export default class Homepage extends Component {
       dataSnapshot.forEach(child => {
         this.FirebaseApi.accountData[child.key] = {
           email: child.child("infoAccount").child("email").val(),
-          family_name: child.child("infoAccount").child("family_name").val(),
-          given_name: child.child("infoAccount").child("given_name").val(),
+          //family_name: child.child("infoAccount").child("family_name").val(),
+          //given_name: child.child("infoAccount").child("given_name").val(),
           name: child.child("infoAccount").child("name").val(),
           picture: child.child("infoAccount").child("picture").val(),
           token: child.child("token").val()
@@ -245,10 +245,33 @@ export default class Homepage extends Component {
       this.FirebaseApi.myGroup &&
       this.FirebaseApi.groupData &&
       this.FirebaseApi.accountData &&
+      this.User.user &&
       this.Global.modalType === "loading"
         ? (this.Global.modalType = false)
         : null;
     });
+  }
+
+  getUserInfo(id) {
+    this.itemRefs.child("Account").child(id).on("value", dataSnapshot => {
+      this.User.user = {
+        email: dataSnapshot.child("infoAccount").child("email").val(),
+        name: dataSnapshot.child("infoAccount").child("name").val(),
+        id: dataSnapshot.child("infoAccount").child("id").val(),
+        picture: dataSnapshot.child("infoAccount").child("picture").val(),
+        token: dataSnapshot.child("token").val()
+      };
+      !this.FirebaseApi.myGroup
+        ? this.getMyGroup()
+        : (this.Global.modalType = false);
+    });
+    this.FirebaseApi.myGroup &&
+    this.FirebaseApi.groupData &&
+    this.FirebaseApi.accountData &&
+    this.User.user &&
+    this.Global.modalType === "loading"
+      ? (this.Global.modalType = false)
+      : null;
   }
 }
 

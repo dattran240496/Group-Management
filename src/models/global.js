@@ -12,6 +12,7 @@ class Global {
     @observable groupName = "";
     @observable groupKey = "";
     @observable urlPushNoti = "https://exp.host/--/api/v2/push/send";
+    @observable isFooter = false;
 }
 const global = new Global();
 export default global;

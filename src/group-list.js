@@ -169,7 +169,8 @@ export default class GroupList extends Component {
                 .child("groupMember")
                 .child(_id)
                 .update({
-                  email: this.User.user.email
+                  email: this.User.user.email,
+                  name: this.User.user.name
                 }),
               this.itemRefs
                 .child("Account")

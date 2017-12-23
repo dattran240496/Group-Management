@@ -178,6 +178,24 @@ export default class VotePoll extends Component {
                       this.setState({
                           poll: mess
                       });
+                      Object.values(this.FirebaseApi.members).map((v, i) => {
+                          fetch(this.Global.urlPushNoti, {
+                              method: "POST",
+                              headers: {
+                                  Accept: "application/json",
+                                  "Content-Type": "application/json",
+                                  "accept-encoding": "gzip, deflate"
+                              },
+                              body: JSON.stringify({
+                                  to: v.token,
+                                  sound: "default",
+                                  body: this.state.poll.message
+                              })
+                          })
+                              .then(response => response.json())
+                              .then(response => console.log(response))
+                              .catch(e => console.log(e));
+                      });
                       this.itemRefs
                           .child("Group")
                           .child(this.Global.groupKey)

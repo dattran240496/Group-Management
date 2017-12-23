@@ -83,6 +83,7 @@ export default class CheckAttendance extends Component {
               this.state.messages = null;
               this.FirebaseApi.members = null;
               this.info = null;
+              this.Global.isFooter = false;
               Actions.pop({ type: "refresh" });
             }}
             style={styles.header_btn_back_view}
@@ -205,24 +206,11 @@ export default class CheckAttendance extends Component {
 
             <View style={styles.admin_info}>
               <View style={{ flexDirection: "row" }}>
-                <Text style={styles.txt_name}>Name</Text>
-                <Text style={[styles.txt_name, { width: 20 }]}>:</Text>
                 <Text style={styles.admin_info_name}>
-                  {this.info ? this.info.name : ""}
+                  {this.info ? this.info.name.toString().toUpperCase() : ""}
                 </Text>
               </View>
               <View style={{ flexDirection: "row" }}>
-                <Text
-                  style={[
-                    styles.txt_name,
-                    {
-                      width: __d(50)
-                    }
-                  ]}
-                >
-                  Email
-                </Text>
-                <Text style={[styles.txt_name, { width: 20 }]}>:</Text>
                 <Text
                   numberOfLines={1}
                   ellipsizeMode="tail"
@@ -251,85 +239,7 @@ export default class CheckAttendance extends Component {
           />
         </View>
 
-        <View style={[styles.func_view]}>
-          {this.info &&
-            isAdmin &&
-            <TouchableOpacity
-              onPress={() => {
-                this.Global.modalType = "check-attendance";
-              }}
-              style={[
-                styles.func_btn_view,
-                {
-                  borderLeftWidth: 0
-                }
-              ]}
-            >
-              <Icon
-                name="check"
-                color={this.indexSelected === 1 ? "#5DADE2" : "#b3b3b3"}
-                size={__d(35)}
-              />
-            </TouchableOpacity>}
 
-          <TouchableOpacity
-            onPress={() => {
-              Actions.members();
-            }}
-            style={[
-              styles.func_btn_view,
-              {
-                //marginLeft: __d(10)
-              }
-            ]}
-          >
-            <Icon
-              name="users"
-              color={this.indexSelected === 2 ? "#5DADE2" : "#b3b3b3"}
-              size={__d(35)}
-            />
-          </TouchableOpacity>
-
-          {this.info &&
-            isAdmin &&
-            <TouchableOpacity
-              style={[
-                styles.func_btn_view,
-                {
-                  //marginTop: __d(10)
-                }
-              ]}
-              onPress={() => {
-                Actions.postMessage();
-              }}
-            >
-              <Icon
-                name="commenting-o"
-                color={this.indexSelected === 3 ? "#5DADE2" : "#b3b3b3"}
-                size={__d(35)}
-              />
-            </TouchableOpacity>}
-          {this.info &&
-            isAdmin &&
-            <TouchableOpacity
-              style={[
-                styles.func_btn_view,
-                {
-                  //marginLeft: __d(10),
-                  //marginTop: __d(10)
-                }
-              ]}
-              onPress={() => {
-                Actions.createPoll();
-              }}
-            >
-              <Icon
-                name="flag"
-                color={this.indexSelected === 4 ? "#5DADE2" : "#b3b3b3"}
-                size={__d(35)}
-              />
-            </TouchableOpacity>}
-        </View>
       </View>
     );
   }
@@ -369,7 +279,8 @@ export default class CheckAttendance extends Component {
         dataSnapshot.forEach(child => {
           this.FirebaseApi.members[child.key] = {
             email: child.child("email").val(),
-            token: child.child("token").val()
+            token: child.child("token").val(),
+              name: child.child("name").val()
           };
           this.info &&
           this.state.messages &&
@@ -556,19 +467,20 @@ const styles = StyleSheet.create({
     flex: 2.5,
     borderBottomColor: "#e1e1e1",
     borderBottomWidth: __d(2),
-    padding: __d(10),
+    //padding: __d(10),
     zIndex: 0,
     borderTopColor: "#e1e1e1",
     borderTopWidth: __d(1),
     justifyContent: "center"
   },
   admin_info_bg_view: {
-    backgroundColor: "#5DADE2",
+    backgroundColor: "#fff",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: __d(15),
-    padding: __d(10)
+    //borderRadius: __d(15),
+    padding: __d(10),
+      flex: 1
   },
   admin_info_img: {
     width: __d(100),
@@ -583,16 +495,18 @@ const styles = StyleSheet.create({
   txt_name: {
     fontSize: __d(13),
     width: __d(50),
-    color: "#fff"
+    color: "#000"
   },
   admin_info_name: {
-    fontSize: __d(15),
-    color: "#FFF"
+    fontSize: __d(25),
+    color: "#000",
+      fontWeight: "500"
   },
   admin_info_email: {
-    fontSize: __d(15),
-    color: "#fff",
-    flex: 1
+    fontSize: __d(17),
+    color: "#000",
+    flex: 1,
+      paddingTop: __d(5)
   },
   list_mess_view: {
     flex: __d(5),

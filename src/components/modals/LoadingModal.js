@@ -33,7 +33,7 @@ export default class LoadingModal extends Component {
     return (
       <View style={styles.container}>
         <Image
-            source={require("../images/loading/loadinganimation.gif")}
+            source={require("../../images/loading/loadinganimation.gif")}
             style={{
                 width: width,
                 height: height,

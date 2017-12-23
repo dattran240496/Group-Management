@@ -28,7 +28,8 @@ import VotePoll from "./vote-poll";
 import EditGroup from "./edit-group";
 import Member from "./members";
 import Account from "./account";
-import ModalBox from "./components/index";
+import ModalBox from "./components/modals/index";
+import Footer from "./components/Footer/footer"
 import User from "./models/user";
 import Global from "./models/global";
 import FirebaseApi from "./models/firebase";
@@ -286,6 +287,11 @@ export default class App extends Component {
           Global={this.Global}
           Firebase={this.FirebaseApi}
           User={this.User}
+        />
+        <Footer
+            Global={this.Global}
+            User={this.User}
+            Firebase={this.FirebaseApi}
         />
       </View>
     );
