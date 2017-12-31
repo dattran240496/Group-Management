@@ -59,27 +59,27 @@ export default class CheckAttendanceModal extends Component {
       .child("newUpdate")
       .on("value", dataSnapshot => {
         this.newUpdate = dataSnapshot.val();
-      });
-    this.newUpdate && this.itemRefs
-      .child("Group")
-      .child(this.Global.groupKey)
-      .child("checkedAttendance")
-      .child(this.newUpdate)
-      .child("members")
-      .on("value", dataSnapshot => {
-        this.checkedMembers = [];
-        dataSnapshot.forEach(child => {
-          this.checkedMembers.push({
-            id: child.key,
-            email: child.child("email").val(),
-            latitude: child.child("latitude").val(),
-            longitude: child.child("longitude").val()
+        this.itemRefs
+          .child("Group")
+          .child(this.Global.groupKey)
+          .child("checkedAttendance")
+          .child(this.newUpdate)
+          .child("members")
+          .on("value", dataSnapshot => {
+            this.checkedMembers = [];
+            dataSnapshot.forEach(child => {
+              this.checkedMembers.push({
+                id: child.key,
+                email: child.child("email").val(),
+                latitude: child.child("latitude").val(),
+                longitude: child.child("longitude").val()
+              });
+              this.setState({});
+            });
           });
-        });
       });
   }
   render() {
-    console.log(this.isChecking);
     return (
       <View style={styles.container}>
         <TouchableOpacity

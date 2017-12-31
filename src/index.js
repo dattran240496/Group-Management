@@ -14,6 +14,7 @@ import { autobind } from "core-decorators";
 import { observer } from "mobx-react/native";
 import Drawer from "react-native-drawer";
 import SideMenu from "./SideMenu";
+import Intro from "./intro"
 import Login from "./login";
 import Loading from "./loading";
 import GroupList from "./group-list";
@@ -21,14 +22,15 @@ import Homepage from "./home-page";
 import MyGroup from "./my-group";
 import EnterGroupName from "./enter-group-name";
 import CheckAttendance from "./check-attendance";
-import PostMessage from "./post-messages";
+import PostMessage from "./components/components-footer/post-messages";
 import DetailMessage from "./detail-message";
-import CreatePoll from "./create-poll";
+import CreatePoll from "./components/components-footer/create-poll";
 import VotePoll from "./vote-poll";
 import EditGroup from "./edit-group";
-import Member from "./members";
+import Member from "./components/components-footer/members";
 import Account from "./account";
 import ModalBox from "./components/modals/index";
+import ComponentFooter from "./components/components-footer/index"
 import Footer from "./components/Footer/footer"
 import User from "./models/user";
 import Global from "./models/global";
@@ -115,6 +117,15 @@ export default class App extends Component {
           FirebaseApi={this.FirebaseApi}
           Global={this.Global}
         >
+          <Scene
+              key="intro"
+              title=""
+              component={Intro}
+              hideNavBar={true}
+              sceneStyle={{
+                  paddingTop: 0
+              }}
+          />
           <Scene
             key="login"
             title=""
@@ -287,6 +298,11 @@ export default class App extends Component {
           Global={this.Global}
           Firebase={this.FirebaseApi}
           User={this.User}
+        />
+        <ComponentFooter
+            Global={this.Global}
+            Firebase={this.FirebaseApi}
+            User={this.User}
         />
         <Footer
             Global={this.Global}

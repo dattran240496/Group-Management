@@ -38,31 +38,28 @@ export default class Footer extends Component {
     this.Global.groupKey ? this.getInfoAdminAndGroup() : null;
   }
   render() {
-      let info = null;
-      let isAdmin = false;
-      this.Global.groupKey && this.FirebaseApi.accountData ? this.itemRefs
+    let info = null;
+    let isAdmin = false;
+    this.Global.groupKey && this.FirebaseApi.accountData
+      ? this.itemRefs
           .child("Group")
           .child(this.Global.groupKey)
           .child("createdGroupBy")
           .on("value", dataSnapshot => {
-              info = this.FirebaseApi.accountData[dataSnapshot.val()];
-              console.log(dataSnapshot.val());
-              console.log(this.FirebaseApi.accountData);
-              console.log(info);
-              isAdmin = info.email === this.User.user.email ? true : false;
-          }) : null;
+            info = this.FirebaseApi.accountData[dataSnapshot.val()];
+            isAdmin = info.email === this.User.user.email ? true : false;
+          })
+      : null;
 
-      console.log(info);
-      console.log(isAdmin);
     return (
       <View>
         {this.Global.isFooter
           ? <View style={[styles.func_view]}>
-              {
-                isAdmin &&
+              {isAdmin &&
                 <TouchableOpacity
                   onPress={() => {
-                      this.indexSelected = 1;
+                    this.Global.componentFooter = false;
+                    this.indexSelected = 1;
                     this.Global.modalType = "check-attendance";
                   }}
                   style={[
@@ -81,8 +78,8 @@ export default class Footer extends Component {
 
               <TouchableOpacity
                 onPress={() => {
-                    this.indexSelected = 2;
-                  Actions.members();
+                  this.indexSelected = 2;
+                  this.Global.componentFooter = "members";
                 }}
                 style={[
                   styles.func_btn_view,
@@ -98,8 +95,7 @@ export default class Footer extends Component {
                 />
               </TouchableOpacity>
 
-              {
-                isAdmin &&
+              {isAdmin &&
                 <TouchableOpacity
                   style={[
                     styles.func_btn_view,
@@ -108,8 +104,8 @@ export default class Footer extends Component {
                     }
                   ]}
                   onPress={() => {
-                      this.indexSelected = 3;
-                    Actions.postMessage();
+                    this.indexSelected = 3;
+                    this.Global.componentFooter = "messages";
                   }}
                 >
                   <Icon
@@ -118,9 +114,7 @@ export default class Footer extends Component {
                     size={__d(35)}
                   />
                 </TouchableOpacity>}
-              {
-                isAdmin &&
-
+              {isAdmin &&
                 <TouchableOpacity
                   style={[
                     styles.func_btn_view,
@@ -130,8 +124,8 @@ export default class Footer extends Component {
                     }
                   ]}
                   onPress={() => {
-                      this.indexSelected = 4;
-                    Actions.createPoll();
+                    this.indexSelected = 4;
+                    this.Global.componentFooter = "poll";
                   }}
                 >
                   <Icon

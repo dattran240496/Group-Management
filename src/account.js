@@ -169,6 +169,7 @@ export default class Account extends Component {
               this.FirebaseApi.accountData = null;
               this.FirebaseApi.myGroup = null;
               AsyncStorage.removeItem("@user:key");
+
               this.itemRefs.child("Account").child(this.User.user.id).update({
                 token: ""
               });

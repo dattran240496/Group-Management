@@ -16,8 +16,8 @@ import { Actions, Router, Scene } from "react-native-mobx";
 import { observable } from "mobx";
 import { autobind } from "core-decorators";
 import { observer } from "mobx-react/native";
-import firebase from "./api/api";
-import { __d } from "./components/helpers/index";
+import firebase from "../../api/api";
+import { __d } from "../helpers/index";
 import Modal from "react-native-modalbox";
 import Icon from "react-native-vector-icons/FontAwesome";
 const { width, height } = Dimensions.get("window");
@@ -55,6 +55,7 @@ export default class PostMessage extends Component {
         />
         <TouchableOpacity
           onPress={() => {
+
             this.state.message !== ""
               ? this.postMessage()
               : Alert.alert("Warning!", "Message is not empty!");
@@ -118,7 +119,7 @@ export default class PostMessage extends Component {
         message: this.state.message,
         timeAtPost: formatTime,
       });
-    Actions.pop();
+    this.Global.componentFooter = false;
   }
 }
 const styles = StyleSheet.create({

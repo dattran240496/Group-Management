@@ -9,6 +9,7 @@ import { observer } from "mobx-react/native";
 class Global {
     @observable accessToken;
     @observable modalType = false;
+    @observable componentFooter = false;
     @observable groupName = "";
     @observable groupKey = "";
     @observable urlPushNoti = "https://exp.host/--/api/v2/push/send";

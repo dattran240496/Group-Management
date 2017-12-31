@@ -197,31 +197,29 @@ export default class CheckAttendance extends Component {
           </TouchableOpacity>
         </View>
 
-        <View style={styles.admin_info_view}>
-          <View style={styles.admin_info_bg_view}>
-            <Image
-              source={this.info ? { uri: this.info.picture } : null}
-              style={styles.admin_info_img}
-            />
+        <Image
+          blurRadius={5}
+          source={this.info ? { uri: this.info.picture } : null}
+          style={styles.admin_info_view}
+        >
+          <Image
+            source={this.info ? { uri: this.info.picture } : null}
+            style={styles.admin_info_img}
+          />
 
-            <View style={styles.admin_info}>
-              <View style={{ flexDirection: "row" }}>
-                <Text style={styles.admin_info_name}>
-                  {this.info ? this.info.name.toString().toUpperCase() : ""}
-                </Text>
-              </View>
-              <View style={{ flexDirection: "row" }}>
-                <Text
-                  numberOfLines={1}
-                  ellipsizeMode="tail"
-                  style={styles.admin_info_email}
-                >
-                  {this.info ? this.info.email : ""}
-                </Text>
-              </View>
-            </View>
+          <View style={styles.admin_info}>
+              <Text style={styles.admin_info_name}>
+                {this.info ? this.info.name.toString().toUpperCase() : ""}
+              </Text>
+              <Text
+                numberOfLines={1}
+                ellipsizeMode="tail"
+                style={styles.admin_info_email}
+              >
+                {this.info ? this.info.email : ""}
+              </Text>
           </View>
-        </View>
+        </Image>
 
         <View style={styles.list_mess_view}>
           <FlatList
@@ -238,8 +236,6 @@ export default class CheckAttendance extends Component {
             }}
           />
         </View>
-
-
       </View>
     );
   }
@@ -280,7 +276,7 @@ export default class CheckAttendance extends Component {
           this.FirebaseApi.members[child.key] = {
             email: child.child("email").val(),
             token: child.child("token").val(),
-              name: child.child("name").val()
+            name: child.child("name").val()
           };
           this.info &&
           this.state.messages &&
@@ -425,13 +421,13 @@ const styles = StyleSheet.create({
   },
   header_btn_back_view: {
     position: "absolute",
-    width: __d(64),
-    height: __d(64),
+    width: 64,
+    height: 64,
     justifyContent: "center",
     left: 0,
     top: 0,
     paddingLeft: __d(10),
-    paddingTop: __d(10)
+    paddingTop: 10
   },
   header_txt: {
     color: "#fff",
@@ -465,13 +461,10 @@ const styles = StyleSheet.create({
   },
   admin_info_view: {
     flex: 2.5,
-    borderBottomColor: "#e1e1e1",
-    borderBottomWidth: __d(2),
-    //padding: __d(10),
     zIndex: 0,
-    borderTopColor: "#e1e1e1",
-    borderTopWidth: __d(1),
-    justifyContent: "center"
+    justifyContent: "center",
+    alignItems: "center",
+      paddingTop: __d(10)
   },
   admin_info_bg_view: {
     backgroundColor: "#fff",
@@ -480,7 +473,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     //borderRadius: __d(15),
     padding: __d(10),
-      flex: 1
+    flex: 1
   },
   admin_info_img: {
     width: __d(100),
@@ -490,23 +483,24 @@ const styles = StyleSheet.create({
   },
   admin_info: {
     flex: 1,
-    paddingLeft: __d(10)
+    paddingLeft: __d(10),
+      alignItems: "center"
   },
   txt_name: {
     fontSize: __d(13),
-    width: __d(50),
     color: "#000"
   },
   admin_info_name: {
     fontSize: __d(25),
-    color: "#000",
-      fontWeight: "500"
+    color: "#fff",
+    fontWeight: "500",
+    backgroundColor: "transparent",
   },
   admin_info_email: {
     fontSize: __d(17),
-    color: "#000",
-    flex: 1,
-      paddingTop: __d(5)
+    color: "#fff",
+    paddingTop: __d(5),
+    backgroundColor: "transparent"
   },
   list_mess_view: {
     flex: __d(5),

@@ -55,6 +55,7 @@ export default class EnterGroupName extends Component {
           onChangeText={txt => {
             this.setState({ groupName: txt });
           }}
+          value={this.state.groupName}
         />
         {!_.isEmpty(this.errors["groupName"]) &&
           <Text style={styles.error_txt}>
@@ -75,6 +76,7 @@ export default class EnterGroupName extends Component {
           onChangeText={txt => {
             this.setState({ groupPass: txt });
           }}
+          value={this.state.groupPass}
         />
         <TextInput
           placeholder="Confirm group pass..."
@@ -90,6 +92,7 @@ export default class EnterGroupName extends Component {
           onChangeText={txt => {
             this.setState({ confirmGroupPass: txt });
           }}
+          value={this.state.confirmGroupPass}
         />
         {!_.isEmpty(this.errors["password"]) &&
           <Text style={styles.error_txt}>

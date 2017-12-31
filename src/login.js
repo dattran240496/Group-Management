@@ -17,12 +17,13 @@ import Loading from "./loading";
 import { _ } from "lodash";
 import firebase from "./api/api";
 import { __d } from "./components/helpers/index";
-const PUSH_ENDPOINT = 'https://your-server.com/users/push-token';
+import Swiper from "react-native-swiper";
+const PUSH_ENDPOINT = "https://your-server.com/users/push-token";
 
 @autobind
 @observer
 export default class Login extends Component {
-    @observable register = null;
+  @observable register = null;
   constructor(props) {
     super(props);
 
@@ -31,88 +32,47 @@ export default class Login extends Component {
     this.Global = this.props.Global;
     this.itemRefs = firebase.database().ref("app_expo");
   }
-    componentWillMount() {
-    }
+  componentWillMount() {}
   render() {
     return (
-      <View style={styles.container}>
-        <View
-          style={{
-            flex: 1,
-            justifyContent: "center"
-          }}
-        >
-          <Text
-            style={{
-              fontSize: __d(40),
-              color: "#fff",
-              fontStyle: "italic",
-              fontFamily:
-                Platform.OS === "ios" ? "Georgia-BoldItalic" : "sans-serif"
-            }}
-          >
-            Check
-          </Text>
-          <Text
-            style={{
-              fontSize: __d(40),
-              color: "#fff",
-              paddingLeft: __d(45),
-              fontStyle: "italic",
-              fontFamily:
-                Platform.OS === "ios" ? "Georgia-BoldItalic" : "sans-serif"
-            }}
-          >
-            Attendance
-          </Text>
-        </View>
-        <View
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center"
-          }}
-        >
+      <View style={[styles.container]}>
+        <Image
+          source={require("./images/login/logo.png")}
+          style={styles.img_logo}
+        />
+        <Image
+          source={require("./images/login/page-4.png")}
+          style={styles.img_logo}
+        />
+        <View style={styles.func_view}>
           <TouchableOpacity
-            style={{
-              width: __d(250),
-              height: __d(50),
-              borderRadius: __d(5),
-              borderWidth: __d(1),
-              borderColor: "#e1e1e1",
-              justifyContent: "center",
-              alignItems: "center",
-              flexDirection: "row"
-            }}
+            style={styles.btn_login_view}
             onPress={() => {
               this.Global.modalType = "loading";
               this.fetchAsync(this.itemRefs);
             }}
           >
-            <Image
-              source={require("./images/login/googleBtn.png")}
-              style={{
-                width: __d(50),
-                height: __d(40),
-                resizeMode: "contain"
-              }}
-            />
-            <Text
-              style={{
-                fontSize: __d(18),
-                color: "#fff",
-                paddingLeft: __d(5),
-                fontWeight: "bold"
-              }}
-            >
-              Login with Google
-            </Text>
+            <Text style={styles.btn_login_txt}>Login</Text>
           </TouchableOpacity>
+          <Text style={styles.location_txt}>Location: Việt Nam</Text>
         </View>
       </View>
     );
   }
 
+  async getDataWhenInstallApp() {
+    try {
+      let value = await AsyncStorage.getItem("@isInstallApp:key");
+      console.log(value);
+      if (value !== null) {
+        this.isInstalledApp = true;
+      } else {
+        this.isInstalledApp = false;
+      }
+    } catch (error) {
+      return false;
+    }
+  }
   // set user data into local
   async setData(item, token) {
     try {
@@ -126,26 +86,26 @@ export default class Login extends Component {
   async registerForPushNotificationsAsync() {
     // Android remote notification permissions are granted during the app
     // install, so this will only ask on iOS
-      const { status: existingStatus } = await Permissions.getAsync(
-          Permissions.NOTIFICATIONS
-      );
-      let finalStatus = existingStatus;
+    const { status: existingStatus } = await Permissions.getAsync(
+      Permissions.NOTIFICATIONS
+    );
+    let finalStatus = existingStatus;
 
-      // only ask if permissions have not already been determined, because
-      // iOS won't necessarily prompt the user a second time.
-      if (existingStatus !== 'granted') {
-          // Android remote notification permissions are granted during the app
-          // install, so this will only ask on iOS
-          const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
-          finalStatus = status;
-      }
+    // only ask if permissions have not already been determined, because
+    // iOS won't necessarily prompt the user a second time.
+    if (existingStatus !== "granted") {
+      // Android remote notification permissions are granted during the app
+      // install, so this will only ask on iOS
+      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+      finalStatus = status;
+    }
 
-      // Stop here if the user did not grant permissions
-      if (finalStatus !== 'granted') {
-          return;
-      }
+    // Stop here if the user did not grant permissions
+    if (finalStatus !== "granted") {
+      return;
+    }
 
-      // Get the token that uniquely identifies this device
+    // Get the token that uniquely identifies this device
 
     let token = await Notifications.getExpoPushTokenAsync();
 
@@ -244,8 +204,42 @@ export default class Login extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#5DADE2",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    zIndex: 0
+  },
+  img_logo: {
+    flex: 1.2,
+    resizeMode: "contain"
+  },
+  func_view: {
+    flex: 1,
+    alignItems: "center"
+  },
+  btn_login_view: {
+    width: __d(150),
+    height: __d(50),
+    borderRadius: __d(5),
+    borderWidth: __d(1),
+    borderColor: "#e1e1e1",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+    backgroundColor: "#5DADE2"
+  },
+  btn_login_txt: {
+    fontSize: __d(18),
+    color: "#fff",
+    paddingLeft: __d(5),
+    fontWeight: "bold"
+  },
+  location_txt: {
+    fontSize: __d(15),
+    color: "#5DADE2",
+    paddingLeft: __d(5),
+    fontWeight: "bold",
+    position: "absolute",
+    bottom: __d(15),
+    backgroundColor: "transparent"
   }
 });

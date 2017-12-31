@@ -107,6 +107,7 @@ export default class DetailMessage extends Component {
                     message: this.state.message.message,
                     timeAtPost: formatTime
                   });
+                  Actions.pop({type: "refresh"});
               }}
               style={styles.btn_update_view}
             >

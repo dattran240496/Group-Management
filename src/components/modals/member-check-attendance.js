@@ -116,7 +116,6 @@ export default class MemberCheckAttendanceModal extends Component {
         });
       this.Global.modalType = false;
     }else{
-      console.log(distance);
       Alert.alert("Warning!", "You can not check attendance!")
     }
   }

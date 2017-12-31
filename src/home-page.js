@@ -52,6 +52,7 @@ export default class Homepage extends Component {
     !this.FirebaseApi.accessToken
       ? this.getAccount()
       : (this.Global.modalType = false);
+    this.setDataWhenInstallApp();
 
     //this.isDisable = !!(this.FirebaseApi.groupData && this.FirebaseApi.myGroup);
     //this.isDisable ? this.Global.modalType = false : null;
@@ -272,6 +273,23 @@ export default class Homepage extends Component {
     this.Global.modalType === "loading"
       ? (this.Global.modalType = false)
       : null;
+  }
+
+  async setDataWhenInstallApp() {
+    try {
+      let value = await AsyncStorage.getItem("@isInstallApp:key");
+      console.log(value);
+      if (value !== null) {
+      } else {
+        try {
+          await AsyncStorage.setItem("@isInstallApp:key", "true");
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    } catch (error) {
+      return false;
+    }
   }
 }
 

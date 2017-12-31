@@ -16,11 +16,11 @@ import { Actions, Router, Scene } from "react-native-mobx";
 import { observable } from "mobx";
 import { autobind } from "core-decorators";
 import { observer } from "mobx-react/native";
-import firebase from "./api/api";
+import firebase from "../../api/api";
 import Modal from "react-native-modalbox";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { _ } from "lodash";
-import { __d } from "./components/helpers/index";
+import { __d } from "../helpers/index";
 const { width, height } = Dimensions.get("window");
 
 @autobind
@@ -41,6 +41,7 @@ export default class Members extends Component {
     this.members = Object.values(this.FirebaseApi.members);
   }
   render() {
+    console.log("member");
     return (
       <View style={styles.container}>
         <TextInput
