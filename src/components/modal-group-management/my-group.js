@@ -15,11 +15,11 @@ import { Actions, Router, Scene } from "react-native-mobx";
 import { observable } from "mobx";
 import { autobind } from "core-decorators";
 import { observer } from "mobx-react/native";
-import firebase from "./api/api";
+import firebase from "../../api/api";
 import Modal from "react-native-modalbox";
 import Icon from "react-native-vector-icons/FontAwesome";
 import Swipeout from "react-native-swipeout";
-import { __d } from "./components/helpers/index";
+import { __d } from "../helpers/index";
 import { _ } from "lodash";
 const { width, height } = Dimensions.get("window");
 
@@ -48,6 +48,26 @@ export default class MyGroup extends Component {
     let myGroupData = this.myGroupList;
     return (
       <View style={styles.container}>
+        <TouchableOpacity
+            onPress={() => {
+                this.Global.modalGroupManagement = false;
+            }}
+            style={{
+                width: __d(40),
+                height: __d(40),
+                borderRadius: __d(20),
+                borderWidth: __d(1),
+                borderColor: "#5DADE2",
+                justifyContent: "center",
+                alignItems: "center",
+                position: "absolute",
+                right: -__d(10),
+                top: -__d(20),
+                backgroundColor: "#fff"
+            }}
+        >
+          <Icon name="times" color="#5DADE2" size={15} />
+        </TouchableOpacity>
         <TextInput
           underlineColorAndroid="transparent"
           placeholder="Group name..."
@@ -166,9 +186,10 @@ export default class MyGroup extends Component {
 }
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: "center",
-    backgroundColor: "#fff"
+    backgroundColor: "#fff",
+      width: width - __d(20),
+      height: __d(350),
   },
   text_input_view: {
     width: width - __d(30),

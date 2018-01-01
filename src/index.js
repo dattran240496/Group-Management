@@ -17,10 +17,10 @@ import SideMenu from "./SideMenu";
 import Intro from "./intro"
 import Login from "./login";
 import Loading from "./loading";
-import GroupList from "./group-list";
+import GroupList from "./components/modal-group-management/group-list";
 import Homepage from "./home-page";
-import MyGroup from "./my-group";
-import EnterGroupName from "./enter-group-name";
+import MyGroup from "./components/modal-group-management/my-group";
+import EnterGroupName from "./components/modal-group-management/enter-group-name";
 import CheckAttendance from "./check-attendance";
 import PostMessage from "./components/components-footer/post-messages";
 import DetailMessage from "./detail-message";
@@ -28,9 +28,10 @@ import CreatePoll from "./components/components-footer/create-poll";
 import VotePoll from "./vote-poll";
 import EditGroup from "./edit-group";
 import Member from "./components/components-footer/members";
-import Account from "./account";
+import Account from "./components/modal-group-management/account";
 import ModalBox from "./components/modals/index";
 import ComponentFooter from "./components/components-footer/index"
+import ModalGroupManagement from "./components/modal-group-management/index"
 import Footer from "./components/Footer/footer"
 import User from "./models/user";
 import Global from "./models/global";
@@ -300,6 +301,11 @@ export default class App extends Component {
           User={this.User}
         />
         <ComponentFooter
+            Global={this.Global}
+            Firebase={this.FirebaseApi}
+            User={this.User}
+        />
+        <ModalGroupManagement
             Global={this.Global}
             Firebase={this.FirebaseApi}
             User={this.User}

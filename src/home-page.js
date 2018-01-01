@@ -20,7 +20,8 @@ import { observer } from "mobx-react/native";
 import firebase from "./api/api";
 import Modal from "react-native-modalbox";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { Permissions, Notifications } from "expo";
+import { Permissions, Notifications, Font } from "expo";
+
 const { width, height } = Dimensions.get("window");
 import { _ } from "lodash";
 import Swiper from "react-native-swiper";
@@ -36,14 +37,15 @@ export default class Homepage extends Component {
     this.state = {
       groupName: "",
       groupPass: "",
-      notification: {}
+      notification: {},
+        isFontLoaded: false
     };
     this.User = this.props.User;
     this.FirebaseApi = this.props.FirebaseApi;
     this.Global = this.props.Global;
     this.itemRefs = firebase.database().ref("app_expo");
   }
-  componentWillMount() {
+   componentWillMount() {
     //this.Global.modalType = "loading";
     this.props.user ? this.getUserInfo(this.props.user) : null;
     !this.FirebaseApi.groupData
@@ -57,124 +59,257 @@ export default class Homepage extends Component {
     //this.isDisable = !!(this.FirebaseApi.groupData && this.FirebaseApi.myGroup);
     //this.isDisable ? this.Global.modalType = false : null;
   }
-  componentDidMount() {
-    //registerForPushNotificationsAsync(this.User.user);
-    //console.log(this.FirebaseApi.accountData);
-  }
+    async componentDidMount() {
+        await Font.loadAsync({
+            'FiraSans-BoldItalic': require('../assets/fonts/FiraSans-BoldItalic.otf'),
+        });
+        this.setState({
+            isFontLoaded: true
+        })
+    }
 
   render() {
+    let circleLargeHeight = 3 * height / 5;
+    let circleSmallHeight = 3 * height / 10;
     return (
       <View style={styles.container}>
-        <View style={styles.swiper}>
-          <Swiper>
-            <View style={styles.swiper_view}>
-              <Text style={styles.swiper_title_txt}>
-                CLASS MANAGEMNT IS SIMPLE
-              </Text>
-
-              <Text style={styles.swiper_info_txt}>
-                Make class management easier with the application.
-              </Text>
-            </View>
-
-            <View style={styles.swiper_view}>
-              <Text style={styles.swiper_title_txt}>
-                CLASS MANAGEMNT IS SIMPLE
-              </Text>
-
-              <Text style={styles.swiper_info_txt}>
-                Make class management easier with the application.
-              </Text>
-            </View>
-
-            <View style={styles.swiper_view}>
-              <Text style={styles.swiper_title_txt}>
-                CLASS MANAGEMENT IS SIMPLE
-              </Text>
-
-              <Text style={styles.swiper_info_txt}>
-                Make class management easier with the application.
-              </Text>
-            </View>
-          </Swiper>
-        </View>
-
-        <View style={styles.body_view}>
-          <TouchableOpacity
-            onPress={() => {
-              Actions.enterGroupName();
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            paddingLeft: __d(30)
+          }}
+        >
+          <Image
+            source={require("./images/home-page/avata.png")}
+            style={{
+              width: __d(80),
+              height: __d(80),
+              resizeMode: "contain"
             }}
-            style={styles.body_btn_view}
           >
             <Image
-              source={require("./images/home-page/new-group.png")}
-              style={styles.body_btn_img}
-            />
-            <Text style={styles.body_btn_txt}>New Group</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={() => {
-              this.FirebaseApi.groupData = null;
-              this.Global.modalType = "loading";
-              Actions.groupList();
-            }}
-            style={[
-              styles.body_btn_view,
-              {
-                marginLeft: __d(10)
-              }
-            ]}
-          >
-            <Image
-              source={require("./images/home-page/group-list.png")}
-              style={[
-                styles.body_btn_img,
-                {
-                  width: __d(60),
-                  height: __d(60)
-                }
-              ]}
-            />
-            <Text style={styles.body_btn_txt}>Find Group</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={() => {
-              Actions.myGroup();
-            }}
-            style={[
-              styles.body_btn_view,
-              {
-                marginTop: __d(10)
-              }
-            ]}
-          >
-            <Image
-              source={require("./images/home-page/my-group.png")}
-              style={styles.body_btn_img}
-            />
-            <Text style={styles.body_btn_txt}>My Group</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              Actions.account();
-            }}
-            style={[
-              styles.body_btn_view,
-              {
+              source={this.User.user ? { uri: this.User.user.picture } : null}
+              style={{
+                width: __d(60),
+                height: __d(60),
+                borderRadius: __d(30),
+                resizeMode: "contain",
                 marginLeft: __d(10),
-                marginTop: __d(10)
-              }
-            ]}
-          >
-            <Image
-              source={require("./images/home-page/account.png")}
-              style={styles.body_btn_img}
+                marginTop: __d(3)
+              }}
             />
-            <Text style={styles.body_btn_txt}>Account</Text>
-          </TouchableOpacity>
+          </Image>
         </View>
+        <View
+          style={{
+            flex: 3,
+            justifyContent: "center"
+          }}
+        >
+          <View
+            style={{
+              width: circleLargeHeight,
+              height: circleLargeHeight,
+              borderRadius: circleLargeHeight / 2,
+              borderWidth: __d(4),
+              borderColor: "#5DADE2",
+              marginLeft: circleLargeHeight / 2.2
+            }}
+          >
+            <View
+              style={{
+                width: circleSmallHeight,
+                height: circleSmallHeight,
+                borderRadius: circleSmallHeight / 2,
+                borderWidth: __d(2),
+                borderColor: "#5DADE2",
+                marginLeft: circleLargeHeight / 4,
+                marginTop: circleLargeHeight / 4
+              }}
+            />
+            <View
+              style={{
+                position: "absolute",
+                top: -__d(10),
+                flexDirection: "row",
+                height: __d(60),
+                alignItems: "center",
+                backgroundColor: "transparent",
+                left: -__d(20)
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: __d(18),
+                  color: "#808080",
+                  fontWeight: "bold",
+                    fontFamily: this.state.isFontLoaded ? "FiraSans-BoldItalic" : null
+                }}
+              >
+                Find groups
+              </Text>
+              <TouchableOpacity
+                  onPress={()=>{
+                      this.Global.modalGroupManagement = "groupList";
+                  }}
+                style={{
+                  height: __d(60)
+                }}
+              >
+                <Image
+                  source={require("./images/home-page/item1.png")}
+                  style={{
+                    resizeMode: "contain",
+                    flex: 1
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
+            <View
+              style={{
+                position: "absolute",
+                top: __d(80),
+                flexDirection: "row",
+                height: __d(60),
+                alignItems: "center",
+                backgroundColor: "transparent",
+                left: -__d(135)
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: __d(18),
+                  color: "#808080",
+                  fontWeight: "bold",
+                    fontFamily: this.state.isFontLoaded ? "FiraSans-BoldItalic" : null
+                }}
+              >
+                Create groups
+              </Text>
+              <TouchableOpacity
+                  onPress={()=>{
+                      this.Global.modalGroupManagement = "createGroup";
+                  }}
+                style={{
+                  height: __d(60)
+                }}
+              >
+                <Image
+                  source={require("./images/home-page/item2.png")}
+                  style={{
+                    resizeMode: "contain",
+                    flex: 1
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
+            <View
+              style={{
+                position: "absolute",
+                top: __d(220),
+                flexDirection: "row",
+                height: __d(60),
+                alignItems: "center",
+                backgroundColor: "transparent",
+                left: -__d(125)
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: __d(18),
+                  color: "#808080",
+                  fontWeight: "bold",
+                    fontFamily: this.state.isFontLoaded ? "FiraSans-BoldItalic" : null
+                }}
+              >
+                My groups
+              </Text>
+              <TouchableOpacity
+                  onPress={()=>{
+                      this.Global.modalGroupManagement = "myGroup";
+                  }}
+                style={{
+                  height: __d(60)
+                }}
+              >
+                <Image
+                  source={require("./images/home-page/item3.png")}
+                  style={{
+                    resizeMode: "contain",
+                    flex: 1
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
+            <View
+              style={{
+                position: "absolute",
+                top: __d(330),
+                flexDirection: "row",
+                height: __d(60),
+                alignItems: "center",
+                backgroundColor: "transparent",
+                left: -__d(10)
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: __d(18),
+                  color: "#808080",
+                  fontWeight: "bold",
+                    fontFamily: this.state.isFontLoaded ? "FiraSans-BoldItalic" : null
+                }}
+              >
+                Setting
+              </Text>
+              <TouchableOpacity
+                  onPress={()=>{
+                      this.Global.modalGroupManagement = "account";
+                  }}
+                style={{
+                  height: __d(60)
+                }}
+              >
+                <Image
+                  source={require("./images/home-page/item4.png")}
+                  style={{
+                    resizeMode: "contain",
+                    flex: 1
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+        <View
+          style={{
+            flex: 1,
+            alignItems: "flex-end",
+            paddingRight: __d(15)
+          }}
+        >
+          <Image
+            source={require("./images/home-page/logo.png")}
+            style={{
+              width: width / 2,
+              height: height / 5,
+              resizeMode: "contain",
+              marginTop: __d(15)
+            }}
+          />
+        </View>
+        <Image
+          source={require("./images/home-page/picture1.png")}
+          style={{
+            width: width * 1 / 2,
+            height: width * 1 / 2,
+            resizeMode: "stretch",
+            position: "absolute",
+            bottom: 0,
+            left: 0
+          }}
+        />
       </View>
     );
   }
@@ -278,7 +413,6 @@ export default class Homepage extends Component {
   async setDataWhenInstallApp() {
     try {
       let value = await AsyncStorage.getItem("@isInstallApp:key");
-      console.log(value);
       if (value !== null) {
       } else {
         try {
@@ -295,57 +429,6 @@ export default class Homepage extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: "#e1e1e1"
-  },
-  swiper: {
-    width: width,
-    height: __d(250)
-  },
-  swiper_view: {
-    backgroundColor: "#5DADE2",
-    width: width,
-    height: __d(250),
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  swiper_title_txt: {
-    color: "#fff",
-    fontSize: __d(18),
-    fontWeight: "bold"
-  },
-  swiper_info_txt: {
-    color: "#fff",
-    fontSize: __d(16),
-    textAlign: "center",
-    paddingTop: __d(5)
-  },
-  body_view: {
-    flex: 1,
-    justifyContent: "center",
-    paddingTop: (height - __d(520)) / 2,
-    flexWrap: "wrap",
-    flexDirection: "row"
-  },
-  body_btn_view: {
-    width: __d(130),
-    height: __d(130),
-    borderRadius: __d(10),
-    justifyContent: "center",
-    alignItems: "center",
-    borderColor: "#e1e1e1",
-    borderWidth: __d(1),
-    backgroundColor: "#fff",
-    paddingTop: __d(15)
-  },
-  body_btn_img: {
-    width: __d(40),
-    height: __d(40),
-    resizeMode: "contain",
     flex: 1
-  },
-  body_btn_txt: {
-    flex: 1,
-    paddingTop: __d(5)
   }
 });
