@@ -29,6 +29,7 @@ export default class GroupList extends Component {
   @observable groupFilter = [];
   @observable groupNameList = [];
   @observable info = null;
+  @observable errors = {};
   constructor(props) {
     super(props);
     this.User = this.props.User;
@@ -144,8 +145,9 @@ export default class GroupList extends Component {
             backgroundColor: "#5DADE2",
             borderRadius: __d(5),
             marginBottom: __d(5),
-            marginTop: _.isEmpty(dataGroupList) ? this.state.groupNameSearch === "" ? __d(20) : __d(5)
-                : __d(5)
+            marginTop: _.isEmpty(dataGroupList)
+              ? this.state.groupNameSearch === "" ? __d(20) : __d(5)
+              : __d(5)
           }}
         >
           {_.isEmpty(dataGroupList)
@@ -188,6 +190,44 @@ export default class GroupList extends Component {
           swipeToClose={false}
           coverScreen={true}
         >
+          <TouchableOpacity
+            onPress={() => {
+              this._modalEnterPas.close();
+              this.errors["password"] = null;
+            }}
+            style={{
+              width: __d(40),
+              height: __d(40),
+              borderRadius: __d(20),
+              borderWidth: __d(1),
+              borderColor: "#5DADE2",
+              justifyContent: "center",
+              alignItems: "center",
+              position: "absolute",
+              right: -__d(10),
+              top: -__d(10),
+              backgroundColor: "#fff"
+            }}
+          >
+            <Icon name="times" color="#5DADE2" size={15} />
+          </TouchableOpacity>
+          <Image
+            source={require("./images/find-group/password.png")}
+            style={{
+              width: __d(70),
+              height: __d(70),
+              resizeMode: "contain"
+            }}
+          />
+          <Text
+            style={{
+              fontSize: __d(15),
+              textAlign: "center",
+              paddingTop: __d(5)
+            }}
+          >
+            Your group password
+          </Text>
           <TextInput
             underlineColorAndroid="transparent"
             secureTextEntry={true}
@@ -205,13 +245,17 @@ export default class GroupList extends Component {
               this.setState({ groupPass: txt });
             }}
           />
+          {!_.isEmpty(this.errors["password"]) &&
+            <Text style={styles.error_txt}>
+              {this.errors["password"]}
+            </Text>}
           <TouchableOpacity
             onPress={() => {
               this.joinGroup();
             }}
             style={styles.btn_join_view}
           >
-            <Text style={styles.btn_join_txt}>Join group</Text>
+            <Text style={styles.btn_join_txt}>OK</Text>
           </TouchableOpacity>
         </Modal>
       </View>
@@ -243,10 +287,10 @@ export default class GroupList extends Component {
     let numberOfGroup = item.groupMember
       ? Object.values(item.groupMember).length
       : 0;
-    this.FirebaseApi.myGroup.map((v, i)=>{
-      if (v.groupName === item.groupName){
-          isJoined = true;
-          return;
+    this.FirebaseApi.myGroup.map((v, i) => {
+      if (v.groupName === item.groupName) {
+        isJoined = true;
+        return;
       }
     });
     return (
@@ -277,7 +321,7 @@ export default class GroupList extends Component {
             {name}
           </Text>
           <TouchableOpacity
-              disabled={isJoined}
+            disabled={isJoined}
             onPress={() => {
               this._modalEnterPas.open();
               this.setState({
@@ -294,35 +338,31 @@ export default class GroupList extends Component {
               marginRight: __d(5)
             }}
           >
-              {
-                isJoined ? (
-                    <View style={{
-                      flexDirection: "row"
-                    }}>
-                      <Icon
-                        name="check"
-                        size={__d(15)}
-                        color="#fff"
-                      />
-                      <Text style={{
-                        fontSize: __d(13),
-                          color: "#fff"
-                      }}>
-                        Joined
-                      </Text>
-                    </View>
-                ) : (
-                    <Text
-                        style={{
-                            fontSize: __d(13),
-                            fontWeight: "bold",
-                            color: "#fff"
-                        }}
-                    >
-                      Join
-                    </Text>
-                )
-              }
+            {isJoined
+              ? <View
+                  style={{
+                    flexDirection: "row"
+                  }}
+                >
+                  <Icon name="check" size={__d(15)} color="#fff" />
+                  <Text
+                    style={{
+                      fontSize: __d(13),
+                      color: "#fff"
+                    }}
+                  >
+                    Joined
+                  </Text>
+                </View>
+              : <Text
+                  style={{
+                    fontSize: __d(13),
+                    fontWeight: "bold",
+                    color: "#fff"
+                  }}
+                >
+                  Join
+                </Text>}
           </TouchableOpacity>
         </View>
       </View>
@@ -336,9 +376,9 @@ export default class GroupList extends Component {
       v === this.state.groupSelectedToJoin.groupName ? (isJoined = true) : null;
     });
     _id === this.state.groupSelectedToJoin.createdGroupBy || isJoined // if user joined this group
-      ? Alert.alert("Warning!", "You joined this group!")
+      ? (Alert.alert("Warning!", "You joined this group!"), this.setState({}))
       : this.state.groupPass === "" // if password is empty
-        ? Alert.alert("Warning!", "Password is not empty!")
+        ? (this.errors["password"] = "Password is not empty!", this.setState({}))
         : this.state.groupPass === this.state.groupSelectedToJoin.groupPass // if password is true
           ? (
               this.itemRefs
@@ -363,7 +403,10 @@ export default class GroupList extends Component {
               (this.Global.groupKey = this.state.groupSelectedToJoin.groupKey),
               Actions.checkAttendance()
             )
-          : Alert.alert("Warning!", "Invalid password!");
+          : (
+              (this.errors["password"] = "Invalid password!"),
+              this.setState({})
+            );
   }
 
   filterGroupData() {
@@ -419,27 +462,26 @@ const styles = StyleSheet.create({
   },
   modal_view: {
     width: __d(300),
-    height: __d(150),
+    height: __d(250),
     backgroundColor: "#fff",
     borderRadius: __d(8),
     justifyContent: "center",
     alignItems: "center"
-    //flexDirection: "row"
+    //flexDirection: "row",
   },
   txt_input_pass: {
-    marginTop: __d(5),
+    marginTop: __d(10),
     width: __d(250),
     height: __d(40),
     paddingLeft: __d(10),
-    borderRadius: __d(5),
     borderWidth: __d(1),
-    borderColor: "#e1e1e1",
+    borderColor: "#5DADE2",
     fontSize: __d(13)
   },
   btn_join_view: {
     marginTop: __d(15),
-    width: __d(250),
-    height: __d(40),
+    width: __d(50),
+    height: __d(30),
     justifyContent: "center",
     alignItems: "center",
     borderColor: "#e1e1e1",
@@ -484,5 +526,9 @@ const styles = StyleSheet.create({
     fontSize: __d(15),
     flex: 1,
     paddingLeft: __d(10)
-  }
+  },
+    error_txt: {
+        color: "red",
+        marginTop: __d(5)
+    },
 });

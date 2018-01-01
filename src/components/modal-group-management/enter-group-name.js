@@ -324,7 +324,7 @@ export default class EnterGroupName extends Component {
 const styles = StyleSheet.create({
   container: {
     width: width - __d(20),
-    height: __d(350),
+    height: __d(370),
     alignItems: "center",
     backgroundColor: "#fff",
     paddingTop: __d(20)

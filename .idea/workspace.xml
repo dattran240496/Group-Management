@@ -2,55 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f80bd068-de4b-47a2-bab1-1c03e9d9c73e" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/components/modal-group-management/images/create-group/Popup-CreateGroup.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/components/modal-group-management/images/create-group/man-user.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/components/modal-group-management/images/create-group/password.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/components/modal-group-management/images/find-group/Popup-Search.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/components/modal-group-management/images/find-group/avata.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/images/home-page/avata.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/images/home-page/check-symbol.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/images/home-page/item1.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/images/home-page/item2.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/images/home-page/item3.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/images/home-page/item4.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/images/home-page/logo.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/images/home-page/picture1.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/fonts/FiraSans-Bold.otf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/fonts/FiraSans-BoldItalic.otf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/fonts/FiraSans-Book.otf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/fonts/FiraSans-BookItalic.otf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/fonts/FiraSans-ExtraBold.otf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/fonts/FiraSans-ExtraBoldItalic.otf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/fonts/FiraSans-ExtraLight.otf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/fonts/FiraSans-ExtraLightItalic.otf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/fonts/FiraSans-Heavy.otf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/fonts/FiraSans-HeavyItalic.otf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/fonts/FiraSans-Italic.otf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/fonts/FiraSans-Light.otf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/fonts/FiraSans-LightItalic.otf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/fonts/FiraSans-Medium.otf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/fonts/FiraSans-MediumItalic.otf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/fonts/FiraSans-Regular.otf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/fonts/FiraSans-SemiBold.otf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/fonts/FiraSans-SemiBoldItalic.otf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/fonts/FiraSans-Thin.otf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/fonts/FiraSans-ThinItalic.otf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/fonts/FiraSans-Ultra.otf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/fonts/FiraSans-UltraItalic.otf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/fonts/FiraSans-UltraLight.otf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/fonts/FiraSans-UltraLightItalic.otf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/components/modal-group-management/index.js" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/account.js" afterPath="$PROJECT_DIR$/src/components/modal-group-management/account.js" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/enter-group-name.js" afterPath="$PROJECT_DIR$/src/components/modal-group-management/enter-group-name.js" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/group-list.js" afterPath="$PROJECT_DIR$/src/components/modal-group-management/group-list.js" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/my-group.js" afterPath="$PROJECT_DIR$/src/components/modal-group-management/my-group.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/components/modal-group-management/images/find-group/password.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/components/modal-group-management/images/my-group/Popup-MyGroup.png" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/package-lock.json" afterPath="$PROJECT_DIR$/package-lock.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/package.json" afterPath="$PROJECT_DIR$/package.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/home-page.js" afterPath="$PROJECT_DIR$/src/home-page.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/index.js" afterPath="$PROJECT_DIR$/src/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/intro.js" afterPath="$PROJECT_DIR$/src/intro.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/models/global.js" afterPath="$PROJECT_DIR$/src/models/global.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/modal-group-management/enter-group-name.js" afterPath="$PROJECT_DIR$/src/components/modal-group-management/enter-group-name.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/modal-group-management/group-list.js" afterPath="$PROJECT_DIR$/src/components/modal-group-management/group-list.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/modal-group-management/my-group.js" afterPath="$PROJECT_DIR$/src/components/modal-group-management/my-group.js" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -64,7 +21,7 @@
       <file leaf-file-name="home-page.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/home-page.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="284">
+            <state relative-caret-position="0">
               <caret line="229" column="65" lean-forward="false" selection-start-line="229" selection-start-column="65" selection-end-line="229" selection-end-column="65" />
               <folding>
                 <element signature="e#0#41#0" expanded="true" />
@@ -77,7 +34,7 @@
       <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="393">
+            <state relative-caret-position="4050">
               <caret line="307" column="29" lean-forward="false" selection-start-line="307" selection-start-column="9" selection-end-line="307" selection-end-column="29" />
               <folding>
                 <element signature="e#0#41#0" expanded="true" />
@@ -86,22 +43,32 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="account.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/components/modal-group-management/account.js">
+      <file leaf-file-name="my-group.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/modal-group-management/my-group.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="563">
-              <caret line="62" column="29" lean-forward="false" selection-start-line="62" selection-start-column="29" selection-end-line="62" selection-end-column="29" />
-              <folding />
+            <state relative-caret-position="1590">
+              <caret line="106" column="24" lean-forward="false" selection-start-line="106" selection-start-column="24" selection-end-line="106" selection-end-column="24" />
+              <folding>
+                <element signature="e#0#41#0" expanded="true" />
+                <element signature="e#4096#6158#0" expanded="false" />
+                <element signature="e#7102#8035#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="my-group.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/modal-group-management/my-group.js">
+      <file leaf-file-name="check-attendance.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/check-attendance.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="537">
-              <caret line="69" column="27" lean-forward="false" selection-start-line="69" selection-start-column="27" selection-end-line="69" selection-end-column="27" />
-              <folding />
+            <state relative-caret-position="-902">
+              <caret line="81" column="28" lean-forward="true" selection-start-line="81" selection-start-column="28" selection-end-line="81" selection-end-column="28" />
+              <folding>
+                <element signature="e#1289#1863#0" expanded="false" />
+                <element signature="e#8251#8957#0" expanded="false" />
+                <element signature="e#8973#9687#0" expanded="false" />
+                <element signature="e#9703#11007#0" expanded="false" />
+                <element signature="e#11039#12987#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -109,36 +76,22 @@
       <file leaf-file-name="group-list.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/modal-group-management/group-list.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="319">
-              <caret line="393" column="27" lean-forward="true" selection-start-line="393" selection-start-column="4" selection-end-line="393" selection-end-column="27" />
+            <state relative-caret-position="242">
+              <caret line="195" column="45" lean-forward="false" selection-start-line="195" selection-start-column="45" selection-end-line="195" selection-end-column="45" />
               <folding>
                 <element signature="e#0#41#0" expanded="true" />
                 <element signature="e#597#624#0" expanded="true" />
-                <element signature="e#6809#9832#0" expanded="false" />
-                <element signature="e#9848#11367#0" expanded="false" />
+                <element signature="e#8118#10952#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/modal-group-management/index.js">
+      <file leaf-file-name="enter-group-name.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/components/modal-group-management/enter-group-name.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="147">
-              <caret line="65" column="19" lean-forward="false" selection-start-line="65" selection-start-column="12" selection-end-line="65" selection-end-column="19" />
-              <folding>
-                <element signature="e#0#41#0" expanded="true" />
-                <element signature="e#648#690#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="global.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/models/global.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="90">
-              <caret line="11" column="36" lean-forward="false" selection-start-line="11" selection-start-column="16" selection-end-line="11" selection-end-column="36" />
+            <state relative-caret-position="3061">
+              <caret line="326" column="18" lean-forward="false" selection-start-line="326" selection-start-column="18" selection-end-line="326" selection-end-column="18" />
               <folding />
             </state>
           </provider>
@@ -155,7 +108,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>groupName</find>
       <find>console</find>
       <find>optionsPoll</find>
       <find>containerStyle</find>
@@ -185,6 +137,7 @@
       <find>getUserInfo</find>
       <find>dataGroupList</find>
       <find>groupNameList</find>
+      <find>idAdmin</find>
     </findStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$/node_modules/firebase</dir>
@@ -247,11 +200,11 @@
         <option value="$PROJECT_DIR$/src/index.js" />
         <option value="$PROJECT_DIR$/src/models/global.js" />
         <option value="$PROJECT_DIR$/src/components/modal-group-management/index.js" />
-        <option value="$PROJECT_DIR$/src/components/modal-group-management/enter-group-name.js" />
-        <option value="$PROJECT_DIR$/src/components/modal-group-management/group-list.js" />
         <option value="$PROJECT_DIR$/src/home-page.js" />
-        <option value="$PROJECT_DIR$/src/components/modal-group-management/my-group.js" />
         <option value="$PROJECT_DIR$/src/components/modal-group-management/account.js" />
+        <option value="$PROJECT_DIR$/src/components/modal-group-management/my-group.js" />
+        <option value="$PROJECT_DIR$/src/components/modal-group-management/group-list.js" />
+        <option value="$PROJECT_DIR$/src/components/modal-group-management/enter-group-name.js" />
       </list>
     </option>
   </component>
@@ -373,6 +326,10 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
+      <pane id="Scratches" />
+      <pane id="Scope" />
+      <pane id="AndroidView" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -384,6 +341,17 @@
               <item name="app-expo" type="b2602c69:ProjectViewProjectNode" />
               <item name="app-expo" type="462c0819:PsiDirectoryNode" />
               <item name=".expo" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="app-expo" type="b2602c69:ProjectViewProjectNode" />
+              <item name="app-expo" type="462c0819:PsiDirectoryNode" />
+              <item name="assets" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="app-expo" type="b2602c69:ProjectViewProjectNode" />
+              <item name="app-expo" type="462c0819:PsiDirectoryNode" />
+              <item name="assets" type="462c0819:PsiDirectoryNode" />
+              <item name="icons" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="app-expo" type="b2602c69:ProjectViewProjectNode" />
@@ -422,10 +390,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="AndroidView" />
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -447,11 +411,11 @@
       <recent name="$PROJECT_DIR$/src/components/modals" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src/components/modal-group-management/images/create-group" />
       <recent name="$PROJECT_DIR$/src/components/modal-group-management/images/find-group" />
+      <recent name="$PROJECT_DIR$/src/components/modal-group-management/images/my-group" />
+      <recent name="$PROJECT_DIR$/src/components/modal-group-management/images/create-group" />
       <recent name="$PROJECT_DIR$/src/components/modal-group-management/images" />
       <recent name="$PROJECT_DIR$/assets/fonts" />
-      <recent name="$PROJECT_DIR$/src/images/home-page" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -684,12 +648,14 @@
       <workItem from="1514701972346" duration="564000" />
       <workItem from="1514703148052" duration="4125000" />
       <workItem from="1514729901406" duration="6414000" />
-      <workItem from="1514782240322" duration="14981000" />
+      <workItem from="1514782240322" duration="15172000" />
+      <workItem from="1514817989098" duration="3167000" />
+      <workItem from="1514825003657" duration="4445000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="445233000" />
+    <option name="totallyTimeSpent" value="453036000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
@@ -707,7 +673,7 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.20556228" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20100144" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2067239" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -761,25 +727,11 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="16" />
+      <option name="time" value="17" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/node_modules/react-native-router-flux/src/Router.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="393">
-          <caret line="157" column="22" lean-forward="false" selection-start-line="157" selection-start-column="22" selection-end-line="157" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/node_modules/react-native-router-flux/src/NavBar.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="206">
-          <caret line="41" column="23" lean-forward="false" selection-start-line="41" selection-start-column="8" selection-end-line="41" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/assets/icons/app-icon.png">
       <provider selected="true" editor-type-id="images">
         <state />
@@ -915,7 +867,7 @@
         <state relative-caret-position="2010">
           <caret line="156" column="0" lean-forward="false" selection-start-line="156" selection-start-column="0" selection-end-line="156" selection-end-column="0" />
           <folding>
-            <element signature="e#0#41#0" expanded="true" />
+            <element signature="e#0#41#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -932,8 +884,8 @@
         <state relative-caret-position="945">
           <caret line="87" column="14" lean-forward="false" selection-start-line="87" selection-start-column="14" selection-end-line="87" selection-end-column="14" />
           <folding>
-            <element signature="e#0#41#0" expanded="true" />
-            <element signature="e#638#680#0" expanded="true" />
+            <element signature="e#0#41#0" expanded="false" />
+            <element signature="e#638#680#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -981,7 +933,7 @@
         <state relative-caret-position="1796">
           <caret line="144" column="29" lean-forward="true" selection-start-line="144" selection-start-column="29" selection-end-line="144" selection-end-column="29" />
           <folding>
-            <element signature="e#0#41#0" expanded="true" />
+            <element signature="e#0#41#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -995,7 +947,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
           <caret line="23" column="2" lean-forward="false" selection-start-line="23" selection-start-column="2" selection-end-line="23" selection-end-column="2" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1003,9 +954,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3120">
           <caret line="227" column="29" lean-forward="false" selection-start-line="227" selection-start-column="23" selection-end-line="227" selection-end-column="29" />
-          <folding>
-            <element signature="e#0#41#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1023,7 +971,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1031,7 +978,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="90">
           <caret line="11" column="36" lean-forward="false" selection-start-line="11" selection-start-column="16" selection-end-line="11" selection-end-column="36" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1039,7 +985,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="360">
           <caret line="38" column="31" lean-forward="true" selection-start-line="38" selection-start-column="31" selection-end-line="38" selection-end-column="31" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1060,32 +1005,37 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1013">
           <caret line="20" column="67" lean-forward="true" selection-start-line="20" selection-start-column="67" selection-end-line="20" selection-end-column="67" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/check-attendance.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="413">
-          <caret line="277" column="24" lean-forward="false" selection-start-line="277" selection-start-column="24" selection-end-line="277" selection-end-column="24" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/modal-group-management/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="147">
+        <state relative-caret-position="630">
           <caret line="65" column="19" lean-forward="false" selection-start-line="65" selection-start-column="12" selection-end-line="65" selection-end-column="19" />
           <folding>
-            <element signature="e#0#41#0" expanded="true" />
-            <element signature="e#648#690#0" expanded="true" />
+            <element signature="e#0#41#0" expanded="false" />
+            <element signature="e#648#690#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/modal-group-management/account.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="179">
+          <caret line="53" column="30" lean-forward="false" selection-start-line="53" selection-start-column="30" selection-end-line="53" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/modal-group-management/images/my-group/mygroup.png" />
+    <entry file="file://$PROJECT_DIR$/src/components/modal-group-management/images/my-group/Popup-MyGroup.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="393">
+        <state relative-caret-position="4050">
           <caret line="307" column="29" lean-forward="false" selection-start-line="307" selection-start-column="9" selection-end-line="307" selection-end-column="29" />
           <folding>
             <element signature="e#0#41#0" expanded="true" />
@@ -1093,20 +1043,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/modal-group-management/enter-group-name.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="58" column="26" lean-forward="true" selection-start-line="58" selection-start-column="26" selection-end-line="58" selection-end-column="26" />
-          <folding>
-            <element signature="e#0#41#0" expanded="true" />
-            <element signature="e#585#612#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/home-page.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="284">
+        <state relative-caret-position="0">
           <caret line="229" column="65" lean-forward="false" selection-start-line="229" selection-start-column="65" selection-end-line="229" selection-end-column="65" />
           <folding>
             <element signature="e#0#41#0" expanded="true" />
@@ -1115,31 +1054,48 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/modal-group-management/group-list.js">
+    <entry file="file://$PROJECT_DIR$/src/components/modal-group-management/my-group.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="319">
-          <caret line="393" column="27" lean-forward="true" selection-start-line="393" selection-start-column="4" selection-end-line="393" selection-end-column="27" />
+        <state relative-caret-position="1590">
+          <caret line="106" column="24" lean-forward="false" selection-start-line="106" selection-start-column="24" selection-end-line="106" selection-end-column="24" />
           <folding>
             <element signature="e#0#41#0" expanded="true" />
-            <element signature="e#597#624#0" expanded="true" />
-            <element signature="e#6809#9832#0" expanded="false" />
-            <element signature="e#9848#11367#0" expanded="false" />
+            <element signature="e#4096#6158#0" expanded="false" />
+            <element signature="e#7102#8035#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/modal-group-management/my-group.js">
+    <entry file="file://$PROJECT_DIR$/src/check-attendance.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="537">
-          <caret line="69" column="27" lean-forward="false" selection-start-line="69" selection-start-column="27" selection-end-line="69" selection-end-column="27" />
-          <folding />
+        <state relative-caret-position="-902">
+          <caret line="81" column="28" lean-forward="true" selection-start-line="81" selection-start-column="28" selection-end-line="81" selection-end-column="28" />
+          <folding>
+            <element signature="e#1289#1863#0" expanded="false" />
+            <element signature="e#8251#8957#0" expanded="false" />
+            <element signature="e#8973#9687#0" expanded="false" />
+            <element signature="e#9703#11007#0" expanded="false" />
+            <element signature="e#11039#12987#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/modal-group-management/account.js">
+    <entry file="file://$PROJECT_DIR$/src/components/modal-group-management/group-list.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="563">
-          <caret line="62" column="29" lean-forward="false" selection-start-line="62" selection-start-column="29" selection-end-line="62" selection-end-column="29" />
+        <state relative-caret-position="242">
+          <caret line="195" column="45" lean-forward="false" selection-start-line="195" selection-start-column="45" selection-end-line="195" selection-end-column="45" />
+          <folding>
+            <element signature="e#0#41#0" expanded="true" />
+            <element signature="e#597#624#0" expanded="true" />
+            <element signature="e#8118#10952#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/modal-group-management/enter-group-name.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3061">
+          <caret line="326" column="18" lean-forward="false" selection-start-line="326" selection-start-column="18" selection-end-line="326" selection-end-column="18" />
           <folding />
         </state>
       </provider>
