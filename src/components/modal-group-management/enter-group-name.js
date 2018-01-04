@@ -8,7 +8,8 @@ import {
   Dimensions,
   TextInput,
   Alert,
-  Image
+  Image,
+  KeyboardAvoidingView
 } from "react-native";
 import Expo from "expo";
 import { Actions, Router, Scene } from "react-native-mobx";
@@ -38,222 +39,231 @@ export default class EnterGroupName extends Component {
     this.FirebaseApi = this.props.FirebaseApi;
     this.itemRefs = firebase.database().ref("app_expo");
   }
-  componentWillMount() {}
+  componentWillMount() {
+
+  }
   render() {
     return (
-      <View style={styles.container}>
-        <TouchableOpacity
-          onPress={() => {
-            this.Global.modalGroupManagement = false;
-          }}
-          style={{
-            width: __d(40),
-            height: __d(40),
-            borderRadius: __d(20),
-            borderWidth: __d(1),
-            borderColor: "#5DADE2",
-            justifyContent: "center",
-            alignItems: "center",
-            position: "absolute",
-            right: -__d(10),
-            top: -__d(20),
-            backgroundColor: "#fff"
-          }}
-        >
-          <Icon name="times" color="#5DADE2" size={15} />
-        </TouchableOpacity>
-        <Image
-          source={require("./images/create-group/Popup-CreateGroup.png")}
-          style={{
-            width: __d(70),
-            height: __d(70),
-            resizeMode: "contain"
-          }}
-        />
-        <Text
-          style={{
-            fontSize: __d(15),
-            textAlign: "center",
-            paddingTop: __d(5)
-          }}
-        >
-          Name of group has not{"\n"}Special Character
-        </Text>
-        <View
-          style={{
-            width: width - __d(30),
-            height: __d(40),
-            flexDirection: "row",
-            borderColor: "#5DADE2",
-            borderWidth: __d(1),
-            alignItems: "center",
-            marginTop: __d(20)
-          }}
-        >
-          <View
+      <KeyboardAvoidingView behavior="padding">
+        <View style={styles.container}>
+          <TouchableOpacity
+            onPress={() => {
+              this.Global.modalGroupManagement = false;
+            }}
             style={{
+              width: __d(40),
+              height: __d(40),
+              borderRadius: __d(20),
+              borderWidth: __d(1),
+              borderColor: "#5DADE2",
               justifyContent: "center",
               alignItems: "center",
-              width: __d(50),
-              height: __d(40)
+              position: "absolute",
+              right: -__d(10),
+              top: -__d(20),
+              backgroundColor: "#fff"
             }}
           >
-            <Image
-              source={require("./images/create-group/man-user.png")}
+            <Icon name="times" color="#5DADE2" size={15} />
+          </TouchableOpacity>
+          <Image
+            source={require("./images/create-group/Popup-CreateGroup.png")}
+            style={{
+              width: __d(70),
+              height: __d(70),
+              resizeMode: "contain"
+            }}
+          />
+          <Text
+            style={{
+              fontSize: __d(15),
+              textAlign: "center",
+              paddingTop: __d(5)
+            }}
+          >
+            Name of group has not{"\n"}Special Character
+          </Text>
+          <View
+            style={{
+              width: width - __d(30),
+              height: __d(40),
+              flexDirection: "row",
+              borderColor: "#5DADE2",
+              borderWidth: __d(1),
+              alignItems: "center",
+              marginTop: __d(20)
+            }}
+          >
+            <View
               style={{
-                width: __d(30),
-                height: __d(30),
-                resizeMode: "contain"
+                justifyContent: "center",
+                alignItems: "center",
+                width: __d(50),
+                height: __d(40)
               }}
+            >
+              <Image
+                source={require("./images/create-group/man-user.png")}
+                style={{
+                  width: __d(30),
+                  height: __d(30),
+                  resizeMode: "contain"
+                }}
+              />
+              <View
+                style={{
+                  width: __d(2),
+                  height: __d(30),
+                  backgroundColor: "#5DADE2",
+                  position: "absolute",
+                  right: 0
+                }}
+              />
+            </View>
+            <TextInput
+              placeholder="Group name..."
+              placeholderStyle={{ color: "#e1e1e1" }}
+              underlineColorAndroid="transparent"
+              style={[
+                styles.text_input_view,
+                {
+                  borderTopLeftRadius: __d(5),
+                  borderTopRightRadius: __d(5),
+                  fontStyle: this.state.groupName !== "" ? "normal" : "italic"
+                }
+              ]}
+              onChangeText={txt => {
+                this.setState({ groupName: txt });
+              }}
+              value={this.state.groupName}
             />
-            <View style={{
-              width: __d(2),
-                height: __d(30),
-                backgroundColor: "#5DADE2",
-                position: "absolute",
-                right: 0,
-            }}/>
+          </View>
+          {!_.isEmpty(this.errors["groupName"]) &&
+            <Text style={styles.error_txt}>
+              {this.errors["groupName"]}
+            </Text>}
 
-          </View>
-          <TextInput
-            placeholder="Group name..."
-            placeholderStyle={{ color: "#e1e1e1" }}
-            underlineColorAndroid="transparent"
-            style={[
-              styles.text_input_view,
-              {
-                borderTopLeftRadius: __d(5),
-                borderTopRightRadius: __d(5),
-                fontStyle: this.state.groupName !== "" ? "normal" : "italic"
-              }
-            ]}
-            onChangeText={txt => {
-              this.setState({ groupName: txt });
-            }}
-            value={this.state.groupName}
-          />
-        </View>
-        {!_.isEmpty(this.errors["groupName"]) &&
-          <Text style={styles.error_txt}>
-            {this.errors["groupName"]}
-          </Text>}
-
-        <View
-          style={{
-            width: width - __d(30),
-            height: __d(40),
-            flexDirection: "row",
-            borderColor: "#5DADE2",
-            borderWidth: __d(1),
-            marginTop: __d(20)
-          }}
-        >
           <View
             style={{
-              justifyContent: "center",
-              alignItems: "center",
-              width: __d(50),
-              height: __d(40)
+              width: width - __d(30),
+              height: __d(40),
+              flexDirection: "row",
+              borderColor: "#5DADE2",
+              borderWidth: __d(1),
+              marginTop: __d(20)
             }}
           >
-            <Image
-              source={require("./images/create-group/password.png")}
+            <View
               style={{
-                width: __d(30),
-                height: __d(30),
-                resizeMode: "contain"
+                justifyContent: "center",
+                alignItems: "center",
+                width: __d(50),
+                height: __d(40)
               }}
+            >
+              <Image
+                source={require("./images/create-group/password.png")}
+                style={{
+                  width: __d(30),
+                  height: __d(30),
+                  resizeMode: "contain"
+                }}
+              />
+              <View
+                style={{
+                  width: __d(2),
+                  height: __d(30),
+                  backgroundColor: "#5DADE2",
+                  position: "absolute",
+                  right: 0
+                }}
+              />
+            </View>
+            <TextInput
+              placeholder="Group pass..."
+              placeholderStyle={{ color: "#e1e1e1" }}
+              secureTextEntry={true}
+              underlineColorAndroid="transparent"
+              style={[
+                styles.text_input_view,
+                {
+                  fontStyle: this.state.groupPass !== "" ? "normal" : "italic"
+                }
+              ]}
+              onChangeText={txt => {
+                this.setState({ groupPass: txt });
+              }}
+              value={this.state.groupPass}
             />
-            <View style={{
-                width: __d(2),
-                height: __d(30),
-                backgroundColor: "#5DADE2",
-                position: "absolute",
-                right: 0,
-            }}/>
           </View>
-          <TextInput
-            placeholder="Group pass..."
-            placeholderStyle={{ color: "#e1e1e1" }}
-            secureTextEntry={true}
-            underlineColorAndroid="transparent"
-            style={[
-              styles.text_input_view,
-              {
-                fontStyle: this.state.groupPass !== "" ? "normal" : "italic"
-              }
-            ]}
-            onChangeText={txt => {
-              this.setState({ groupPass: txt });
-            }}
-            value={this.state.groupPass}
-          />
-        </View>
-        <View
-          style={{
-            width: width - __d(30),
-            height: __d(40),
-            flexDirection: "row",
-            borderColor: "#5DADE2",
-            borderWidth: __d(1),
-            marginTop: __d(20)
-          }}
-        >
           <View
             style={{
-              justifyContent: "center",
-              alignItems: "center",
-              width: __d(50),
-              height: __d(40)
+              width: width - __d(30),
+              height: __d(40),
+              flexDirection: "row",
+              borderColor: "#5DADE2",
+              borderWidth: __d(1),
+              marginTop: __d(20)
             }}
           >
-            <Image
-              source={require("./images/create-group/password.png")}
+            <View
               style={{
-                width: __d(30),
-                height: __d(30),
-                resizeMode: "contain"
+                justifyContent: "center",
+                alignItems: "center",
+                width: __d(50),
+                height: __d(40)
               }}
+            >
+              <Image
+                source={require("./images/create-group/password.png")}
+                style={{
+                  width: __d(30),
+                  height: __d(30),
+                  resizeMode: "contain"
+                }}
+              />
+              <View
+                style={{
+                  width: __d(2),
+                  height: __d(30),
+                  backgroundColor: "#5DADE2",
+                  position: "absolute",
+                  right: 0
+                }}
+              />
+            </View>
+            <TextInput
+              placeholder="Confirm group pass..."
+              placeholderStyle={{ color: "#e1e1e1" }}
+              secureTextEntry={true}
+              underlineColorAndroid="transparent"
+              style={[
+                styles.text_input_view,
+                {
+                  fontStyle:
+                    this.state.confirmGroupPass !== "" ? "normal" : "italic"
+                }
+              ]}
+              onChangeText={txt => {
+                this.setState({ confirmGroupPass: txt });
+              }}
+              value={this.state.confirmGroupPass}
             />
-            <View style={{
-                width: __d(2),
-                height: __d(30),
-                backgroundColor: "#5DADE2",
-                position: "absolute",
-                right: 0,
-            }}/>
           </View>
-          <TextInput
-            placeholder="Confirm group pass..."
-            placeholderStyle={{ color: "#e1e1e1" }}
-            secureTextEntry={true}
-            underlineColorAndroid="transparent"
-            style={[
-              styles.text_input_view,
-              {
-                fontStyle:
-                  this.state.confirmGroupPass !== "" ? "normal" : "italic"
-              }
-            ]}
-            onChangeText={txt => {
-              this.setState({ confirmGroupPass: txt });
+          {!_.isEmpty(this.errors["password"]) &&
+            <Text style={styles.error_txt}>
+              {this.errors["password"]}
+            </Text>}
+          <TouchableOpacity
+            onPress={() => {
+              this.pushGroupName();
             }}
-            value={this.state.confirmGroupPass}
-          />
+            style={styles.btn_add_new_group}
+          >
+            <Text style={styles.btn_add_new_group_txt}>Create</Text>
+          </TouchableOpacity>
         </View>
-        {!_.isEmpty(this.errors["password"]) &&
-          <Text style={styles.error_txt}>
-            {this.errors["password"]}
-          </Text>}
-        <TouchableOpacity
-          onPress={() => {
-            this.pushGroupName();
-          }}
-          style={styles.btn_add_new_group}
-        >
-          <Text style={styles.btn_add_new_group_txt}>Create</Text>
-        </TouchableOpacity>
-      </View>
+      </KeyboardAvoidingView>
     );
   }
   // push group to firebase
@@ -303,7 +313,7 @@ export default class EnterGroupName extends Component {
               groupName: groupName
             });
 
-          return Actions.pop();
+          this.Global.modalGroupManagement = false;
         }
       } else {
         this.setState({});
@@ -347,11 +357,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#5DADE2",
-      marginTop: __d(15)
+    marginTop: __d(15)
   },
   btn_add_new_group_txt: {
     color: "#fff",
     fontSize: __d(13),
-      fontWeight: "bold"
+    fontWeight: "bold"
   }
 });

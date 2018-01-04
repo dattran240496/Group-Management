@@ -9,7 +9,8 @@ import {
   TextInput,
   Alert,
   FlatList,
-  Image
+  Image,
+  KeyboardAvoidingView
 } from "react-native";
 import Expo from "expo";
 import { Actions, Router, Scene } from "react-native-mobx";
@@ -55,145 +56,18 @@ export default class GroupList extends Component {
       ? __d(300 - 140)
       : __d(400 - 170);
     return (
-      <View
-        style={[
-          styles.container,
-          {
-            height: _.isEmpty(dataGroupList) ? __d(250) : __d(400)
-          }
-        ]}
-      >
-        <TouchableOpacity
-          onPress={() => {
-            this.Global.modalGroupManagement = false;
-          }}
-          style={{
-            width: __d(40),
-            height: __d(40),
-            borderRadius: __d(20),
-            borderWidth: __d(1),
-            borderColor: "#5DADE2",
-            justifyContent: "center",
-            alignItems: "center",
-            position: "absolute",
-            right: -__d(10),
-            top: !_.isEmpty(dataGroupList)
-              ? heightModal / 2 - __d(130)
-              : heightModal / 2 - __d(100),
-            backgroundColor: "#fff"
-          }}
-        >
-          <Icon name="times" color="#5DADE2" size={15} />
-        </TouchableOpacity>
-        <Image
-          source={require("./images/find-group/Popup-Search.png")}
-          style={{
-            width: __d(70),
-            height: __d(70),
-            resizeMode: "contain"
-          }}
-        />
-        <Text
-          style={{
-            fontSize: __d(15),
-            textAlign: "center",
-            paddingTop: __d(5)
-          }}
-        >
-          You can find group with ID or{"\n"}name of group
-        </Text>
-        <TextInput
-          placeholder="ID or Name of group"
-          placeholderStyle={{ color: "#e1e1e1" }}
-          underlineColorAndroid="transparent"
+      <KeyboardAvoidingView behavior="padding">
+        <View
           style={[
-            styles.txtInput_search,
+            styles.container,
             {
-              textAlign: this.state.groupNameSearch === "" ? "center" : "left",
-              fontStyle: this.state.groupNameSearch !== "" ? "normal" : "italic"
+              height: _.isEmpty(dataGroupList) ? __d(250) : __d(400)
             }
           ]}
-          value={this.state.groupNameSearch}
-          onChangeText={name => {
-            this.setState({ groupNameSearch: name });
-            this.filterGroupName(name);
-          }}
-        />
-        {!_.isEmpty(dataGroupList)
-          ? <FlatList
-              style={[
-                styles.fl_view,
-                {
-                  height: heightModal
-                }
-              ]}
-              ref={ref => (this.flatList = ref)}
-              keyExtractor={(item, index) => index}
-              data={dataGroupList}
-              extraData={this.state}
-              renderItem={({ item, index }) => this._renderItem(item, index)}
-            />
-          : this.state.groupNameSearch !== ""
-            ? <Text style={styles.txt_no_group}>No group you can join!</Text>
-            : null}
-        <TouchableOpacity
-          style={{
-            width: __d(100),
-            height: __d(30),
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "#5DADE2",
-            borderRadius: __d(5),
-            marginBottom: __d(5),
-            marginTop: _.isEmpty(dataGroupList)
-              ? this.state.groupNameSearch === "" ? __d(20) : __d(5)
-              : __d(5)
-          }}
-        >
-          {_.isEmpty(dataGroupList)
-            ? <Text
-                style={{
-                  color: "#fff",
-                  fontSize: __d(16),
-                  fontWeight: "bold"
-                }}
-              >
-                Search
-              </Text>
-            : <TouchableOpacity
-                onPress={() => {
-                  this.setState({
-                    groupNameSearch: ""
-                  });
-                }}
-                style={{
-                  flexDirection: "row"
-                }}
-              >
-                <Icon name="arrow-left" size={__d(16)} color="#fff" />
-                <Text
-                  style={{
-                    fontSize: __d(16),
-                    color: "#fff",
-                    fontWeight: "bold",
-                    paddingLeft: __d(5)
-                  }}
-                >
-                  Back
-                </Text>
-              </TouchableOpacity>}
-        </TouchableOpacity>
-        <Modal
-          ref={ref => (this._modalEnterPas = ref)}
-          style={styles.modal_view}
-          position={"center"}
-          swipeToClose={false}
-          coverScreen={true}
         >
           <TouchableOpacity
             onPress={() => {
-              this._modalEnterPas.close();
-              this.errors["password"] = null;
+              this.Global.modalGroupManagement = false;
             }}
             style={{
               width: __d(40),
@@ -205,14 +79,16 @@ export default class GroupList extends Component {
               alignItems: "center",
               position: "absolute",
               right: -__d(10),
-              top: -__d(10),
+              top: !_.isEmpty(dataGroupList)
+                ? heightModal / 2 - __d(130)
+                : heightModal / 2 - __d(100),
               backgroundColor: "#fff"
             }}
           >
             <Icon name="times" color="#5DADE2" size={15} />
           </TouchableOpacity>
           <Image
-            source={require("./images/find-group/password.png")}
+            source={require("./images/find-group/Popup-Search.png")}
             style={{
               width: __d(70),
               height: __d(70),
@@ -226,39 +102,168 @@ export default class GroupList extends Component {
               paddingTop: __d(5)
             }}
           >
-            Your group password
+            You can find group with ID or{"\n"}name of group
           </Text>
           <TextInput
+            placeholder="ID or Name of group"
+            placeholderStyle={{ color: "#e1e1e1" }}
             underlineColorAndroid="transparent"
-            secureTextEntry={true}
-            placeholder="Group pass..."
-            placeholderStyle={{
-              color: "#e1e1e1"
-            }}
             style={[
-              styles.txt_input_pass,
+              styles.txtInput_search,
               {
-                fontStyle: this.state.groupPass !== "" ? "normal" : "italic"
+                textAlign:
+                  this.state.groupNameSearch === "" ? "center" : "left",
+                fontStyle:
+                  this.state.groupNameSearch !== "" ? "normal" : "italic"
               }
             ]}
-            onChangeText={txt => {
-              this.setState({ groupPass: txt });
+            value={this.state.groupNameSearch}
+            onChangeText={name => {
+              this.setState({ groupNameSearch: name });
+              this.filterGroupName(name);
             }}
           />
-          {!_.isEmpty(this.errors["password"]) &&
-            <Text style={styles.error_txt}>
-              {this.errors["password"]}
-            </Text>}
+          {!_.isEmpty(dataGroupList)
+            ? <FlatList
+                style={[
+                  styles.fl_view,
+                  {
+                    height: heightModal
+                  }
+                ]}
+                ref={ref => (this.flatList = ref)}
+                keyExtractor={(item, index) => index}
+                data={dataGroupList}
+                extraData={this.state}
+                renderItem={({ item, index }) => this._renderItem(item, index)}
+              />
+            : this.state.groupNameSearch !== ""
+              ? <Text style={styles.txt_no_group}>No group you can join!</Text>
+              : null}
           <TouchableOpacity
-            onPress={() => {
-              this.joinGroup();
+            style={{
+              width: __d(100),
+              height: __d(30),
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: "#5DADE2",
+              borderRadius: __d(5),
+              marginBottom: __d(5),
+              marginTop: _.isEmpty(dataGroupList)
+                ? this.state.groupNameSearch === "" ? __d(20) : __d(5)
+                : __d(5)
             }}
-            style={styles.btn_join_view}
           >
-            <Text style={styles.btn_join_txt}>OK</Text>
+            {_.isEmpty(dataGroupList)
+              ? <Text
+                  style={{
+                    color: "#fff",
+                    fontSize: __d(16),
+                    fontWeight: "bold"
+                  }}
+                >
+                  Search
+                </Text>
+              : <TouchableOpacity
+                  onPress={() => {
+                    this.setState({
+                      groupNameSearch: ""
+                    });
+                  }}
+                  style={{
+                    flexDirection: "row"
+                  }}
+                >
+                  <Icon name="arrow-left" size={__d(16)} color="#fff" />
+                  <Text
+                    style={{
+                      fontSize: __d(16),
+                      color: "#fff",
+                      fontWeight: "bold",
+                      paddingLeft: __d(5)
+                    }}
+                  >
+                    Back
+                  </Text>
+                </TouchableOpacity>}
           </TouchableOpacity>
-        </Modal>
-      </View>
+          <Modal
+            ref={ref => (this._modalEnterPas = ref)}
+            style={styles.modal_view}
+            position={"center"}
+            swipeToClose={false}
+            coverScreen={true}
+          >
+            <TouchableOpacity
+              onPress={() => {
+                this._modalEnterPas.close();
+                this.errors["password"] = null;
+              }}
+              style={{
+                width: __d(40),
+                height: __d(40),
+                borderRadius: __d(20),
+                borderWidth: __d(1),
+                borderColor: "#5DADE2",
+                justifyContent: "center",
+                alignItems: "center",
+                position: "absolute",
+                right: -__d(10),
+                top: -__d(10),
+                backgroundColor: "#fff"
+              }}
+            >
+              <Icon name="times" color="#5DADE2" size={15} />
+            </TouchableOpacity>
+            <Image
+              source={require("./images/find-group/password.png")}
+              style={{
+                width: __d(70),
+                height: __d(70),
+                resizeMode: "contain"
+              }}
+            />
+            <Text
+              style={{
+                fontSize: __d(15),
+                textAlign: "center",
+                paddingTop: __d(5)
+              }}
+            >
+              Your group password
+            </Text>
+            <TextInput
+              underlineColorAndroid="transparent"
+              secureTextEntry={true}
+              placeholder="Group pass..."
+              placeholderStyle={{
+                color: "#e1e1e1"
+              }}
+              style={[
+                styles.txt_input_pass,
+                {
+                  fontStyle: this.state.groupPass !== "" ? "normal" : "italic"
+                }
+              ]}
+              onChangeText={txt => {
+                this.setState({ groupPass: txt });
+              }}
+            />
+            {!_.isEmpty(this.errors["password"]) &&
+              <Text style={styles.error_txt}>
+                {this.errors["password"]}
+              </Text>}
+            <TouchableOpacity
+              onPress={() => {
+                this.joinGroup();
+              }}
+              style={styles.btn_join_view}
+            >
+              <Text style={styles.btn_join_txt}>OK</Text>
+            </TouchableOpacity>
+          </Modal>
+        </View>
+      </KeyboardAvoidingView>
     );
   }
   filterGroupName(name) {
@@ -378,7 +383,10 @@ export default class GroupList extends Component {
     _id === this.state.groupSelectedToJoin.createdGroupBy || isJoined // if user joined this group
       ? (Alert.alert("Warning!", "You joined this group!"), this.setState({}))
       : this.state.groupPass === "" // if password is empty
-        ? (this.errors["password"] = "Password is not empty!", this.setState({}))
+        ? (
+            (this.errors["password"] = "Password is not empty!"),
+            this.setState({})
+          )
         : this.state.groupPass === this.state.groupSelectedToJoin.groupPass // if password is true
           ? (
               this.itemRefs
@@ -527,8 +535,8 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingLeft: __d(10)
   },
-    error_txt: {
-        color: "red",
-        marginTop: __d(5)
-    },
+  error_txt: {
+    color: "red",
+    marginTop: __d(5)
+  }
 });

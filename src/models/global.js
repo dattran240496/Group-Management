@@ -15,6 +15,24 @@ class Global {
     @observable groupKey = "";
     @observable urlPushNoti = "https://exp.host/--/api/v2/push/send";
     @observable isFooter = false;
+    @observable isShowButtonFooter = false;
+    @observable month = [
+        "NONE",
+        "JAN",
+        "FEB",
+        "MAR",
+        "APR",
+        "MAY",
+        "JUNE",
+        "JULY",
+        "AUG",
+        "SEPT",
+        "OCT",
+        "NOV",
+        "DEC"
+    ];
+    @observable selectedMessage = null;
+    @observable selectedPoll = null;
 }
 const global = new Global();
 export default global;

@@ -19,8 +19,11 @@ import { Actions } from "react-native-mobx";
 import LoadingModal from "./LoadingModal";
 import CheckAttendanceModal from "./check-attendance-modal";
 import MemberCheckAttendanceModal from "./member-check-attendance";
-const { width, height } = Dimensions.get("window");
+import Message  from "./detail-message";
+import Poll from "./vote-poll";
+import Member from "./members"
 import Modal from "react-native-modalbox";
+const { width, height } = Dimensions.get("window");
 
 @autobind
 @observer
@@ -30,6 +33,7 @@ export default class ModalBox extends Component {
     super(props);
     this.Global = this.props.Global;
     this.User = this.props.User;
+    this.FirebaseApi = this.props.Firebase;
   }
   _onOpen() {}
   _onClose() {}
@@ -84,6 +88,46 @@ export default class ModalBox extends Component {
                 />
             );
 
+            break;
+        case "message":
+            component = (
+                <Message
+                    closeModal={() => {
+                        this.Global.modalType = false;
+                        this.closeModal();
+                    }}
+                    Global={this.Global}
+                    User={this.User}
+                    FirebaseApi={this.FirebaseApi}
+                />
+            );
+
+            break;
+        case "poll":
+            component = (
+                <Poll
+                    closeModal={() => {
+                        this.Global.modalType = false;
+                        this.closeModal();
+                    }}
+                    Global={this.Global}
+                    User={this.User}
+                    FirebaseApi={this.FirebaseApi}
+                />
+            );
+            break;
+        case "member":
+            component = (
+                <Member
+                    closeModal={() => {
+                        this.Global.modalType = false;
+                        this.closeModal();
+                    }}
+                    Global={this.Global}
+                    User={this.User}
+                    FirebaseApi={this.FirebaseApi}
+                />
+            );
             break;
     }
     return (

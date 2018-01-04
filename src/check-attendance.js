@@ -10,7 +10,8 @@ import {
   Alert,
   FlatList,
   Image,
-  TouchableHighlight
+  TouchableHighlight,
+    KeyboardAvoidingView
 } from "react-native";
 import Expo from "expo";
 import { Actions, Router, Scene } from "react-native-mobx";
@@ -20,9 +21,14 @@ import { observer } from "mobx-react/native";
 import firebase from "./api/api";
 import Modal from "react-native-modalbox";
 import Swipeout from "react-native-swipeout";
+import Footer from "./components/components-footer/footer";
 import Icon from "react-native-vector-icons/FontAwesome";
-const { width, height } = Dimensions.get("window");
+import moment from "moment";
+import Dash from "react-native-dash";
 import { __d } from "./components/helpers/index";
+import { _ } from "lodash";
+
+const { width, height } = Dimensions.get("window");
 @autobind
 @observer
 export default class CheckAttendance extends Component {
@@ -31,6 +37,15 @@ export default class CheckAttendance extends Component {
   @observable isEdit = false;
   @observable info = null;
   @observable indexSelected = -1;
+  @observable indexSelectedOption = 1;
+  @observable isAdmin = false;
+  @observable messageSelected = null;
+  @observable pollSelected = null;
+  @observable messageEdit = null;
+  @observable pollEdit = null;
+    @observable arrOptions = [""];
+    @observable poll = null;
+    @observable messages = null;
   constructor(props) {
     super(props);
     this.User = this.props.User;
@@ -40,13 +55,15 @@ export default class CheckAttendance extends Component {
     this.state = {
       groupName: this.Global.groupName,
       messages: null,
-      groupKey: ""
+      groupKey: "",
+      poll: null
     };
   }
   componentWillMount() {
     this.getInfoAdminAndGroup();
     this.getMembers();
     this.getMessage();
+    this.getPoll();
     this.itemRefs
       .child("Group")
       .child(this.Global.groupKey)
@@ -62,6 +79,12 @@ export default class CheckAttendance extends Component {
             : null;
         });
       });
+    let isAdmin =
+      this.info && this.info.email === this.User.user.email ? true : false;
+    this.isAdmin = isAdmin;
+    if (this.isAdmin) {
+      this.Global.isFooter = true;
+    }
   }
   componentDidMount() {
     this.info &&
@@ -73,170 +96,236 @@ export default class CheckAttendance extends Component {
   }
 
   render() {
-    let isAdmin =
-      this.info && this.info.email === this.User.user.email ? true : false;
     return (
+        <KeyboardAvoidingView
+            style={styles.container}
+            behavior="padding">
       <View style={styles.container}>
-        <View style={styles.header_view}>
-          <TouchableOpacity
-            onPress={() => {
-              this.state.messages = null;
-              this.FirebaseApi.members = null;
-              this.info = null;
-              this.Global.isFooter = false;
-              Actions.pop({ type: "refresh" });
-            }}
-            style={styles.header_btn_back_view}
-          >
-            <Icon name="angle-left" size={__d(35)} color="#fff" />
-          </TouchableOpacity>
-          <Text style={styles.header_txt}>
-            {this.Global.groupName.toString().replace("%", ".")}
-          </Text>
-          <TouchableOpacity
-            style={styles.header_btn_setting_view}
-            onPress={() => {
-              this.isEdit = !this.isEdit;
-            }}
-          >
-            {this.isEdit
-              ? <View
-                  style={[
-                    styles.header_btn_setting_change_name_view,
-                    {
-                      height: isAdmin ? __d(75) : __d(25)
-                    }
-                  ]}
-                >
-                  {isAdmin
-                    ? <TouchableOpacity
-                        onPress={() => {
-                          this.isEdit = false;
-                          Actions.editGroup({
-                            title: "Change group name",
-                            typeEdit: "name"
-                          });
-                        }}
-                        style={[
-                          styles.header_btn_setting_change_name_btn_view,
-                          {}
-                        ]}
-                      >
-                        <Text>Change group name</Text>
-                      </TouchableOpacity>
-                    : null}
-                  {isAdmin
-                    ? <TouchableOpacity
-                        onPress={() => {
-                          this.isEdit = false;
-                          Actions.editGroup({
-                            title: "Change password",
-                            typeEdit: "password"
-                          });
-                        }}
-                        style={styles.header_btn_setting_change_name_btn_view}
-                      >
-                        <Text>Change password</Text>
-                      </TouchableOpacity>
-                    : null}
-                  <TouchableOpacity
-                    onPress={() => {
-                      Actions.pop();
-                      if (!isAdmin) {
-                        let deleteInMygroup = this.itemRefs
-                          .child("Account")
-                          .child(this.User.user.id)
-                          .child("MyGroup")
-                          .child(this.Global.groupKey);
-                        deleteInMygroup.remove();
-                        let deleteInGroup = this.itemRefs
-                          .child("Group")
-                          .child(this.Global.groupKey)
-                          .child("groupMember")
-                          .child(this.User.user.id);
-                        deleteInGroup.remove();
-                      } else {
-                        let groupMem = [];
-                        this.itemRefs
-                          .child("Group")
-                          .child(this.Global.groupKey)
-                          .child("groupMember")
-                          .on("value", dataSnapshot => {
-                            groupMem = dataSnapshot.val();
-                          });
-                        Object.keys(groupMem).map((v, i) => {
-                          let childMyGroup = this.itemRefs
-                            .child("Account")
-                            .child(v)
-                            .child("MyGroup")
-                            .child(this.Global.groupKey);
-                          childMyGroup.remove();
-                        });
-                        let deleteGroup = this.itemRefs
-                          .child("Group")
-                          .child(this.Global.groupKey);
-                        deleteGroup.remove();
-                        this.Global.groupKey = "";
-                        this.Global.groupName = "";
-                      }
-                    }}
-                    style={[
-                      styles.header_btn_setting_change_name_btn_view,
-                      {
-                        borderBottomWidth: 0
-                      }
-                    ]}
-                  >
-                    <Text>
-                      {isAdmin ? "Delete group" : "Leave group"}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              : null}
-            <Icon name="cog" size={__d(20)} color="#fff" />
-          </TouchableOpacity>
-        </View>
-
-        <Image
-          blurRadius={5}
-          source={this.info ? { uri: this.info.picture } : null}
-          style={styles.admin_info_view}
+        <TouchableOpacity
+          onPress={() => {
+            this.Global.isFooter = false;
+            Actions.pop({ type: "refresh" });
+            this.Global.modalGroupManagement = "myGroup";
+          }}
+          style={{
+            marginTop: __d(10),
+            marginLeft: __d(10)
+          }}
+        >
+          <Icon name="arrow-left" size={__d(15)} color="#5DADE2" />
+        </TouchableOpacity>
+        <View
+          style={{
+            flex: 1,
+            flexDirection: "row",
+            padding: __d(10)
+          }}
         >
           <Image
-            source={this.info ? { uri: this.info.picture } : null}
-            style={styles.admin_info_img}
-          />
-
-          <View style={styles.admin_info}>
-              <Text style={styles.admin_info_name}>
-                {this.info ? this.info.name.toString().toUpperCase() : ""}
-              </Text>
-              <Text
-                numberOfLines={1}
-                ellipsizeMode="tail"
-                style={styles.admin_info_email}
-              >
-                {this.info ? this.info.email : ""}
-              </Text>
+            source={require("./images/check-attendance/avata.png")}
+            style={{
+              width: __d(55),
+              height: __d(55),
+              resizeMode: "contain",
+              justifyContent: "center",
+              alignItems: "center"
+            }}
+          >
+            <Image
+              source={this.info ? { uri: this.info.picture } : null}
+              style={{
+                width: __d(40),
+                height: __d(40),
+                resizeMode: "contain",
+                borderRadius: __d(20),
+                marginBottom: __d(10)
+              }}
+            />
+          </Image>
+          <View
+            style={{
+              width: width - __d(110),
+              paddingLeft: __d(20)
+            }}
+          >
+            <TextInput
+              underlineColorAndroid="transparent"
+              placeholder="Group name..."
+              placeholderStyle={{ color: "#e1e1e1" }}
+              style={[
+                {
+                  width: width - __d(110),
+                  height: __d(20),
+                  fontSize: __d(13)
+                }
+              ]}
+              editable={this.isEdit}
+              value={this.state.groupName}
+              onChangeText={name => {
+                this.setState({ groupName: name });
+              }}
+              onSubmitEditing={() => {
+                this.isEditName = false;
+                this.changeGroupName();
+              }}
+            />
+            {!_.isEmpty(this.errors) &&
+              <Text style={{ color: "red", fontSize: __d(13) }}>
+                {this.errors}
+              </Text>}
+            <View
+              style={{
+                flexDirection: "row",
+              }}
+            >
+              <TouchableOpacity
+                  onPress={()=>{
+                      this.Global.modalType = "member";
+                  }}
+                  style={{
+                  flexDirection: "row",
+              }}>
+                  <Image
+                      source={require("./images/check-attendance/group.png")}
+                      style={{
+                          width: __d(20),
+                          height: __d(20),
+                          resizeMode: "contain"
+                      }}
+                  />
+                  <Text
+                      style={{
+                          fontSize: __d(15),
+                          paddingLeft: __d(5)
+                      }}
+                  >
+                      {this.FirebaseApi.members
+                          ? Object.values(this.FirebaseApi.members).length
+                          : null}{" "}
+                      members
+                  </Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </Image>
-
-        <View style={styles.list_mess_view}>
+          {this.isAdmin
+            ? <View
+                style={{
+                  width: __d(30),
+                  alignItems: "flex-end"
+                }}
+              >
+                <TouchableOpacity
+                  onPress={() => {
+                    this.isEdit = true;
+                  }}
+                >
+                  <Image
+                    source={require("./images/check-attendance/pencil.png")}
+                    style={{
+                      width: __d(15),
+                      height: __d(15),
+                      resizeMode: "contain"
+                    }}
+                  />
+                </TouchableOpacity>
+              </View>
+            : null}
+        </View>
+        <View style={[styles.list_mess_view]}>
+          <View
+            style={{
+              width: width,
+              height: __d(50),
+              flexDirection: "row"
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => {
+                this.indexSelectedOption = 1;
+              }}
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+                borderBottomWidth: __d(3),
+                borderBottomColor:
+                  this.indexSelectedOption === 1 ? "#5DADE2" : "#e1e1e1"
+              }}
+            >
+              <Image
+                source={
+                  this.indexSelectedOption === 1
+                    ? require("./images/check-attendance/chat.png")
+                    : require("./images/check-attendance/un-chat.png")
+                }
+                style={{
+                  width: __d(40),
+                  height: __d(40),
+                  resizeMode: "contain"
+                }}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                this.indexSelectedOption = 2;
+              }}
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+                borderBottomWidth: __d(3),
+                borderBottomColor:
+                  this.indexSelectedOption === 2 ? "#5DADE2" : "#e1e1e1"
+              }}
+            >
+              <Image
+                source={
+                  this.indexSelectedOption === 2
+                    ? require("./images/check-attendance/poll.png")
+                    : require("./images/check-attendance/un-poll.png")
+                }
+                style={{
+                  width: __d(40),
+                  height: __d(40),
+                  resizeMode: "contain"
+                }}
+              />
+            </TouchableOpacity>
+          </View>
           <FlatList
-            style={{}}
-            ref={ref => (this.postMessage = ref)}
+            style={{
+              backgroundColor: "#e1e1e1",
+            }}
+            ref={ref => (this.renderMess = ref)}
             keyExtractor={(item, index) => index}
-            data={this.state.messages}
+            data={
+              this.indexSelectedOption === 1
+                ? this.messages
+                : this.poll
+            }
             extraData={this.state}
-            renderItem={({ item, index }) => this._renderMessages(item, index)}
+            renderItem={({ item, index }) =>
+              this.indexSelectedOption === 1
+                ? this._renderMessages(item, index)
+                : this._renderPoll(item, index)}
           />
           <View
             style={{
-              height: 10
+              height: 10,
+              backgroundColor: "#e1e1e1"
+            }}
+          />
+          <View
+            style={{
+              flex: 1.5,
+              backgroundColor: "#e1e1e1"
             }}
           />
         </View>
+
       </View>
+        </KeyboardAvoidingView>
+
     );
   }
   getInfoAdminAndGroup() {
@@ -276,7 +365,8 @@ export default class CheckAttendance extends Component {
           this.FirebaseApi.members[child.key] = {
             email: child.child("email").val(),
             token: child.child("token").val(),
-            name: child.child("name").val()
+            name: child.child("name").val(),
+              key: child.key
           };
           this.info &&
           this.state.messages &&
@@ -301,24 +391,15 @@ export default class CheckAttendance extends Component {
           let index = {
             message: child.child("message").val(),
             timeAtPost: child.child("timeAtPost").val(),
-            key: child.key
+            key: child.key,
+            title: child.child("title").val()
           };
-          // this.state.messages[child.key] = {
-          //     messages: child.child("message").val(),
-          //     timeAtPost: child.child("timeAtPost").val()
-          // }
-          child.child("options").val()
-            ? (index["options"] = child.child("options").val())
-            : null;
-          child.child("isPoll").val()
-            ? (index["isPoll"] = child.child("isPoll").val())
-            : null;
           arrMessage.push(index);
         });
         arrMessage.reverse();
-        this.setState({
-          messages: arrMessage
-        });
+
+          this.messages = arrMessage
+
         this.info &&
         this.FirebaseApi.members &&
         this.Global.modalType === "loading"
@@ -328,9 +409,43 @@ export default class CheckAttendance extends Component {
     //console.log(this.state.messages);
     // if members and messages got, turn off modal loading
   }
+  getPoll() {
+    let arrMessage = [];
+    this.itemRefs
+      .child("Group")
+      .child(this.Global.groupKey)
+      .child("postedPoll")
+      .on("value", dataSnapshot => {
+        this.state.messages = [];
+        arrMessage = [];
+        dataSnapshot.forEach(child => {
+          let index = {
+            message: child.child("message").val(),
+            timeAtPost: child.child("timeAtPost").val(),
+              voted: child.child("voted").val(),
+            key: child.key
+          };
+          // this.state.messages[child.key] = {
+          //     messages: child.child("message").val(),
+          //     timeAtPost: child.child("timeAtPost").val()
+          // }
+          child.child("options").val()
+            ? (index["options"] = child.child("options").val())
+            : null;
+          arrMessage.push(index);
+        });
+        arrMessage.reverse();
+          this.poll = arrMessage;
+        this.info &&
+        this.FirebaseApi.members &&
+        this.Global.modalType === "loading"
+          ? ((this.Global.modalType = false), this.setState({}))
+          : null;
+      });
+  }
   _renderMessages(item, index) {
+    let momentTimeAtPost = moment(item.timeAtPost, "YYYY-MM-DD");
     let _this = this;
-
     let swipeBtns = [
       {
         text: "Delete",
@@ -347,51 +462,134 @@ export default class CheckAttendance extends Component {
       }
     ];
     let messageView = [];
+    let date = momentTimeAtPost.format("DD");
+    let month = this.Global.month[momentTimeAtPost.format("M")];
     messageView.push(
       <View key={index} style={styles.child_mess_view}>
-        {item.isPoll
-          ? <Icon
-              name="flag"
-              color="#e1e1e1"
-              size={__d(15)}
-              style={styles.child_mess_poll_icon}
-            />
-          : null}
         <TouchableHighlight
           underlayColor="transparent"
           onPress={() => {
-            console.log(item);
-            //if option is poll, action to vote, else  action to message
-            item.options
-              ? Actions.votePoll({
-                  poll: item
-                })
-              : Actions.detailMessage({ detailMessage: item });
+            this.messageSelected = item;
+            this.messageEdit = item;
+            this.Global.selectedMessage = item;
+            this.Global.modalType = "message";
           }}
           style={{
-            width: item.options ? width - __d(170) : width - __d(150),
-            height: __d(20)
+            width: width - __d(20),
+            height: __d(70),
+            backgroundColor: "#fff"
           }}
         >
-          <Text
-            numberOfLines={1}
-            ellipsizeMode="tail"
+          <View
             style={{
-              fontSize: __d(13),
-              color: item.options ? "red" : null
+              flex: 1,
+              flexDirection: "row",
+              width: width - __d(20),
+              height: __d(70),
+              backgroundColor: "#fff"
             }}
           >
-            {item.message}
-          </Text>
+            <View
+              style={{
+                height: __d(70),
+                width: __d(70)
+              }}
+            >
+              <View
+                style={{
+                  flex: 1,
+                  borderBottomColor: "#5DADE2",
+                  borderBottomWidth: __d(1),
+                  justifyContent: "center",
+                  alignItems: "center"
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: __d(15),
+                    color: "#5DADE2"
+                  }}
+                >
+                  {date}
+                </Text>
+              </View>
+
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "center",
+                  alignItems: "center"
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: __d(15),
+                    color: "#5DADE2"
+                  }}
+                >
+                  {month}
+                </Text>
+              </View>
+            </View>
+            <View
+              style={{
+                width: __d(5),
+                height: __d(70),
+                backgroundColor: "#e1e1e1"
+              }}
+            />
+            <View
+              style={{
+                width: width - __d(95),
+                height: __d(70),
+                paddingLeft: __d(5)
+              }}
+            >
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "center"
+                }}
+              >
+                <Text
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                  style={{
+                    fontSize: __d(18),
+                    color: item.options ? "red" : null,
+                    justifyContent: "center"
+                  }}
+                >
+                  {item.title.toString().toUpperCase()}
+                </Text>
+              </View>
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "center"
+                }}
+              >
+                <Text
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                  style={{
+                    fontSize: __d(13),
+                    color: item.options ? "red" : null
+                  }}
+                >
+                  {item.message}
+                </Text>
+              </View>
+            </View>
+          </View>
         </TouchableHighlight>
-        <Text style={styles.child_mess_time_at_post}>
-          {item.timeAtPost}
-        </Text>
       </View>
     );
 
     return (
-      <View>
+      <View style={{
+          marginTop: __d(10)
+      }}>
         {this.info.email === this.User.user.email
           ? <Swipeout
               right={swipeBtns}
@@ -403,6 +601,231 @@ export default class CheckAttendance extends Component {
           : messageView}
       </View>
     );
+  }
+  _renderPoll(item, index) {
+    let momentTimeAtPost = moment(item.timeAtPost, "YYYY-MM-DD");
+    let _this = this;
+    let swipeBtns = [
+      {
+        text: "Delete",
+        backgroundColor: "red",
+        underlayColor: "red",
+        onPress: () => {
+          let child = _this.itemRefs
+            .child("Group")
+            .child(this.Global.groupKey)
+            .child("postedPoll")
+            .child(item.key);
+          child.remove();
+        }
+      }
+    ];
+    let messageView = [];
+    let date = momentTimeAtPost.format("DD");
+    let month = this.Global.month[momentTimeAtPost.format("M")];
+    let numberOptions = item.options ? item.options.length : 0;
+    messageView.push(
+      <View key={index} style={styles.child_mess_view}>
+        <TouchableHighlight
+          underlayColor="transparent"
+          onPress={() => {
+              this.Global.selectedPoll = item;
+              this.Global.modalType = "poll";
+          }}
+          style={{
+            width: width - __d(20),
+            height: __d(70),
+            backgroundColor: "#fff"
+          }}
+        >
+          <View
+            style={{
+              flex: 1,
+              flexDirection: "row",
+              width: width - __d(20),
+              height: __d(70),
+              backgroundColor: "#fff"
+            }}
+          >
+            <View
+              style={{
+                height: __d(70),
+                width: __d(70)
+              }}
+            >
+              <View
+                style={{
+                  flex: 1,
+                  borderBottomColor: "#5DADE2",
+                  borderBottomWidth: __d(1),
+                  justifyContent: "center",
+                  alignItems: "center"
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: __d(15),
+                    color: "#5DADE2"
+                  }}
+                >
+                  {date}
+                </Text>
+              </View>
+
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "center",
+                  alignItems: "center"
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: __d(15),
+                    color: "#5DADE2"
+                  }}
+                >
+                  {month}
+                </Text>
+              </View>
+            </View>
+            <View
+              style={{
+                width: __d(5),
+                height: __d(70),
+                backgroundColor: "#e1e1e1"
+              }}
+            />
+            <View
+              style={{
+                width: width - __d(95),
+                height: __d(70),
+                paddingLeft: __d(5)
+              }}
+            >
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "center"
+                }}
+              >
+                <Text
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                  style={{
+                    fontSize: __d(18),
+                    justifyContent: "center"
+                  }}
+                >
+                  {item.message.toString().toUpperCase()}
+                </Text>
+              </View>
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "center",
+                  alignItems: "flex-end"
+                }}
+              >
+                <Text
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                  style={{
+                    fontSize: __d(13),
+                    paddingRight: __d(10),
+                    color: "#999"
+                  }}
+                >
+                  {numberOptions} Answers
+                </Text>
+              </View>
+            </View>
+          </View>
+        </TouchableHighlight>
+      </View>
+    );
+
+    return (
+      <View style={{
+          marginTop: __d(10)
+      }}>
+        {this.info.email === this.User.user.email
+          ? <Swipeout
+              right={swipeBtns}
+              backgroundColor="transparent"
+              autoClose={true}
+            >
+              {messageView}
+            </Swipeout>
+          : messageView}
+      </View>
+    );
+  }
+  validate(value) {
+    let regx = new RegExp(/^[A-Za-z0-9.]+$/);
+    return regx.test(value);
+  }
+  changeGroupName() {
+    let isNameExisted = false;
+    let members = Object.keys(this.FirebaseApi.members);
+    if (this.validate(this.state.groupName)) {
+      this.errors = {};
+      let groupName = this.state.groupName.replace(".", "%");
+      this.FirebaseApi.groupData.map((v, i) => {
+        if (v.groupName === groupName) {
+          isNameExisted = true;
+          this.setState({
+            groupName: this.Global.groupName
+          });
+          return (this.errors = "Group name existed!");
+        }
+      });
+      if (!isNameExisted) {
+        this.itemRefs.child("Group").child(this.Global.groupKey).update({
+          groupName: this.state.groupName
+        });
+        members.map((v, i) => {
+          this.itemRefs
+            .child("Account")
+            .child(v)
+            .child("MyGroup")
+            .child(this.Global.groupKey)
+            .update({
+              groupName: this.state.groupName
+            });
+        });
+        //return Actions.pop({ type: "refresh" });
+      }
+    } else {
+      this.setState({
+        groupName: this.Global.groupName
+      });
+      return (this.errors = "Group names can not have special characters!");
+    }
+  }
+  postMessage() {
+      this.modal_mess.close();
+      if (this.messageEdit){
+        let timeAtPost = new Date(); // get time at post
+        let month = (timeAtPost.getMonth() + 1).toString().length === 1 ? "0" : ""; // if hour < 10 => add "0" previous
+        let day = timeAtPost.getDate().toString().length === 1 ? "0" : ""; // if minute < 10 => add "0" previous
+        let hours = timeAtPost.getHours().toString().length === 1 ? "0" : ""; // if hour < 10 => add "0" previous
+        let minutes = timeAtPost.getMinutes().toString().length === 1 ? "0" : ""; // if minute < 10 => add "0" previous
+        // format time: dd/mm/yyyy - hh:mm
+         let mometTimeAtPost = moment(timeAtPost, "YYYY-MM-DDhh:mm:ss");
+        let formatTime = mometTimeAtPost.format("YYYY-MM-DDhh:mm:ss");
+        this.itemRefs
+            .child("Group")
+            .child(this.Global.groupKey)
+            .child("postedMessages")
+            .child(this.messageEdit.key)
+            .set({
+                message: this.messageEdit.message,
+                title: this.messageEdit.title,
+                timeAtPost: formatTime
+            });
+    }
+
   }
 }
 const styles = StyleSheet.create({
@@ -464,7 +887,7 @@ const styles = StyleSheet.create({
     zIndex: 0,
     justifyContent: "center",
     alignItems: "center",
-      paddingTop: __d(10)
+    paddingTop: __d(10)
   },
   admin_info_bg_view: {
     backgroundColor: "#fff",
@@ -484,7 +907,7 @@ const styles = StyleSheet.create({
   admin_info: {
     flex: 1,
     paddingLeft: __d(10),
-      alignItems: "center"
+    alignItems: "center"
   },
   txt_name: {
     fontSize: __d(13),
@@ -494,7 +917,7 @@ const styles = StyleSheet.create({
     fontSize: __d(25),
     color: "#fff",
     fontWeight: "500",
-    backgroundColor: "transparent",
+    backgroundColor: "transparent"
   },
   admin_info_email: {
     fontSize: __d(17),
@@ -503,19 +926,17 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent"
   },
   list_mess_view: {
-    flex: __d(5),
+    flex: 6,
     borderBottomColor: "#e1e1e1",
     borderBottomWidth: __d(1),
     backgroundColor: "#FFF"
   },
   child_mess_view: {
     width: width,
-    height: __d(50),
+    height: __d(70),
     flexDirection: "row",
     alignItems: "center",
-    paddingLeft: __d(10),
-    borderBottomColor: "#e1e1e1",
-    borderBottomWidth: 1
+    paddingLeft: __d(10)
   },
   child_mess_poll_icon: {
     justifyContent: "center",

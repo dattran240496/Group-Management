@@ -63,7 +63,6 @@ export default class Login extends Component {
   async getDataWhenInstallApp() {
     try {
       let value = await AsyncStorage.getItem("@isInstallApp:key");
-      console.log(value);
       if (value !== null) {
         this.isInstalledApp = true;
       } else {

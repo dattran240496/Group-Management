@@ -144,7 +144,6 @@ export default class Intro extends Component {
     try {
       let value = await AsyncStorage.getItem("@isInstallApp:key");
       if (value !== null) {
-          console.log("login");
           Actions.login({ type: "replace" });
       } else {
         this.isInstalledApp = false;

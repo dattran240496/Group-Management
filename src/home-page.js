@@ -169,7 +169,7 @@ export default class Homepage extends Component {
             <View
               style={{
                 position: "absolute",
-                top: __d(80),
+                top: __d(100),
                 flexDirection: "row",
                 height: __d(60),
                 alignItems: "center",
@@ -207,12 +207,12 @@ export default class Homepage extends Component {
             <View
               style={{
                 position: "absolute",
-                top: __d(220),
+                top: __d(250),
                 flexDirection: "row",
                 height: __d(60),
                 alignItems: "center",
                 backgroundColor: "transparent",
-                left: -__d(125)
+                left: -__d(105)
               }}
             >
               <Text
@@ -245,12 +245,12 @@ export default class Homepage extends Component {
             <View
               style={{
                 position: "absolute",
-                top: __d(330),
+                top: __d(350),
                 flexDirection: "row",
                 height: __d(60),
                 alignItems: "center",
                 backgroundColor: "transparent",
-                left: -__d(10)
+                left: __d(10)
               }}
             >
               <Text
@@ -261,7 +261,7 @@ export default class Homepage extends Component {
                     fontFamily: this.state.isFontLoaded ? "FiraSans-BoldItalic" : null
                 }}
               >
-                Setting
+                Account
               </Text>
               <TouchableOpacity
                   onPress={()=>{

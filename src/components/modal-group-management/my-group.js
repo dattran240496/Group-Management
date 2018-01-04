@@ -10,7 +10,8 @@ import {
   Alert,
   FlatList,
   Image,
-    TouchableHighlight
+  TouchableHighlight,
+  KeyboardAvoidingView
 } from "react-native";
 import Expo from "expo";
 import { Actions, Router, Scene } from "react-native-mobx";
@@ -49,86 +50,87 @@ export default class MyGroup extends Component {
   render() {
     let myGroupData = this.myGroupList;
     return (
-      <View style={styles.container}>
-        <TouchableOpacity
-          onPress={() => {
-            this.Global.modalGroupManagement = false;
-          }}
-          style={{
-            width: __d(40),
-            height: __d(40),
-            borderRadius: __d(20),
-            borderWidth: __d(1),
-            borderColor: "#5DADE2",
-            justifyContent: "center",
-            alignItems: "center",
-            position: "absolute",
-            right: -__d(10),
-            top: -__d(20),
-            backgroundColor: "#fff"
-          }}
-        >
-          <Icon name="times" color="#5DADE2" size={__d(15)} />
-        </TouchableOpacity>
-        <Image
-          source={require("./images/my-group/Popup-MyGroup.png")}
-          style={{
-            width: __d(70),
-            height: __d(70),
-            resizeMode: "contain"
-          }}
-        />
-        <Text
-          style={{
-            fontSize: __d(15),
-            textAlign: "center",
-            paddingTop: __d(5)
-          }}
-        >
-          Your speciality and happiness{"\n"}groups
-        </Text>
-        <TextInput
-          underlineColorAndroid="transparent"
-          placeholder="Group name..."
-          placeholderStyle={{ color: "#e1e1e1" }}
-          style={[
-            styles.text_input_view,
-            {
-              textAlign: this.state.myGroupName === "" ? "center" : "left",
-              fontStyle: this.state.myGroupName !== "" ? "normal" : "italic"
-            }
-          ]}
-          value={this.state.myGroupName}
-          onChangeText={name => {
-            this.setState({ myGroupName: name });
-            this.filterGroupName(name);
-          }}
-        />
-        {!_.isEmpty(this.myGroupList)
-          ? <FlatList
-              style={styles.flat_list_view}
-              ref={ref => (this.flatListMyGroup = ref)}
-              keyExtractor={(item, index) => index}
-              data={this.myGroupList}
-              extraData={this.state}
-              renderItem={({ item, index }) => this._renderItem(item, index)}
-            />
-          : <View style={styles.noti_no_group_view}>
-              <Text style={styles.noti_no_group_txt}>
-                You have not joined the group!
-              </Text>
-              <TouchableOpacity
-                onPress={() => {
-                  this.FirebaseApi.groupData = null;
-                  this.Global.modalType = "loading";
-                  Actions.groupList();
-                }}
-                style={styles.btn_search_group_view}
-              >
-                <Text style={styles.btn_search_group_txt}>Search group</Text>
-              </TouchableOpacity>
-            </View>}
-      </View>
+      <KeyboardAvoidingView behavior="padding">
+        <View style={styles.container}>
+          <TouchableOpacity
+            onPress={() => {
+              this.Global.modalGroupManagement = false;
+            }}
+            style={{
+              width: __d(40),
+              height: __d(40),
+              borderRadius: __d(20),
+              borderWidth: __d(1),
+              borderColor: "#5DADE2",
+              justifyContent: "center",
+              alignItems: "center",
+              position: "absolute",
+              right: -__d(10),
+              top: -__d(20),
+              backgroundColor: "#fff"
+            }}
+          >
+            <Icon name="times" color="#5DADE2" size={__d(15)} />
+          </TouchableOpacity>
+          <Image
+            source={require("./images/my-group/Popup-MyGroup.png")}
+            style={{
+              width: __d(70),
+              height: __d(70),
+              resizeMode: "contain"
+            }}
+          />
+          <Text
+            style={{
+              fontSize: __d(15),
+              textAlign: "center",
+              paddingTop: __d(5)
+            }}
+          >
+            Your speciality and happiness{"\n"}groups
+          </Text>
+          <TextInput
+            underlineColorAndroid="transparent"
+            placeholder="Group name..."
+            placeholderStyle={{ color: "#e1e1e1" }}
+            style={[
+              styles.text_input_view,
+              {
+                textAlign: this.state.myGroupName === "" ? "center" : "left",
+                fontStyle: this.state.myGroupName !== "" ? "normal" : "italic"
+              }
+            ]}
+            value={this.state.myGroupName}
+            onChangeText={name => {
+              this.setState({ myGroupName: name });
+              this.filterGroupName(name);
+            }}
+          />
+          {!_.isEmpty(this.myGroupList)
+            ? <FlatList
+                style={styles.flat_list_view}
+                ref={ref => (this.flatListMyGroup = ref)}
+                keyExtractor={(item, index) => index}
+                data={this.myGroupList}
+                extraData={this.state}
+                renderItem={({ item, index }) => this._renderItem(item, index)}
+              />
+            : <View style={styles.noti_no_group_view}>
+                <Text style={styles.noti_no_group_txt}>
+                  You have not joined the group!
+                </Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.FirebaseApi.groupData = null;
+                    this.Global.modalGroupManagement = "groupList";
+                  }}
+                  style={styles.btn_search_group_view}
+                >
+                  <Text style={styles.btn_search_group_txt}>Search group</Text>
+                </TouchableOpacity>
+              </View>}
+        </View>
+      </KeyboardAvoidingView>
     );
   }
 
@@ -144,14 +146,15 @@ export default class MyGroup extends Component {
       .on("value", dataSnapshot => {
         info = this.FirebaseApi.accountData[dataSnapshot.val()];
       });
-      let isAdmin =
-          info && info.email === this.User.user.email ? true : false;
+    let isAdmin = info && info.email === this.User.user.email ? true : false;
     let swipeBtns = [
       {
         text: "Delete",
         backgroundColor: "red",
         underlayColor: "transparent",
-        onPress: () => {this.deleteGroup(isAdmin, item.groupKey)}
+        onPress: () => {
+          this.deleteGroup(isAdmin, item.groupKey);
+        }
       }
     ];
 
@@ -166,33 +169,36 @@ export default class MyGroup extends Component {
             onPress={() => {
               //this.state.groupName = Object.keys(item);
               this.Global.groupKey = item.groupKey;
+              this.Global.groupName = item.groupName;
               this.FirebaseApi.members = null;
               this.Global.modalType = "loading";
-              this.Global.isFooter = true;
+              //this.Global.isFooter = true;
+              this.Global.isShowButtonFooter = false;
+              this.Global.modalGroupManagement = false;
               Actions.checkAttendance();
             }}
             style={styles.fl_child_view}
           >
-              <View style={styles.fl_child_mem_view}>
+            <View style={styles.fl_child_mem_view}>
+              <Image
+                source={require("./images/find-group/avata.png")}
+                style={styles.fl_child_mem_number}
+              >
                 <Image
-                    source={require("./images/find-group/avata.png")}
-                    style={styles.fl_child_mem_number}
-                >
-                  <Image
-                      source={info ? { uri: info.picture } : null}
-                      style={{
-                          width: __d(35),
-                          height: __d(35),
-                          resizeMode: "contain",
-                          borderRadius: __d(20),
-                          marginBottom: __d(8)
-                      }}
-                  />
-                </Image>
-              </View>
-              <Text style={styles.fl_child_mem_name}>
-                  {name}
-              </Text>
+                  source={info ? { uri: info.picture } : null}
+                  style={{
+                    width: __d(35),
+                    height: __d(35),
+                    resizeMode: "contain",
+                    borderRadius: __d(20),
+                    marginBottom: __d(8)
+                  }}
+                />
+              </Image>
+            </View>
+            <Text style={styles.fl_child_mem_name}>
+              {name}
+            </Text>
           </TouchableOpacity>
         </Swipeout>
       </View>
@@ -222,7 +228,7 @@ export default class MyGroup extends Component {
             groupKey: child.key
           });
         });
-            this.myGroupList = this.FirebaseApi.myGroup
+        this.myGroupList = this.FirebaseApi.myGroup;
         this.FirebaseApi.myGroup && this.Global.modalType === "loading"
           ? (this.Global.modalType = false)
           : null;
@@ -297,8 +303,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: __d(1),
     borderBottomColor: "#fff",
     backgroundColor: "#e1e1e1",
-    flexDirection: "row",
-
+    flexDirection: "row"
   },
   fl_child_mem_view: {
     width: __d(60),

@@ -20,7 +20,6 @@ import { observer } from "mobx-react/native";
 import { Actions } from "react-native-mobx";
 import PostMessage from "./post-messages";
 import CreatePoll from "./create-poll";
-import Member from "./members";
 import Icon from "react-native-vector-icons/FontAwesome";
 const { width, height } = Dimensions.get("window");
 import Modal from "react-native-modalbox";
@@ -51,20 +50,6 @@ export default class ComponentFooter extends Component {
     let title = null;
     let component = null;
     switch (this.Global.componentFooter) {
-      case "members":
-        title = "Member";
-        component = (
-          <Member
-            closeModal={() => {
-              this.closeModal();
-            }}
-            Global={this.Global}
-            User={this.User}
-            FirebaseApi={this.FirebaseApi}
-          />
-        );
-
-        break;
       case "messages":
         title = "Message";
         component = (
@@ -109,7 +94,10 @@ export default class ComponentFooter extends Component {
           isOpen={this.Global.componentFooter ? true : false}
           style={[
             {
-             flex: 1
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: "transparent"
             }
           ]}
           ref={ref => (this.componentFooter = ref)}
@@ -120,33 +108,6 @@ export default class ComponentFooter extends Component {
           onOpened={this._onOpen}
           onClosingState={this._onClosingState}
         >
-          <View style={{
-              width: width,
-              height: 64,
-              backgroundColor: "#5DADE2",
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-              zIndex: 1
-          }}>
-              <TouchableOpacity
-                  onPress={() => {
-                      this.Global.componentFooter = false;
-                  }}
-                  style={styles.header_btn_back_view}
-              >
-                  <Icon name="times" size={__d(35)} color="#fff" />
-
-              </TouchableOpacity>
-              <Text style={{
-
-                  color: "#fff",
-                  fontSize: __d(20),
-                  marginTop: 10
-              }}>
-                  {title}
-              </Text>
-          </View>
           {component}
         </Modal>
       </View>

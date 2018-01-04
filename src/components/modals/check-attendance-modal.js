@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   AsyncStorage,
   Dimensions,
-  FlatList
+  FlatList,
+    Image
 } from "react-native";
 import Expo from "expo";
 import { Actions, Router, Scene } from "react-native-mobx";
@@ -59,7 +60,7 @@ export default class CheckAttendanceModal extends Component {
       .child("newUpdate")
       .on("value", dataSnapshot => {
         this.newUpdate = dataSnapshot.val();
-        this.itemRefs
+        this.newUpdate ? this.itemRefs
           .child("Group")
           .child(this.Global.groupKey)
           .child("checkedAttendance")
@@ -76,7 +77,7 @@ export default class CheckAttendanceModal extends Component {
               });
               this.setState({});
             });
-          });
+          }) : null;
       });
   }
   render() {
@@ -90,6 +91,50 @@ export default class CheckAttendanceModal extends Component {
         >
           <Icon name="times" color="#5DADE2" size={__d(15)} />
         </TouchableOpacity>
+        <View style={{
+          width: width - __d(20),
+            height: __d(80),
+            justifyContent: "center",
+            alignItems: "center"
+        }}>
+          <View style={{
+            flexDirection: "row",
+          }}>
+            <Image
+              source={require("./images/checked.png")}
+              style={{
+                width: __d(20),
+                  height: __d(20),
+                  resizeMode: "contain",
+              }}
+            />
+            <Text style={{
+              paddingLeft: __d(5),
+                fontSize: __d(20)
+            }}>
+              CHECK ATTENDANCE
+            </Text>
+          </View>
+          <Text
+              style={[
+                  styles.btn_check_attendence_txt,
+                  {
+                      color: "#000",
+                      paddingTop: __d(5)
+                  }
+              ]}
+          >
+            {this.checkedMembers.length} members checked
+          </Text>
+        </View>
+        <FlatList
+            style={styles.modal_checkmem_fl_view}
+            keyExtractor={(item, index) => index}
+            data={this.checkedMembers}
+            extraData={this.state}
+            renderItem={({ item, index }) =>
+                this.renderCheckedMems(item, index)}
+        />
         {this.isChecking === "false"
           ? <TouchableOpacity
               onPress={() => {
@@ -101,16 +146,7 @@ export default class CheckAttendanceModal extends Component {
                 Check attendance
               </Text>
             </TouchableOpacity>
-          : <Text
-              style={[
-                styles.btn_check_attendence_txt,
-                {
-                  color: "#000"
-                }
-              ]}
-            >
-              Members have already checked: {this.checkedMembers.length}
-            </Text>}
+          : null}
         {this.checkedMembers.length > 0
           ? <TouchableOpacity
               onPress={() => {
@@ -340,26 +376,27 @@ export default class CheckAttendanceModal extends Component {
 const styles = StyleSheet.create({
   container: {
     width: width - __d(20),
-    height: __d(250),
+    height: __d(300),
     alignItems: "center",
-    justifyContent: "center",
+    //justifyContent: "center",
     backgroundColor: "#fff",
-    borderRadius: __d(10)
   },
   btn_close_view: {
     position: "absolute",
-    top: __d(-30),
-    right: 0,
-    width: __d(50),
-    height: __d(25),
+    top: -__d(20),
+    right: -__d(10),
+    width: __d(40),
+    height: __d(40),
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: __d(5),
-    backgroundColor: "#fff"
+    borderRadius: __d(20),
+    backgroundColor: "#fff",
+      borderWidth: __d(1),
+      borderColor: "#5DADE2"
   },
   btn_check_attendence_view: {
-    width: __d(150),
-    height: __d(40),
+    width: __d(80),
+    height: __d(35),
     justifyContent: "center",
     alignItems: "center",
     borderRadius: __d(5),
@@ -372,15 +409,16 @@ const styles = StyleSheet.create({
     color: "#fff"
   },
   btn_done_view: {
-    width: __d(150),
-    height: __d(40),
+    width: __d(80),
+    height: __d(35),
     justifyContent: "center",
     alignItems: "center",
     borderRadius: __d(5),
     backgroundColor: "#5DADE2",
     borderColor: "#e1e1e1",
     borderWidth: __d(1),
-    marginTop: __d(10)
+    marginTop: __d(10),
+      marginBottom: __d(5)
   },
   modal_view: {
     width: width - __d(10),
@@ -395,7 +433,7 @@ const styles = StyleSheet.create({
   },
   modal_checkmem_fl_view: {
     marginTop: __d(10),
-    maxHeight: height - __d(280)
+    height: __d(100)
   },
   modal_checkmem_btn_view: {
     justifyContent: "center",

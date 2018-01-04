@@ -17,6 +17,7 @@
     "moment": "^2.18.1",
     "react": "16.0.0-alpha.12",
     "react-native": "https://github.com/expo/react-native/archive/sdk-20.0.0.tar.gz",
+    "react-native-dash": "0.0.8",
     "react-native-drawer": "^2.5.0",
     "react-native-facebook-login": "^1.6.0",
     "react-native-google-sign-in": "0.0.16",

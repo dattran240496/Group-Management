@@ -38,7 +38,6 @@ export default class Account extends Component {
   }
 
   render() {
-    console.log("re-render");
     return (
       <View style={styles.container}>
           <TouchableOpacity
@@ -56,7 +55,8 @@ export default class Account extends Component {
                   position: "absolute",
                   right: -__d(10),
                   top: -__d(20),
-                  backgroundColor: "#fff"
+                  backgroundColor: "#fff",
+                  zIndex: 1
               }}
           >
               <Icon name="times" color="#5DADE2" size={15} />
@@ -64,10 +64,11 @@ export default class Account extends Component {
         {this.User.user &&
           <Image
             style={{
-              width: width,
-              height: __d(200),
+              width: width - __d(20),
+              height: __d(150),
               justifyContent: "center",
-              alignItems: "center"
+              alignItems: "center",
+                zIndex: 0
             }}
             source={{ uri: this.User.user.picture }}
             blurRadius={5}
@@ -82,7 +83,7 @@ export default class Account extends Component {
           </Image>}
         <View
           style={{
-            width: width,
+            width: width - __d(20),
             height: __d(45),
             justifyContent: "center",
             backgroundColor: "#e1e1e1",
@@ -100,7 +101,7 @@ export default class Account extends Component {
         </View>
         <View
           style={{
-            width: width,
+            width: width - __d(20),
             height: __d(45),
             alignItems: "center",
             paddingLeft: __d(15),
@@ -122,7 +123,7 @@ export default class Account extends Component {
             underlineColorAndroid="transparent"
             style={{
               fontSize: __d(13),
-              width: width - __d(120)
+              width: width - __d(150)
             }}
             onChangeText={username => {
               this.setState({ username: username });
@@ -155,7 +156,7 @@ export default class Account extends Component {
         </View>
         <View
           style={{
-            width: width,
+            width: width - __d(20),
             height: __d(45),
             alignItems: "center",
             paddingLeft: __d(15),
@@ -175,7 +176,7 @@ export default class Account extends Component {
           <Text
             style={{
               fontSize: __d(13),
-              width: width - __d(80)
+              width: width - __d(150)
             }}
           >
             {this.User.user.email}
@@ -226,7 +227,7 @@ const styles = StyleSheet.create({
   },
   sign_out_view: {
     position: "absolute",
-    bottom: __d(20),
+    bottom: __d(15),
     justifyContent: "center",
     alignItems: "center",
     width: width,
@@ -238,7 +239,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#5DADE2",
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: __d(5),
     flexDirection: "row"
   },
   sign_out_btn_txt: {

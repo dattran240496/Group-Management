@@ -10,7 +10,8 @@ import {
   Alert,
   FlatList,
   Image,
-  ScrollView
+  ScrollView,
+    KeyboardAvoidingView
 } from "react-native";
 import Expo from "expo";
 import { Actions, Router, Scene } from "react-native-mobx";
@@ -19,8 +20,10 @@ import { autobind } from "core-decorators";
 import { observer } from "mobx-react/native";
 import firebase from "../../api/api";
 import Modal from "react-native-modalbox";
+import moment from "moment";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { __d } from "../helpers/index";
+import Dash from "react-native-dash";
 const { width, height } = Dimensions.get("window");
 @autobind
 @observer
@@ -41,18 +44,18 @@ export default class CreatePoll extends Component {
     let arrayComponentOption = [];
     for (let i = 1; i <= this.state.numbersOption; i++) {
       arrayComponentOption.push(
-        <View
-          key={i}
-          style={styles.option_view}
-        >
-          <Icon name="plus" color="#e1e1e1" size={__d(15)} />
+        <View key={i} style={styles.option_view}>
+          <Icon name="plus" color="#5DADE2" size={__d(15)} />
           <TextInput
             placeholder="Add an option..."
             placeholderStyle={{ color: "#e1e1e1" }}
             underlineColorAndroid="transparent"
-            style={[styles.option_btn_view, {
-                fontStyle: this.state.message !== "" ? "normal" : "italic",
-            }]}
+            style={[
+              styles.option_btn_view,
+              {
+                fontStyle: this.state.message !== "" ? "normal" : "italic"
+              }
+            ]}
             onChangeText={txtOption => {
               let arr = this.state.arrOptions;
               arr[i - 1] = txtOption;
@@ -80,26 +83,77 @@ export default class CreatePoll extends Component {
       );
     }
     return (
-      <View
-        style={styles.container}
-      >
+        <KeyboardAvoidingView behavior="padding">
+      <View style={styles.container}>
+        <TouchableOpacity
+          onPress={() => {
+            this.Global.componentFooter = false;
+          }}
+          style={{
+            width: __d(40),
+            height: __d(40),
+            borderRadius: __d(20),
+            borderWidth: __d(1),
+            borderColor: "#5DADE2",
+            justifyContent: "center",
+            alignItems: "center",
+            position: "absolute",
+            right: -__d(10),
+            top: -__d(20),
+            backgroundColor: "#fff"
+          }}
+        >
+          <Icon name="times" color="#5DADE2" size={15} />
+        </TouchableOpacity>
+        <View
+          style={{
+            width: width - __d(20),
+            height: __d(50),
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "row"
+          }}
+        >
+          <Image
+            source={require("./images/poll.png")}
+            style={{
+              width: __d(20),
+              height: __d(20),
+              resizeMode: "contain"
+            }}
+          />
+          <Text
+            style={{
+              fontSize: __d(16),
+              paddingLeft: __d(10)
+            }}
+          >
+            CREATE POLL
+          </Text>
+        </View>
+        <Dash
+          dashGap={5}
+          dashLength={7}
+          dashThickness={1}
+          style={{ width: width - __d(21), height: __d(1) }}
+        />
         <TextInput
-          placeholder="Ask something..."
+          placeholder="Question?"
           placeholderStyle={{ color: "#e1e1e1" }}
-          style={[styles.txt_input_poll, {
-              fontStyle: this.state.message !== "" ? "normal" : "italic",
-          }]}
+          style={[
+            styles.txt_input_poll,
+            {
+              fontStyle: this.state.message !== "" ? "normal" : "italic"
+            }
+          ]}
           onChangeText={message => {
             this.setState({
               message: message
             });
           }}
           value={this.state.message}
-          multiline={true}
         />
-        <View
-          style={styles.scrll_poll_view}
-        >
+        <View style={styles.scrll_poll_view}>
           <ScrollView>
             {arrayComponentOption}
           </ScrollView>
@@ -114,33 +168,18 @@ export default class CreatePoll extends Component {
                 }
               }
               let timeAtPost = new Date(); // get time at post
-              let hours =
-                timeAtPost.getHours().toString().length === 1 ? "0" : ""; // if hour < 10 => add "0" previous
-              let minutes =
-                timeAtPost.getMinutes().toString().length === 1 ? "0" : ""; // if minute < 10 => add "0" previous
 
-              // format time: dd/mm/yyyy - hh:mm
-              let formatTime =
-                timeAtPost.getDate() +
-                "/" +
-                (timeAtPost.getMonth() + 1) +
-                "/" +
-                timeAtPost.getFullYear() +
-                " - " +
-                hours +
-                timeAtPost.getHours() +
-                ":" +
-                minutes +
-                timeAtPost.getMinutes();
+                let mometTimeAtPost = moment(timeAtPost, "YYYY-MM-DDhh:mm:ss");
+                let formatTime = mometTimeAtPost.format("YYYY-MM-DDhh:mm:ss");
               this.itemRefs
                 .child("Group")
                 .child(this.Global.groupKey)
-                .child("postedMessages")
+                .child("postedPoll")
                 .push()
                 .set({
                   message: this.state.message,
                   timeAtPost: formatTime,
-                    isPoll: "true",
+                    voted: 1,
                   options:
                     this.state.arrOptions.length !== 0
                       ? this.state.arrOptions.map((v, i) => {
@@ -148,70 +187,72 @@ export default class CreatePoll extends Component {
                           selected.push(this.User.user.email);
                           return {
                             option: v,
-                              selectedMems: selected
+                            selectedMems: selected
                           };
                         })
                       : "null"
                 });
-                this.Global.componentFooter = false;
+              this.Global.componentFooter = false;
             } else {
               Alert.alert("Warning!", "Poll is not empty!");
             }
           }}
           style={styles.btn_update_view}
         >
-          <Text style={styles.btn_update_txt}>Create Poll</Text>
+          <Text style={styles.btn_update_txt}>Send</Text>
         </TouchableOpacity>
       </View>
+        </KeyboardAvoidingView>
     );
   }
 }
 const styles = StyleSheet.create({
-   container:  {
-       flex: 1,
-       alignItems: "center"
-   },
-    txt_input_poll:{
-        width: width - __d(30),
-        height: __d(100),
-        padding: __d(10),
-        fontSize: __d(15),
-        borderColor: "#e1e1e1",
-        borderWidth: __d(1),
-        marginTop: __d(15),
-        borderRadius: __d(5)
-    },
-    scrll_poll_view:{
-        width: width - __d(30),
-        height: __d(150)
-    },
-    btn_update_view:{
-        justifyContent: "center",
-        alignItems: "center",
-        width: __d(150),
-        height: __d(50),
-        marginTop: __d(20),
-        borderRadius: __d(5),
-        borderColor: "#fff",
-        borderWidth: __d(1),
-        backgroundColor: "#5DADE2"
-    },
-    btn_update_txt:{
-        color: "#fff",
-        fontSize:  __d(15)
-    },
-    option_view:{
-        width: width,
-        height: __d(30),
-        flexDirection: "row",
-        alignItems: "center",
-        paddingLeft: __d(5)
-    },
-    option_btn_view:{
-        width: width - __d(20),
-        height: __d(30),
-        fontSize: __d(13),
-        marginLeft: __d(5),
-    }
-
+  container: {
+    alignItems: "center",
+    width: width - __d(20),
+    height: __d(300),
+    backgroundColor: "#fff"
+  },
+  txt_input_poll: {
+    width: width - __d(30),
+    height: __d(30),
+    fontSize: __d(13),
+    borderColor: "#5DADE2",
+    borderWidth: __d(1),
+    marginTop: __d(15),
+      paddingLeft: __d(10),
+      paddingRight: __d(10),
+  },
+  scrll_poll_view: {
+    width: width - __d(30),
+    height: __d(150)
+  },
+  btn_update_view: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: __d(80),
+    height: __d(30),
+    marginTop: __d(20),
+    borderRadius: __d(5),
+    borderColor: "#fff",
+    borderWidth: __d(1),
+    backgroundColor: "#5DADE2"
+  },
+  btn_update_txt: {
+    color: "#fff",
+    fontSize: __d(15)
+  },
+  option_view: {
+    width: width,
+    height: __d(30),
+    flexDirection: "row",
+    alignItems: "center",
+    paddingLeft: __d(5)
+  },
+  option_btn_view: {
+    width: width - __d(20),
+    height: __d(30),
+    fontSize: __d(13),
+    marginLeft: __d(5)
+  }
 });

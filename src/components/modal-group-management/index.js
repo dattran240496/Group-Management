@@ -10,7 +10,8 @@ import {
   Alert,
   NetInfo,
   TouchableOpacity,
-  Animated
+  Animated,
+    KeyboardAvoidingView
 } from "react-native";
 import { observable } from "mobx";
 import { autobind } from "core-decorators";
