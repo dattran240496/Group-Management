@@ -72,6 +72,7 @@ export default class ModalBox extends Component {
             }}
             Global={this.Global}
             User={this.User}
+            FirebaseApi={this.FirebaseApi}
           />
         );
 
@@ -85,6 +86,7 @@ export default class ModalBox extends Component {
                     }}
                     Global={this.Global}
                     User={this.User}
+                    FirebaseApi={this.FirebaseApi}
                 />
             );
 

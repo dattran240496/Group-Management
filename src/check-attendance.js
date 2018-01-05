@@ -82,9 +82,6 @@ export default class CheckAttendance extends Component {
     let isAdmin =
       this.info && this.info.email === this.User.user.email ? true : false;
     this.isAdmin = isAdmin;
-    if (this.isAdmin) {
-      this.Global.isFooter = true;
-    }
   }
   componentDidMount() {
     this.info &&
@@ -108,11 +105,11 @@ export default class CheckAttendance extends Component {
             this.Global.modalGroupManagement = "myGroup";
           }}
           style={{
-            marginTop: __d(10),
+            marginTop: __d(15),
             marginLeft: __d(10)
           }}
         >
-          <Icon name="arrow-left" size={__d(15)} color="#5DADE2" />
+          <Icon name="arrow-left" size={__d(18)} color="#5DADE2" />
         </TouchableOpacity>
         <View
           style={{

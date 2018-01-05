@@ -172,7 +172,7 @@ export default class MyGroup extends Component {
               this.Global.groupName = item.groupName;
               this.FirebaseApi.members = null;
               this.Global.modalType = "loading";
-              //this.Global.isFooter = true;
+              this.Global.isFooter = true;
               this.Global.isShowButtonFooter = false;
               this.Global.modalGroupManagement = false;
               Actions.checkAttendance();

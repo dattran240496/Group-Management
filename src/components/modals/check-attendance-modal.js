@@ -7,7 +7,7 @@ import {
   AsyncStorage,
   Dimensions,
   FlatList,
-    Image
+  Image
 } from "react-native";
 import Expo from "expo";
 import { Actions, Router, Scene } from "react-native-mobx";
@@ -35,6 +35,7 @@ export default class CheckAttendanceModal extends Component {
     super(props);
     this.itemRefs = firebase.database().ref("app_expo");
     this.Global = this.props.Global;
+    this.FirebaseApi = this.props.FirebaseApi;
     this.state = {
       region: {
         latitude: 10.8665654,
@@ -60,24 +61,25 @@ export default class CheckAttendanceModal extends Component {
       .child("newUpdate")
       .on("value", dataSnapshot => {
         this.newUpdate = dataSnapshot.val();
-        this.newUpdate ? this.itemRefs
-          .child("Group")
-          .child(this.Global.groupKey)
-          .child("checkedAttendance")
-          .child(this.newUpdate)
-          .child("members")
-          .on("value", dataSnapshot => {
-            this.checkedMembers = [];
-            dataSnapshot.forEach(child => {
-              this.checkedMembers.push({
-                id: child.key,
-                email: child.child("email").val(),
-                latitude: child.child("latitude").val(),
-                longitude: child.child("longitude").val()
-              });
-              this.setState({});
-            });
-          }) : null;
+        this.newUpdate
+          ? this.itemRefs
+              .child("Group")
+              .child(this.Global.groupKey)
+              .child("checkedAttendance")
+              .child(this.newUpdate)
+              .child("members")
+              .on("value", dataSnapshot => {
+                this.checkedMembers = [];
+                dataSnapshot.forEach(child => {
+                  this.checkedMembers.push({
+                    key: child.key,
+                    email: child.child("email").val(),
+                    latitude: child.child("latitude").val(),
+                    longitude: child.child("longitude").val()
+                  });
+                });
+              })
+          : null;
       });
   }
   render() {
@@ -91,91 +93,115 @@ export default class CheckAttendanceModal extends Component {
         >
           <Icon name="times" color="#5DADE2" size={__d(15)} />
         </TouchableOpacity>
-        <View style={{
-          width: width - __d(20),
+        <View
+          style={{
+            width: width - __d(20),
             height: __d(80),
             justifyContent: "center",
             alignItems: "center"
-        }}>
-          <View style={{
-            flexDirection: "row",
-          }}>
+          }}
+        >
+          <View
+            style={{
+              flexDirection: "row"
+            }}
+          >
             <Image
               source={require("./images/checked.png")}
               style={{
                 width: __d(20),
-                  height: __d(20),
-                  resizeMode: "contain",
+                height: __d(20),
+                resizeMode: "contain"
               }}
             />
-            <Text style={{
-              paddingLeft: __d(5),
+            <Text
+              style={{
+                paddingLeft: __d(5),
                 fontSize: __d(20)
-            }}>
+              }}
+            >
               CHECK ATTENDANCE
             </Text>
           </View>
           <Text
-              style={[
-                  styles.btn_check_attendence_txt,
-                  {
-                      color: "#000",
-                      paddingTop: __d(5)
-                  }
-              ]}
+            style={[
+              styles.btn_check_attendence_txt,
+              {
+                color: "#000",
+                paddingTop: __d(5)
+              }
+            ]}
           >
             {this.checkedMembers.length} members checked
           </Text>
         </View>
         <FlatList
-            style={styles.modal_checkmem_fl_view}
-            keyExtractor={(item, index) => index}
-            data={this.checkedMembers}
-            extraData={this.state}
-            renderItem={({ item, index }) =>
-                this.renderCheckedMems(item, index)}
+          style={styles.modal_checkmem_fl_view}
+          keyExtractor={(item, index) => index}
+          data={this.checkedMembers}
+          extraData={this.state}
+          renderItem={({ item, index }) => this.renderCheckedMems(item, index)}
         />
-        {this.isChecking === "false"
-          ? <TouchableOpacity
-              onPress={() => {
-                this.checkAttendance();
-              }}
-              style={styles.btn_check_attendence_view}
-            >
-              <Text style={styles.btn_check_attendence_txt}>
-                Check attendance
-              </Text>
-            </TouchableOpacity>
-          : null}
+        {/*{this.isChecking === "false"*/}
+          {/*? <TouchableOpacity*/}
+              {/*onPress={() => {*/}
+                {/*this.checkAttendance();*/}
+              {/*}}*/}
+              {/*style={styles.btn_check_attendence_view}*/}
+            {/*>*/}
+              {/*<Text style={styles.btn_check_attendence_txt}>*/}
+                {/*Check attendance*/}
+              {/*</Text>*/}
+            {/*</TouchableOpacity>*/}
+          {/*: null}*/}
         {this.checkedMembers.length > 0
           ? <TouchableOpacity
               onPress={() => {
-                this.modalCheckedMems.open();
+                this.itemRefs
+                  .child("Group")
+                  .child(this.Global.groupKey)
+                  .child("checkedAttendance")
+                  .on("value", dataSnapshot => {
+                    dataSnapshot.forEach(child => {
+                      if (child.key === this.newUpdate) {
+                        this.admin = {
+                          latitude: child.child("latitude").val(),
+                          longitude: child.child("longitude").val()
+                        };
+                      }
+                    });
+                  });
+                this.modalViewMap.open();
               }}
               style={styles.btn_done_view}
             >
-              <Text style={styles.btn_check_attendence_txt}>
-                Checked Members
-              </Text>
+              <Text style={styles.btn_check_attendence_txt}>View Map</Text>
             </TouchableOpacity>
           : null}
         <TouchableOpacity
           onPress={() => {
-            this.isChecking = false;
-            this.Global.modalType = false;
-            this.itemRefs
-              .child("Group")
-              .child(this.Global.groupKey)
-              .child("checkedAttendance")
-              .child("isChecking")
-              .update({
-                value: "false"
-              });
+            if (this.isChecking === "false") {
+              this.checkAttendance();
+            } else {
+              this.isChecking = false;
+              this.Global.modalType = false;
+              this.itemRefs
+                .child("Group")
+                .child(this.Global.groupKey)
+                .child("checkedAttendance")
+                .child("isChecking")
+                .update({
+                  value: "false"
+                });
+            }
+
             //Expo.FileSystem.writeAsStringAsync(FileSystem.documentDirectory + "test.txt", "Test");
           }}
           style={styles.btn_done_view}
         >
-          <Text style={styles.btn_check_attendence_txt}>Done</Text>
+          <Text style={styles.btn_check_attendence_txt}>
+            {this.isChecking === "false" ? "Check" : "Done"}
+          </Text>
         </TouchableOpacity>
         <Modal
           ref={ref => {
@@ -246,6 +272,7 @@ export default class CheckAttendanceModal extends Component {
           swipeToClose={false}
           backdropPressToClose={false}
           style={styles.modal_view}
+          position={"top"}
         >
           <TouchableOpacity
             onPress={() => {
@@ -259,7 +286,8 @@ export default class CheckAttendanceModal extends Component {
             ? <MapView
                 style={{
                   width: width - __d(10),
-                  height: height - __d(150)
+                  height: height - __d(150),
+                  zIndex: 0
                 }}
                 region={{
                   latitude: this.admin ? this.admin.latitude : 10.8665654,
@@ -288,26 +316,54 @@ export default class CheckAttendanceModal extends Component {
     );
   }
   renderCheckedMems(item, index) {
+    let mem = this.FirebaseApi.accountData[item.key];
+    console.log(mem);
     return (
       <View
         style={{
           width: width - __d(10),
-          height: __d(40),
+          height: __d(60),
           paddingLeft: __d(10),
-          justifyContent: "center",
-          borderTopWidth: __d(1),
-          borderTopColor: "#e1e1e1",
-          borderBottomWidth: __d(1),
-          borderBottomColor: "#e1e1e1"
+          alignItems: "center",
+          flexDirection: "row",
+          backgroundColor: "#e1e1e1"
         }}
       >
-        <Text
+        <Image
+          source={require("./images/avata.png")}
           style={{
-            fontSize: __d(13)
+            width: __d(40),
+            height: __d(40),
+            resizeMode: "contain",
+            justifyContent: "center",
+            alignItems: "center"
           }}
         >
-          {item.email}
-        </Text>
+          <Image
+            source={mem ? { uri: mem.picture } : null}
+            style={{
+              width: __d(30),
+              height: __d(30),
+              resizeMode: "contain",
+              borderRadius: __d(15),
+              marginBottom: __d(7)
+            }}
+          />
+        </Image>
+        <View
+          style={{
+            justifyContent: "center",
+            paddingLeft: __d(10)
+          }}
+        >
+          <Text
+            style={{
+              fontSize: __d(13)
+            }}
+          >
+              {item.name} ({item.email.slice(0, item.email.indexOf("@"))})
+          </Text>
+        </View>
       </View>
     );
   }
@@ -358,6 +414,24 @@ export default class CheckAttendanceModal extends Component {
         latitude: location["coords"].latitude,
         longitude: location["coords"].longitude
       });
+      Object.values(this.FirebaseApi.members).map((v, i) => {
+          fetch(this.Global.urlPushNoti, {
+              method: "POST",
+              headers: {
+                  Accept: "application/json",
+                  "Content-Type": "application/json",
+                  "accept-encoding": "gzip, deflate"
+              },
+              body: JSON.stringify({
+                  to: v.token,
+                  sound: "default",
+                  body: "Group" + this.Global.groupName + "is checking!"
+              })
+          })
+              .then(response => response.json())
+              .then(response => console.log(response))
+              .catch(e => console.log(e));
+      });
     // get admin's location
     navigator.geolocation.getCurrentPosition(
       position => {},
@@ -376,10 +450,10 @@ export default class CheckAttendanceModal extends Component {
 const styles = StyleSheet.create({
   container: {
     width: width - __d(20),
-    height: __d(300),
+    height: __d(350),
     alignItems: "center",
     //justifyContent: "center",
-    backgroundColor: "#fff",
+    backgroundColor: "#fff"
   },
   btn_close_view: {
     position: "absolute",
@@ -391,8 +465,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: __d(20),
     backgroundColor: "#fff",
-      borderWidth: __d(1),
-      borderColor: "#5DADE2"
+    borderWidth: __d(1),
+    borderColor: "#5DADE2",
+    zIndex: 1
   },
   btn_check_attendence_view: {
     width: __d(80),
@@ -417,15 +492,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#5DADE2",
     borderColor: "#e1e1e1",
     borderWidth: __d(1),
-    marginTop: __d(10),
-      marginBottom: __d(5)
+    marginBottom: __d(5)
   },
   modal_view: {
-    width: width - __d(10),
+    alignItems: "center",
+    width: width - __d(20),
     height: height - __d(150),
-    position: "absolute",
-    top: -__d(250) / 2,
-    alignItems: "center"
+    marginTop: -__d(50)
   },
   modal_checkmem_header_txt: {
     fontSize: __d(20),

@@ -39,7 +39,6 @@ export default class Member extends Component {
   }
   componentWillMount() {
     this.members = Object.values(this.FirebaseApi.members);
-    console.log(this.FirebaseApi.accountData);
   }
   render() {
     return (

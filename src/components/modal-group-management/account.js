@@ -194,6 +194,8 @@ export default class Account extends Component {
               this.itemRefs.child("Account").child(this.User.user.id).update({
                 token: ""
               });
+              this.Global.modalType = false;
+              this.Global.modalGroupManagement = false;
               Actions.login({ type: "replace" });
             }}
           >

@@ -50,10 +50,9 @@ export default class Footer extends Component {
           .child("createdGroupBy")
           .on("value", dataSnapshot => {
             info = this.FirebaseApi.accountData[dataSnapshot.val()];
-            isAdmin = info.email === this.User.user.email ? true : false;
+            isAdmin = info ? info.email === this.User.user.email ? true : false : false;
           })
       : null;
-    console.log("render");
     return (
       <View style={{
         flexDirection: "row",
@@ -93,7 +92,7 @@ export default class Footer extends Component {
                     <TouchableOpacity
                         onPress={()=>{
                             this.Global.isShowButtonFooter = false;
-                            this.Global.modalType = "check-attendance";
+                            isAdmin ? this.Global.modalType = "check-attendance" : this.Global.modalType = "member-check-attendance";
                         }}
                         style={{
                       position: "absolute",
@@ -109,44 +108,52 @@ export default class Footer extends Component {
                         }}
                       />
                     </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => {
-                          this.Global.isShowButtonFooter = false;
-                            this.Global.componentFooter = "messages";
-                        }}
-                        style={{
-                        position: "absolute",
-                        left: __d(195),
-                        top: __d(20)
-                    }}>
-                      <Image
-                          source={require("./images/menu-message.png")}
-                          style={{
-                              width: __d(40),
-                              height: __d(40),
-                              resizeMode: "contain"
-                          }}
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => {
-                            this.Global.isShowButtonFooter = false;
-                            this.Global.componentFooter = "poll";
-                        }}
-                        style={{
-                        position: "absolute",
-                        left: __d(222),
-                        top: __d(75)
-                    }}>
-                      <Image
-                          source={require("./images/menu-poll.png")}
-                          style={{
-                              width: __d(40),
-                              height: __d(40),
-                              resizeMode: "contain"
-                          }}
-                      />
-                    </TouchableOpacity>
+                      {
+                        isAdmin ?
+                            <TouchableOpacity
+                                onPress={() => {
+                                    this.Global.isShowButtonFooter = false;
+                                    this.Global.componentFooter = "messages";
+                                }}
+                                style={{
+                                    position: "absolute",
+                                    left: __d(195),
+                                    top: __d(20)
+                                }}>
+                              <Image
+                                  source={require("./images/menu-message.png")}
+                                  style={{
+                                      width: __d(40),
+                                      height: __d(40),
+                                      resizeMode: "contain"
+                                  }}
+                              />
+                            </TouchableOpacity>
+                            : null
+                      }
+                      {
+                        isAdmin ?
+                            <TouchableOpacity
+                                onPress={() => {
+                                    this.Global.isShowButtonFooter = false;
+                                    this.Global.componentFooter = "poll";
+                                }}
+                                style={{
+                                    position: "absolute",
+                                    left: __d(222),
+                                    top: __d(75)
+                                }}>
+                              <Image
+                                  source={require("./images/menu-poll.png")}
+                                  style={{
+                                      width: __d(40),
+                                      height: __d(40),
+                                      resizeMode: "contain"
+                                  }}
+                              />
+                            </TouchableOpacity>
+                            : null
+                      }
                   </View>
               ) : null
           }
