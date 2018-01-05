@@ -55,8 +55,7 @@ export default class Footer extends Component {
       : null;
     return (
       <View style={{
-        flexDirection: "row",
-          backgroundColor: "#e1e1e1"
+        flexDirection: "row"
       }}>
         {this.Global.isFooter
           ? <TouchableOpacity
@@ -79,15 +78,10 @@ export default class Footer extends Component {
           {
               this.Global.isFooter && this.Global.isShowButtonFooter ? (
                   <View style={{
-                      width: __d(250),
-                      height: __d(250),
-                      borderRadius: __d(125),
-                      borderColor: "#5DADE2",
-                      borderWidth: __d(2),
-                      position: "absolute",
-                      left: -__d(125),
-                      bottom: -__d(125),
-                      zIndex: 0
+                      width: __d(120),
+                      height: __d(280),
+                      justifyContent: "center",
+                      alignItems: "center"
                   }}>
                     <TouchableOpacity
                         onPress={()=>{
@@ -95,65 +89,80 @@ export default class Footer extends Component {
                             isAdmin ? this.Global.modalType = "check-attendance" : this.Global.modalType = "member-check-attendance";
                         }}
                         style={{
-                      position: "absolute",
-                        left: __d(140),
-                        top: -__d(12)
-                    }}>
+                            position: "absolute",
+                            top: __d(5),
+                            zIndex: 1,
+                            left: __d(10)
+                        }}>
                       <Image
-                        source={require("./images/Menu-check.png")}
-                        style={{
-                          width: __d(40),
-                            height: __d(40),
-                            resizeMode: "contain"
-                        }}
+                          source={require("./images/Menu-check.png")}
+                          style={{
+                              width: __d(40),
+                              height: __d(40),
+                              resizeMode: "contain"
+                          }}
                       />
                     </TouchableOpacity>
                       {
-                        isAdmin ?
-                            <TouchableOpacity
-                                onPress={() => {
-                                    this.Global.isShowButtonFooter = false;
-                                    this.Global.componentFooter = "messages";
-                                }}
-                                style={{
-                                    position: "absolute",
-                                    left: __d(195),
-                                    top: __d(20)
-                                }}>
-                              <Image
-                                  source={require("./images/menu-message.png")}
-                                  style={{
-                                      width: __d(40),
-                                      height: __d(40),
-                                      resizeMode: "contain"
+                          isAdmin ?
+                              <TouchableOpacity
+                                  onPress={() => {
+                                      this.Global.isShowButtonFooter = false;
+                                      this.Global.componentFooter = "messages";
                                   }}
-                              />
-                            </TouchableOpacity>
-                            : null
+                                  style={{
+                                      position: "absolute",
+                                      left: __d(60),
+                                      top: __d(30),
+                                      zIndex: 1
+                                  }}>
+                                <Image
+                                    source={require("./images/menu-message.png")}
+                                    style={{
+                                        width: __d(40),
+                                        height: __d(40),
+                                        resizeMode: "contain"
+                                    }}
+                                />
+                              </TouchableOpacity>
+                              : null
                       }
                       {
-                        isAdmin ?
-                            <TouchableOpacity
-                                onPress={() => {
-                                    this.Global.isShowButtonFooter = false;
-                                    this.Global.componentFooter = "poll";
-                                }}
-                                style={{
-                                    position: "absolute",
-                                    left: __d(222),
-                                    top: __d(75)
-                                }}>
-                              <Image
-                                  source={require("./images/menu-poll.png")}
-                                  style={{
-                                      width: __d(40),
-                                      height: __d(40),
-                                      resizeMode: "contain"
+                          isAdmin ?
+                              <TouchableOpacity
+                                  onPress={() => {
+                                      this.Global.isShowButtonFooter = false;
+                                      this.Global.componentFooter = "poll";
                                   }}
-                              />
-                            </TouchableOpacity>
-                            : null
+                                  style={{
+                                      position: "absolute",
+                                      left: __d(90),
+                                      top: __d(75),
+                                      zIndex: 1
+                                  }}>
+                                <Image
+                                    source={require("./images/menu-poll.png")}
+                                    style={{
+                                        width: __d(40),
+                                        height: __d(40),
+                                        resizeMode: "contain"
+                                    }}
+                                />
+                              </TouchableOpacity>
+                              : null
                       }
+                    <View style={{
+                        width: __d(250),
+                        height: __d(250),
+                        borderRadius: __d(125),
+                        borderColor: "#5DADE2",
+                        borderWidth: __d(2),
+                        position: "absolute",
+                        left: -__d(125),
+                        zIndex: 0
+                    }}>
+                    </View>
+
                   </View>
               ) : null
           }
@@ -177,11 +186,11 @@ const styles = StyleSheet.create({
     width: __d(120),
     height: __d(120),
     backgroundColor: "#5DADE2",
-    zIndex: 0,
+    zIndex: 1,
     borderRadius: __d(60),
-    position: "absolute",
-    left: -__d(60),
-    bottom: -__d(60)
+      top: __d(60),
+      left: -__d(60),
+      position: "absolute"
   },
   func_btn_view: {
     flex: 1,

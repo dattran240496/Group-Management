@@ -119,6 +119,7 @@ export default class Account extends Component {
             Name
           </Text>
           <TextInput
+
             ref={ref => (this.txtInput = ref)}
             underlineColorAndroid="transparent"
             style={{
@@ -218,7 +219,7 @@ const styles = StyleSheet.create({
     width: __d(100),
     height: __d(100),
     borderRadius: __d(50),
-    resizeMode: "contain"
+    resizeMode: "cover"
   },
   user_name: {
     color: "#fff",

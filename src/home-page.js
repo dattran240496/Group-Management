@@ -77,7 +77,9 @@ export default class Homepage extends Component {
           style={{
             flex: 1,
             justifyContent: "center",
-            paddingLeft: __d(30)
+            paddingLeft: __d(30),
+              zIndex: 0,
+              elevation: 1
           }}
         >
           <Image
@@ -93,18 +95,178 @@ export default class Homepage extends Component {
               style={{
                 width: __d(60),
                 height: __d(60),
-                borderRadius: __d(30),
-                resizeMode: "contain",
+                borderRadius: __d(60) / 2,
+                resizeMode: "cover",
                 marginLeft: __d(10),
                 marginTop: __d(3)
               }}
             />
           </Image>
         </View>
+          <View
+              style={{
+                  position: "absolute",
+                  flexDirection: "row",
+                  height: __d(60),
+                  alignItems: "center",
+                  backgroundColor: "transparent",
+                  left: __d(160),
+                  zIndex: 1,
+                  justifyContent: "center",
+                  top: __d(130)
+              }}
+          >
+              <Text
+                  style={{
+                      fontSize: __d(18),
+                      color: "#808080",
+                      fontWeight: "bold",
+                      fontFamily: this.state.isFontLoaded ? "FiraSans-BoldItalic" : null,
+                      zIndex: 1,
+                  }}
+              >
+                  Find groups
+              </Text>
+              <TouchableOpacity
+                  onPress={()=>{
+                      this.Global.modalGroupManagement = "groupList";
+                  }}
+                  style={{
+                      height: __d(60),
+                      width: __d(60),
+                      zIndex: 1,
+                      marginLeft: __d(5)
+                  }}
+              >
+                  <Image
+                      source={require("./images/home-page/item1.png")}
+                      style={{
+                          resizeMode: "contain",
+                          width: __d(55),
+                          height: __d(55)
+                      }}
+                  />
+              </TouchableOpacity>
+          </View>
+          <View
+              style={{
+                  position: "absolute",
+                  top: __d(220),
+                  flexDirection: "row",
+                  height: __d(60),
+                  alignItems: "center",
+                  left: __d(60),
+                  zIndex: 1
+              }}
+          >
+              <Text
+                  style={{
+                      fontSize: __d(18),
+                      color: "#808080",
+                      fontWeight: "bold",
+                      fontFamily: this.state.isFontLoaded ? "FiraSans-BoldItalic" : null
+                  }}
+              >
+                  Create groups
+              </Text>
+              <TouchableOpacity
+                  onPress={()=>{
+                      this.Global.modalGroupManagement = "createGroup";
+                  }}
+                  style={{
+                      height: __d(60)
+                  }}
+              >
+                  <Image
+                      source={require("./images/home-page/item2.png")}
+                      style={{
+                          resizeMode: "contain",
+                          flex: 1
+                      }}
+                  />
+              </TouchableOpacity>
+          </View>
+          <View
+              style={{
+                  position: "absolute",
+                  top: __d(360),
+                  flexDirection: "row",
+                  height: __d(60),
+                  alignItems: "center",
+                  left: __d(70),
+                  zIndex: 1,
+              }}
+          >
+              <Text
+                  style={{
+                      fontSize: __d(18),
+                      color: "#808080",
+                      fontWeight: "bold",
+                      fontFamily: this.state.isFontLoaded ? "FiraSans-BoldItalic" : null
+                  }}
+              >
+                  My groups
+              </Text>
+              <TouchableOpacity
+                  onPress={()=>{
+                      this.Global.modalGroupManagement = "myGroup";
+                  }}
+                  style={{
+                      height: __d(60)
+                  }}
+              >
+                  <Image
+                      source={require("./images/home-page/item3.png")}
+                      style={{
+                          resizeMode: "contain",
+                          flex: 1
+                      }}
+                  />
+              </TouchableOpacity>
+          </View>
+          <View
+              style={{
+                  position: "absolute",
+                  bottom: __d(130),
+                  flexDirection: "row",
+                  height: __d(60),
+                  alignItems: "center",
+                  left: __d(180),
+                  zIndex: 1
+              }}
+          >
+              <Text
+                  style={{
+                      fontSize: __d(18),
+                      color: "#808080",
+                      fontWeight: "bold",
+                      fontFamily: this.state.isFontLoaded ? "FiraSans-BoldItalic" : null,
+                  }}
+              >
+                  Account
+              </Text>
+              <TouchableOpacity
+                  onPress={()=>{
+                      this.Global.modalGroupManagement = "account";
+                  }}
+                  style={{
+                      height: __d(60),
+                  }}
+              >
+                  <Image
+                      source={require("./images/home-page/item4.png")}
+                      style={{
+                          resizeMode: "contain",
+                          flex: 1
+                      }}
+                  />
+              </TouchableOpacity>
+          </View>
         <View
           style={{
             flex: 3,
-            justifyContent: "center"
+              zIndex: 0,
+              backgroundColor: "transparent"
           }}
         >
           <View
@@ -114,7 +276,7 @@ export default class Homepage extends Component {
               borderRadius: circleLargeHeight / 2,
               borderWidth: __d(4),
               borderColor: "#5DADE2",
-              marginLeft: circleLargeHeight / 2.2
+              marginLeft: circleLargeHeight / 2.2,
             }}
           >
             <View
@@ -125,177 +287,28 @@ export default class Homepage extends Component {
                 borderWidth: __d(2),
                 borderColor: "#5DADE2",
                 marginLeft: circleLargeHeight / 4,
-                marginTop: circleLargeHeight / 4
+                marginTop: circleLargeHeight / 4,
+                  zIndex: 0
               }}
             />
-            <View
-              style={{
-                position: "absolute",
-                top: -__d(10),
-                flexDirection: "row",
-                height: __d(60),
-                alignItems: "center",
-                backgroundColor: "transparent",
-                left: -__d(20)
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: __d(18),
-                  color: "#808080",
-                  fontWeight: "bold",
-                    fontFamily: this.state.isFontLoaded ? "FiraSans-BoldItalic" : null
-                }}
-              >
-                Find groups
-              </Text>
-              <TouchableOpacity
-                  onPress={()=>{
-                      this.Global.modalGroupManagement = "groupList";
-                  }}
-                style={{
-                  height: __d(60)
-                }}
-              >
-                <Image
-                  source={require("./images/home-page/item1.png")}
-                  style={{
-                    resizeMode: "contain",
-                    flex: 1
-                  }}
-                />
-              </TouchableOpacity>
-            </View>
-            <View
-              style={{
-                position: "absolute",
-                top: __d(100),
-                flexDirection: "row",
-                height: __d(60),
-                alignItems: "center",
-                backgroundColor: "transparent",
-                left: -__d(135)
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: __d(18),
-                  color: "#808080",
-                  fontWeight: "bold",
-                    fontFamily: this.state.isFontLoaded ? "FiraSans-BoldItalic" : null
-                }}
-              >
-                Create groups
-              </Text>
-              <TouchableOpacity
-                  onPress={()=>{
-                      this.Global.modalGroupManagement = "createGroup";
-                  }}
-                style={{
-                  height: __d(60)
-                }}
-              >
-                <Image
-                  source={require("./images/home-page/item2.png")}
-                  style={{
-                    resizeMode: "contain",
-                    flex: 1
-                  }}
-                />
-              </TouchableOpacity>
-            </View>
-            <View
-              style={{
-                position: "absolute",
-                top: __d(250),
-                flexDirection: "row",
-                height: __d(60),
-                alignItems: "center",
-                backgroundColor: "transparent",
-                left: -__d(105)
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: __d(18),
-                  color: "#808080",
-                  fontWeight: "bold",
-                    fontFamily: this.state.isFontLoaded ? "FiraSans-BoldItalic" : null
-                }}
-              >
-                My groups
-              </Text>
-              <TouchableOpacity
-                  onPress={()=>{
-                      this.Global.modalGroupManagement = "myGroup";
-                  }}
-                style={{
-                  height: __d(60)
-                }}
-              >
-                <Image
-                  source={require("./images/home-page/item3.png")}
-                  style={{
-                    resizeMode: "contain",
-                    flex: 1
-                  }}
-                />
-              </TouchableOpacity>
-            </View>
-            <View
-              style={{
-                position: "absolute",
-                top: __d(350),
-                flexDirection: "row",
-                height: __d(60),
-                alignItems: "center",
-                backgroundColor: "transparent",
-                left: __d(10)
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: __d(18),
-                  color: "#808080",
-                  fontWeight: "bold",
-                    fontFamily: this.state.isFontLoaded ? "FiraSans-BoldItalic" : null
-                }}
-              >
-                Account
-              </Text>
-              <TouchableOpacity
-                  onPress={()=>{
-                      this.Global.modalGroupManagement = "account";
-                  }}
-                style={{
-                  height: __d(60)
-                }}
-              >
-                <Image
-                  source={require("./images/home-page/item4.png")}
-                  style={{
-                    resizeMode: "contain",
-                    flex: 1
-                  }}
-                />
-              </TouchableOpacity>
-            </View>
+
           </View>
+
         </View>
         <View
           style={{
             flex: 1,
             alignItems: "flex-end",
-            paddingRight: __d(15)
+            paddingRight: __d(15),
           }}
         >
+
           <Image
             source={require("./images/home-page/logo.png")}
             style={{
               width: width / 2,
               height: height / 5,
-              resizeMode: "contain",
-              marginTop: __d(15)
+              resizeMode: "contain"
             }}
           />
         </View>
@@ -307,9 +320,11 @@ export default class Homepage extends Component {
             resizeMode: "stretch",
             position: "absolute",
             bottom: 0,
-            left: 0
+            left: 0,
+              zIndex: 0,
           }}
         />
+
       </View>
     );
   }
@@ -429,6 +444,7 @@ export default class Homepage extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+      zIndex: 0
   }
 });

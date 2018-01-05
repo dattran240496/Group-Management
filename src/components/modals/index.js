@@ -23,6 +23,8 @@ import Message  from "./detail-message";
 import Poll from "./vote-poll";
 import Member from "./members"
 import Modal from "react-native-modalbox";
+import Icon from "react-native-vector-icons/FontAwesome";
+import { __d } from "../helpers/index";
 const { width, height } = Dimensions.get("window");
 
 @autobind
@@ -163,6 +165,31 @@ export default class ModalBox extends Component {
           onOpened={this._onOpen}
           onClosingState={this._onClosingState}
         >
+            {
+                this.Global.modalType !== false && this.Global.modalType !== "loading" ? (
+                    <TouchableOpacity
+                        onPress={() => {
+                            this.Global.modalType = false;
+                        }}
+                        style={{
+                            position: "absolute",
+                            top: (height - __d(350)) / 2 - __d(20),
+                            right: __d(0),
+                            width: __d(40),
+                            height: __d(40),
+                            justifyContent: "center",
+                            alignItems: "center",
+                            borderRadius: __d(20),
+                            backgroundColor: "#fff",
+                            borderWidth: __d(1),
+                            borderColor: "#5DADE2",
+                            zIndex: 1
+                        }}
+                    >
+                        <Icon name="times" color="#5DADE2" size={__d(15)} />
+                    </TouchableOpacity>
+                ) : null
+            }
           {component}
         </Modal>
       </View>

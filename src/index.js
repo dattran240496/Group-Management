@@ -94,6 +94,7 @@ export default class App extends Component {
               flex: 1
           }}
       >
+
         <Router
           sceneStyle={{
             paddingTop: 64
@@ -310,11 +311,8 @@ export default class App extends Component {
             Firebase={this.FirebaseApi}
             User={this.User}
         />
-        <Footer
-            Global={this.Global}
-            User={this.User}
-            Firebase={this.FirebaseApi}
-        />
+
+
       </View>
     );
   }

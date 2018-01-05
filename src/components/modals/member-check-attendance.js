@@ -66,7 +66,6 @@ export default class MemberCheckAttendanceModal extends Component {
                               name: child.child("name").val()
                           });
                       });
-                      this.setState({})
                   }) : null;
           }
         });
@@ -98,14 +97,6 @@ export default class MemberCheckAttendanceModal extends Component {
     });
     return (
       <View style={styles.container}>
-        <TouchableOpacity
-            onPress={() => {
-                this.Global.modalType = false;
-            }}
-            style={styles.btn_close_view}
-        >
-          <Icon name="times" color="#5DADE2" size={__d(15)} />
-        </TouchableOpacity>
         <View style={{
             width: width - __d(20),
             height: __d(80),
@@ -268,7 +259,7 @@ export default class MemberCheckAttendanceModal extends Component {
                     style={{
                         width: __d(30),
                         height: __d(30),
-                        resizeMode: "contain",
+                        resizeMode: "cover",
                         borderRadius: __d(15),
                         marginBottom: __d(7)
                     }}
@@ -288,9 +279,7 @@ export default class MemberCheckAttendanceModal extends Component {
   async _getLocationAsync() {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
     if (status !== "granted") {
-      this.setState({
-        errorMessage: "Permission to access location was denied"
-      });
+        this.errorMessage = "Permission to access location was denied"
     }
     let location = await Location.getCurrentPositionAsync({});
     let distance = 0;

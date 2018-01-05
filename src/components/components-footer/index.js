@@ -108,6 +108,31 @@ export default class ComponentFooter extends Component {
           onOpened={this._onOpen}
           onClosingState={this._onClosingState}
         >
+            {
+              this.Global.componentFooter !== false ?(
+                  <TouchableOpacity
+                      onPress={() => {
+                          this.Global.componentFooter = false;
+                      }}
+                      style={{
+                          width: __d(40),
+                          height: __d(40),
+                          borderRadius: __d(20),
+                          borderWidth: __d(1),
+                          borderColor: "#5DADE2",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          position: "absolute",
+                          right: -__d(0),
+                          top:(height - __d(300)) / 2 - __d(20),
+                          backgroundColor: "#fff",
+                          zIndex: 1
+                      }}
+                  >
+                    <Icon name="times" color="#5DADE2" size={15} />
+                  </TouchableOpacity>
+              ) : null
+            }
           {component}
         </Modal>
       </View>

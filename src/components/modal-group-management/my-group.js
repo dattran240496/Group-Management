@@ -11,7 +11,8 @@ import {
   FlatList,
   Image,
   TouchableHighlight,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+    Platform
 } from "react-native";
 import Expo from "expo";
 import { Actions, Router, Scene } from "react-native-mobx";
@@ -32,6 +33,7 @@ export default class MyGroup extends Component {
   @observable numberGroupMem = 0;
   @observable info = null;
   @observable myGroupList = this.props.FirebaseApi.myGroup;
+  @observable selectedGroup = null;
   constructor(props) {
     super(props);
     this.User = this.props.User;
@@ -52,26 +54,6 @@ export default class MyGroup extends Component {
     return (
       <KeyboardAvoidingView behavior="padding">
         <View style={styles.container}>
-          <TouchableOpacity
-            onPress={() => {
-              this.Global.modalGroupManagement = false;
-            }}
-            style={{
-              width: __d(40),
-              height: __d(40),
-              borderRadius: __d(20),
-              borderWidth: __d(1),
-              borderColor: "#5DADE2",
-              justifyContent: "center",
-              alignItems: "center",
-              position: "absolute",
-              right: -__d(10),
-              top: -__d(20),
-              backgroundColor: "#fff"
-            }}
-          >
-            <Icon name="times" color="#5DADE2" size={__d(15)} />
-          </TouchableOpacity>
           <Image
             source={require("./images/my-group/Popup-MyGroup.png")}
             style={{
@@ -130,6 +112,90 @@ export default class MyGroup extends Component {
                 </TouchableOpacity>
               </View>}
         </View>
+        <Modal
+            style={[{
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: 'transparent',
+                flex:1
+            }]}
+            ref={ref => (this.modalDeleteGroup = ref)}
+            swipeToClose={false}
+            backdropPressToClose={false}
+            position={"center"}>
+          <View style={{
+              width: width - __d(20),
+              height: __d(120),
+              backgroundColor: "#fff"
+          }}>
+            <View style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+            }}>
+              <Text style={{
+                  fontSize: __d(15)
+              }}>
+                Do you want to delete it?
+              </Text>
+            </View>
+            <View style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+                flexDirection: "row"
+            }}>
+              <TouchableOpacity
+                  onPress={()=>{
+                      let info = null;
+                      this.itemRefs
+                          .child("Group")
+                          .child(this.selectedGroup.groupKey)
+                          .child("createdGroupBy")
+                          .on("value", dataSnapshot => {
+                              info = this.FirebaseApi.accountData[dataSnapshot.val()];
+                          });
+                      let isAdmin = info && info.email === this.User.user.email ? true : false;
+                      this.deleteGroup(isAdmin, this.selectedGroup.groupKey);
+                      this.modalDeleteGroup.close();
+                  }}
+                  style={{
+                      width: __d(80),
+                      height: __d(30),
+                      justifyContent: "center",
+                      alignItems: "center",
+                      backgroundColor: "red"
+                  }}>
+                <Text style={{
+                    fontSize: __d(13),
+                    color: "#fff"
+                }}>
+                  Delete
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                  onPress={()=>{
+                      this.modalDeleteGroup.close();
+                  }}
+                  style={{
+                      width: __d(80),
+                      height: __d(30),
+                      justifyContent: "center",
+                      alignItems: "center",
+                      backgroundColor: "#e1e1e1",
+                      marginLeft: __d(15)
+                  }}>
+                <Text style={{
+                    fontSize: __d(13),
+                    color: "#fff"
+                }}>
+                  Cancel
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
       </KeyboardAvoidingView>
     );
   }
@@ -178,6 +244,10 @@ export default class MyGroup extends Component {
               Actions.checkAttendance();
             }}
             style={styles.fl_child_view}
+            onLongPress ={(e)=>{
+                Platform.OS === "android" ? this.modalDeleteGroup.open() : null;
+                this.selectedGroup = item;
+            }}
           >
             <View style={styles.fl_child_mem_view}>
               <Image
@@ -189,7 +259,7 @@ export default class MyGroup extends Component {
                   style={{
                     width: __d(35),
                     height: __d(35),
-                    resizeMode: "contain",
+                    resizeMode: "cover",
                     borderRadius: __d(20),
                     marginBottom: __d(8)
                   }}
@@ -283,7 +353,7 @@ const styles = StyleSheet.create({
     width: width - __d(70),
     height: __d(40),
     paddingLeft: __d(10),
-    borderWidth: __d(1),
+    borderWidth: 1,
     borderColor: "#5DADE2",
     fontSize: __d(13),
     marginTop: __d(20),

@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "app-expo",
+    "name": "Group Management",
     "description": "An empty new project",
     "slug": "app-expo",
     "privacy": "public",
@@ -21,7 +21,7 @@
       "supportsTablet": true
     },
     "android": {
-      "package": "com.yourcompany.yourappname",
+      "package": "com.newbie.groupmanagement",
       "config": {
         "googleMaps": {
           "apiKey": "796165831117-gvkmjfc8fo2756b3cascvufksetoh0rk.apps.googleusercontent.com"

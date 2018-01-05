@@ -43,27 +43,6 @@ export default class Member extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <TouchableOpacity
-            onPress={() => {
-                this.Global.modalType = false;
-            }}
-            style={{
-                width: __d(40),
-                height: __d(40),
-                borderRadius: __d(20),
-                borderWidth: __d(1),
-                borderColor: "#5DADE2",
-                justifyContent: "center",
-                alignItems: "center",
-                position: "absolute",
-                right: -__d(10),
-                top: -__d(20),
-                backgroundColor: "#fff",
-                zIndex: 1
-            }}
-        >
-          <Icon name="times" color="#5DADE2" size={15} />
-        </TouchableOpacity>
         <View style={{
             flex: 1,
             zIndex: 0,
@@ -95,12 +74,13 @@ export default class Member extends Component {
 
           </View>
           <TextInput
+              underlineColorAndroid="transparent"
               style={{
                   marginTop: __d(10),
                   width: width - __d(50),
                   height: __d(40),
                   borderColor: "#5DADE2",
-                  borderWidth: __d(2),
+                  borderWidth: 2,
                   paddingLeft: __d(5)
               }}
               value={this.Global.groupName}
@@ -154,7 +134,7 @@ export default class Member extends Component {
                 style={{
                     width: __d(30),
                     height: __d(30),
-                    resizeMode: "contain",
+                    resizeMode: "cover",
                     borderRadius: __d(15),
                     marginBottom: __d(7)
                 }}
@@ -174,7 +154,7 @@ export default class Member extends Component {
 const styles = StyleSheet.create({
   container: {
       width: width - __d(20),
-      height: __d(300),
+      height: __d(350),
       backgroundColor: "#fff",
       alignItems: "center",
       paddingTop: __d(10)

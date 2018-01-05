@@ -46,26 +46,6 @@ export default class EnterGroupName extends Component {
     return (
       <KeyboardAvoidingView behavior="padding">
         <View style={styles.container}>
-          <TouchableOpacity
-            onPress={() => {
-              this.Global.modalGroupManagement = false;
-            }}
-            style={{
-              width: __d(40),
-              height: __d(40),
-              borderRadius: __d(20),
-              borderWidth: __d(1),
-              borderColor: "#5DADE2",
-              justifyContent: "center",
-              alignItems: "center",
-              position: "absolute",
-              right: -__d(10),
-              top: -__d(20),
-              backgroundColor: "#fff"
-            }}
-          >
-            <Icon name="times" color="#5DADE2" size={15} />
-          </TouchableOpacity>
           <Image
             source={require("./images/create-group/Popup-CreateGroup.png")}
             style={{
@@ -89,7 +69,7 @@ export default class EnterGroupName extends Component {
               height: __d(40),
               flexDirection: "row",
               borderColor: "#5DADE2",
-              borderWidth: __d(1),
+              borderWidth: 1,
               alignItems: "center",
               marginTop: __d(20)
             }}
@@ -149,7 +129,7 @@ export default class EnterGroupName extends Component {
               height: __d(40),
               flexDirection: "row",
               borderColor: "#5DADE2",
-              borderWidth: __d(1),
+              borderWidth: 1,
               marginTop: __d(20)
             }}
           >
@@ -202,7 +182,7 @@ export default class EnterGroupName extends Component {
               height: __d(40),
               flexDirection: "row",
               borderColor: "#5DADE2",
-              borderWidth: __d(1),
+              borderWidth: 1,
               marginTop: __d(20)
             }}
           >

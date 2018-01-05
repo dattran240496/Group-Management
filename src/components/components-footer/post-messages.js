@@ -10,7 +10,8 @@ import {
   Alert,
   FlatList,
   Image,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+    Platform
 } from "react-native";
 import Expo from "expo";
 import { Actions, Router, Scene } from "react-native-mobx";
@@ -41,26 +42,6 @@ export default class PostMessage extends Component {
     return (
       <KeyboardAvoidingView behavior="padding">
         <View style={styles.container}>
-          <TouchableOpacity
-            onPress={() => {
-              this.Global.componentFooter = false;
-            }}
-            style={{
-              width: __d(40),
-              height: __d(40),
-              borderRadius: __d(20),
-              borderWidth: __d(1),
-              borderColor: "#5DADE2",
-              justifyContent: "center",
-              alignItems: "center",
-              position: "absolute",
-              right: -__d(10),
-              top: -__d(20),
-              backgroundColor: "#fff"
-            }}
-          >
-            <Icon name="times" color="#5DADE2" size={15} />
-          </TouchableOpacity>
           <View
             style={{
               width: width - __d(20),
@@ -120,7 +101,9 @@ export default class PostMessage extends Component {
             style={[
               styles.txt_input_mess,
               {
-                fontStyle: this.state.message !== "" ? "normal" : "italic"
+                fontStyle: this.state.message !== "" ? "normal" : "italic",
+                  textAlignVertical: Platform.OS === "android" ?  "top" : null,
+                  paddingTop: Platform.OS === "android" ? __d(10) : null
               }
             ]}
             onChangeText={message => {
@@ -201,7 +184,7 @@ const styles = StyleSheet.create({
       paddingRight: __d(10),
     fontSize: __d(13),
     borderColor: "#5DADE2",
-    borderWidth: __d(1),
+    borderWidth: 1,
     marginTop: __d(15)
   },
   btn_post_mess_view: {
@@ -212,7 +195,7 @@ const styles = StyleSheet.create({
     marginTop: __d(20),
     borderRadius: __d(5),
     borderColor: "#e1e1e1",
-    borderWidth: __d(1),
+    borderWidth: 1,
     backgroundColor: "#5DADE2"
   },
   btn_post_mess_txt: {

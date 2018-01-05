@@ -85,26 +85,7 @@ export default class CreatePoll extends Component {
     return (
         <KeyboardAvoidingView behavior="padding">
       <View style={styles.container}>
-        <TouchableOpacity
-          onPress={() => {
-            this.Global.componentFooter = false;
-          }}
-          style={{
-            width: __d(40),
-            height: __d(40),
-            borderRadius: __d(20),
-            borderWidth: __d(1),
-            borderColor: "#5DADE2",
-            justifyContent: "center",
-            alignItems: "center",
-            position: "absolute",
-            right: -__d(10),
-            top: -__d(20),
-            backgroundColor: "#fff"
-          }}
-        >
-          <Icon name="times" color="#5DADE2" size={15} />
-        </TouchableOpacity>
+
         <View
           style={{
             width: width - __d(20),
@@ -138,6 +119,7 @@ export default class CreatePoll extends Component {
           style={{ width: width - __d(21), height: __d(1) }}
         />
         <TextInput
+            underlineColorAndroid="transparent"
           placeholder="Question?"
           placeholderStyle={{ color: "#e1e1e1" }}
           style={[
@@ -211,14 +193,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: width - __d(20),
     height: __d(300),
-    backgroundColor: "#fff"
+    backgroundColor: "#fff",
+      zIndex: 0
   },
   txt_input_poll: {
     width: width - __d(30),
     height: __d(30),
     fontSize: __d(13),
     borderColor: "#5DADE2",
-    borderWidth: __d(1),
+    borderWidth: 2,
     marginTop: __d(15),
       paddingLeft: __d(10),
       paddingRight: __d(10),

@@ -85,14 +85,6 @@ export default class CheckAttendanceModal extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <TouchableOpacity
-          onPress={() => {
-            this.Global.modalType = false;
-          }}
-          style={styles.btn_close_view}
-        >
-          <Icon name="times" color="#5DADE2" size={__d(15)} />
-        </TouchableOpacity>
         <View
           style={{
             width: width - __d(20),
@@ -274,20 +266,12 @@ export default class CheckAttendanceModal extends Component {
           style={styles.modal_view}
           position={"top"}
         >
-          <TouchableOpacity
-            onPress={() => {
-              this.modalViewMap.close();
-            }}
-            style={styles.btn_close_view}
-          >
-            <Icon name="times" color="#5DADE2" size={__d(15)} />
-          </TouchableOpacity>
           {this.admin
             ? <MapView
                 style={{
                   width: width - __d(10),
-                  height: height - __d(150),
-                  zIndex: 0
+                  height: height - __d(200),
+                    zIndex: 0
                 }}
                 region={{
                   latitude: this.admin ? this.admin.latitude : 10.8665654,
@@ -344,7 +328,7 @@ export default class CheckAttendanceModal extends Component {
             style={{
               width: __d(30),
               height: __d(30),
-              resizeMode: "contain",
+              resizeMode: "cover",
               borderRadius: __d(15),
               marginBottom: __d(7)
             }}
@@ -498,7 +482,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: width - __d(20),
     height: height - __d(150),
-    marginTop: -__d(50)
+    marginTop: -__d(50),
+      zIndex: 0
   },
   modal_checkmem_header_txt: {
     fontSize: __d(20),

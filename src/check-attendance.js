@@ -11,7 +11,8 @@ import {
   FlatList,
   Image,
   TouchableHighlight,
-    KeyboardAvoidingView
+    KeyboardAvoidingView,
+    Platform
 } from "react-native";
 import Expo from "expo";
 import { Actions, Router, Scene } from "react-native-mobx";
@@ -60,6 +61,7 @@ export default class CheckAttendance extends Component {
     };
   }
   componentWillMount() {
+      this.Global.isFooter = true;
     this.getInfoAdminAndGroup();
     this.getMembers();
     this.getMessage();
@@ -133,7 +135,7 @@ export default class CheckAttendance extends Component {
               style={{
                 width: __d(40),
                 height: __d(40),
-                resizeMode: "contain",
+                resizeMode: "cover",
                 borderRadius: __d(20),
                 marginBottom: __d(10)
               }}
@@ -314,12 +316,184 @@ export default class CheckAttendance extends Component {
           />
           <View
             style={{
-              flex: 1.5,
-              backgroundColor: "#e1e1e1"
+              backgroundColor: "#e1e1e1",
+                width: width,
+                height: __d(120)
             }}
-          />
+          >
+              <Footer
+                  style={{
+                      width: __d(120),
+                      height: __d(120),
+                      backgroundColor: "red"
+                  }}
+                  Global={this.Global}
+                  User={this.User}
+                  Firebase={this.FirebaseApi}
+              />
+          </View>
         </View>
-
+          <Modal
+              style={[{
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: 'transparent',
+                  width: width,
+                  height: height
+              }]}
+              ref={ref => (this.modalDelete = ref)}
+              swipeToClose={false}
+              backdropPressToClose={false}
+              position={"center"}>
+              <View style={{
+                  width: width - __d(20),
+                  height: __d(120),
+                  backgroundColor: "#fff"
+              }}>
+                  <View style={{
+                      flex: 1,
+                      justifyContent: "center",
+                      alignItems: "center"
+                  }}>
+                      <Text style={{
+                          fontSize: __d(15)
+                      }}>
+                          Do you want to delete it?
+                      </Text>
+                  </View>
+                  <View style={{
+                      flex: 1,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      flexDirection: "row"
+                  }}>
+                      <TouchableOpacity
+                          onPress={()=>{
+                              let child = this.itemRefs
+                                  .child("Group")
+                                  .child(this.Global.groupKey)
+                                  .child("postedMessages")
+                                  .child(this.messageSelected.key);
+                              child.remove();
+                              this.modalDelete.close();
+                          }}
+                          style={{
+                              width: __d(80),
+                              height: __d(30),
+                              justifyContent: "center",
+                              alignItems: "center",
+                              backgroundColor: "red"
+                          }}>
+                          <Text style={{
+                              fontSize: __d(13),
+                              color: "#fff"
+                          }}>
+                              Delete
+                          </Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                          onPress={()=>{
+                              this.modalDelete.close();
+                          }}
+                          style={{
+                              width: __d(80),
+                              height: __d(30),
+                              justifyContent: "center",
+                              alignItems: "center",
+                              backgroundColor: "#e1e1e1",
+                              marginLeft: __d(15)
+                          }}>
+                          <Text style={{
+                              fontSize: __d(13),
+                              color: "#fff"
+                          }}>
+                              Cancel
+                          </Text>
+                      </TouchableOpacity>
+                  </View>
+              </View>
+          </Modal>
+          <Modal
+              style={[{
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: 'transparent',
+                  flex:1
+              }]}
+              ref={ref => (this.modalDeletePoll = ref)}
+              swipeToClose={false}
+              backdropPressToClose={false}
+              position={"center"}>
+              <View style={{
+                  width: width - __d(20),
+                  height: __d(120),
+                  backgroundColor: "#fff"
+              }}>
+                  <View style={{
+                      flex: 1,
+                      justifyContent: "center",
+                      alignItems: "center",
+                  }}>
+                      <Text style={{
+                          fontSize: __d(15)
+                      }}>
+                          Do you want to delete it?
+                      </Text>
+                  </View>
+                  <View style={{
+                      flex: 1,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      flexDirection: "row"
+                  }}>
+                      <TouchableOpacity
+                          onPress={()=>{
+                              let child = this.itemRefs
+                                  .child("Group")
+                                  .child(this.Global.groupKey)
+                                  .child("postedPoll")
+                                  .child(this.pollSelected.key);
+                              child.remove();
+                              this.modalDeletePoll.close();
+                          }}
+                          style={{
+                              width: __d(80),
+                              height: __d(30),
+                              justifyContent: "center",
+                              alignItems: "center",
+                              backgroundColor: "red"
+                          }}>
+                          <Text style={{
+                              fontSize: __d(13),
+                              color: "#fff"
+                          }}>
+                              Delete
+                          </Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                          onPress={()=>{
+                              this.modalDeletePoll.close();
+                          }}
+                          style={{
+                              width: __d(80),
+                              height: __d(30),
+                              justifyContent: "center",
+                              alignItems: "center",
+                              backgroundColor: "#e1e1e1",
+                              marginLeft: __d(15)
+                          }}>
+                          <Text style={{
+                              fontSize: __d(13),
+                              color: "#fff"
+                          }}>
+                              Cancel
+                          </Text>
+                      </TouchableOpacity>
+                  </View>
+              </View>
+          </Modal>
       </View>
         </KeyboardAvoidingView>
 
@@ -476,6 +650,10 @@ export default class CheckAttendance extends Component {
             height: __d(70),
             backgroundColor: "#fff"
           }}
+          onLongPress ={(e)=>{
+              Platform.OS === "android" ? this.modalDelete.open() : null;
+              this.messageSelected = item;
+          }}
         >
           <View
             style={{
@@ -596,6 +774,7 @@ export default class CheckAttendance extends Component {
               {messageView}
             </Swipeout>
           : messageView}
+
       </View>
     );
   }
@@ -633,6 +812,10 @@ export default class CheckAttendance extends Component {
             width: width - __d(20),
             height: __d(70),
             backgroundColor: "#fff"
+          }}
+          onLongPress ={(e)=>{
+              Platform.OS === "android" ? this.modalDeletePoll.open() : null;
+              this.pollSelected = item;
           }}
         >
           <View

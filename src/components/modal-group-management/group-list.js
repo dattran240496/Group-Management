@@ -53,40 +53,19 @@ export default class GroupList extends Component {
     let dataGroupList =
       this.state.groupNameSearch !== "" ? this.groupNameList : [];
     let heightModal = _.isEmpty(dataGroupList)
-      ? __d(300 - 140)
-      : __d(400 - 170);
+      ? __d(350)
+      : __d(350);
     return (
       <KeyboardAvoidingView behavior="padding">
         <View
           style={[
             styles.container,
             {
-              height: _.isEmpty(dataGroupList) ? __d(250) : __d(400)
+              height: __d(350),
+                zIndex: 0
             }
           ]}
         >
-          <TouchableOpacity
-            onPress={() => {
-              this.Global.modalGroupManagement = false;
-            }}
-            style={{
-              width: __d(40),
-              height: __d(40),
-              borderRadius: __d(20),
-              borderWidth: __d(1),
-              borderColor: "#5DADE2",
-              justifyContent: "center",
-              alignItems: "center",
-              position: "absolute",
-              right: -__d(10),
-              top: !_.isEmpty(dataGroupList)
-                ? heightModal / 2 - __d(130)
-                : heightModal / 2 - __d(100),
-              backgroundColor: "#fff"
-            }}
-          >
-            <Icon name="times" color="#5DADE2" size={15} />
-          </TouchableOpacity>
           <Image
             source={require("./images/find-group/Popup-Search.png")}
             style={{
@@ -311,7 +290,7 @@ export default class GroupList extends Component {
                 style={{
                   width: __d(35),
                   height: __d(35),
-                  resizeMode: "contain",
+                  resizeMode: "cover",
                   borderRadius: __d(20),
                   marginBottom: __d(8)
                 }}

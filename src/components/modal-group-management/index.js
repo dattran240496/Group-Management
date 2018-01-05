@@ -11,7 +11,7 @@ import {
   NetInfo,
   TouchableOpacity,
   Animated,
-    KeyboardAvoidingView
+  KeyboardAvoidingView
 } from "react-native";
 import { observable } from "mobx";
 import { autobind } from "core-decorators";
@@ -114,7 +114,7 @@ export default class ModalBox extends Component {
           top: 0,
           left: 0,
           width: width,
-          height: height,
+          height: height
           //backgroundColor: "transparent"
         }}
         pointerEvents={this.Global.modalGroupManagement ? "auto" : "none"}
@@ -127,7 +127,8 @@ export default class ModalBox extends Component {
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
-              backgroundColor: "transparent"
+              backgroundColor: "transparent",
+              zIndex: 0
             }
           ]}
           ref={ref => (this.modal = ref)}
@@ -138,6 +139,31 @@ export default class ModalBox extends Component {
           onOpened={this._onOpen}
           onClosingState={this._onClosingState}
         >
+            {
+              this.Global.modalGroupManagement !== false ?  (
+                  <TouchableOpacity
+                      onPress={() => {
+                          this.Global.modalGroupManagement = false;
+                      }}
+                      style={{
+                          width: __d(40),
+                          height: __d(40),
+                          borderRadius: __d(20),
+                          borderWidth: __d(1),
+                          borderColor: "#5DADE2",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          position: "absolute",
+                          right: -__d(0),
+                          top: (height - this.Global.heightPopUp) / 2 - __d(20),
+                          backgroundColor: "#fff",
+                          zIndex: 1
+                      }}
+                  >
+                    <Icon name="times" color="#5DADE2" size={15} />
+                  </TouchableOpacity>
+              ) : null
+            }
           {component}
         </Modal>
       </View>

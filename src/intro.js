@@ -7,7 +7,8 @@ import {
   AsyncStorage,
   Image,
   Platform,
-  Dimensions
+  Dimensions,
+    BackHandler
 } from "react-native";
 import Expo, { Notifications, Permissions } from "expo";
 import { Actions, Router, Scene } from "react-native-mobx";
@@ -37,10 +38,28 @@ export default class Intro extends Component {
   }
   componentWillMount() {
     this.getDataWhenInstallApp();
+      BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
   }
+    componentWillUnmount() {
+        BackHandler.removeEventListener('hardwareBackPress', this.onBackPress);
+    }
+    onBackPress = () => {
+        if (this.props.currentRoute.index === 0) {
+            BackHandler.exitApp();
+            return false;
+        }
+        this.props.navigation.goBack(null);
+        return true;
+    };
+
+    openAuth() {
+        this.props.navigation.navigate('auth');
+    }
   render() {
     let instruction_first = (
-      <View style={[styles.container]}>
+      <View
+          key={1}
+          style={[styles.container]}>
         <Image
           source={require("./images/intro/page-1.png")}
           style={styles.img_intro}
@@ -55,10 +74,26 @@ export default class Intro extends Component {
           source={require("./images/intro/heart.png")}
           style={styles.intro_img_heart}
         />
+          <TouchableOpacity
+              style={styles.btn_skip_view}
+              onPress={() => {
+                  Actions.login({ type: "replace" });
+              }}
+          >
+              <Text
+                  style={{
+                      fontSize: __d(15)
+                  }}
+              >
+                  Skip
+              </Text>
+          </TouchableOpacity>
       </View>
     );
     let instruction_second = (
-      <View style={[styles.container]}>
+      <View
+          key={2}
+          style={[styles.container]}>
         <Image
           source={require("./images/intro/page-2.png")}
           style={styles.img_intro}
@@ -73,10 +108,26 @@ export default class Intro extends Component {
           source={require("./images/intro/heart.png")}
           style={styles.intro_img_heart}
         />
+          <TouchableOpacity
+              style={styles.btn_skip_view}
+              onPress={() => {
+                  Actions.login({ type: "replace" });
+              }}
+          >
+              <Text
+                  style={{
+                      fontSize: __d(15)
+                  }}
+              >
+                  Skip
+              </Text>
+          </TouchableOpacity>
       </View>
     );
     let instruction_third = (
-      <View style={[styles.container]}>
+      <View
+          key={3}
+          style={[styles.container]}>
         <Image
           source={require("./images/intro/page-3.png")}
           style={styles.img_intro}
@@ -108,43 +159,28 @@ export default class Intro extends Component {
       </View>
     );
     return (
-      <View style={styles.container}>
-        {!this.isInstalledApp
-          ? <Swiper
+
+          <Swiper
               onIndexChanged={index => {
                 this.indexSwiper = index;
               }}
               loop={false}
+              dotStyle={styles.dotStyle}
+              style={{
+                  flex: 1
+              }}
             >
               {instruction_first}
               {instruction_second}
               {instruction_third}
             </Swiper>
-          : instruction_third}
-        {!this.isInstalledApp && this.indexSwiper !== 2
-          ? <TouchableOpacity
-              style={styles.btn_skip_view}
-              onPress={() => {
-                Actions.login({ type: "replace" });
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: __d(15)
-                }}
-              >
-                Skip
-              </Text>
-            </TouchableOpacity>
-          : null}
-      </View>
     );
   }
   async getDataWhenInstallApp() {
     try {
       let value = await AsyncStorage.getItem("@isInstallApp:key");
       if (value !== null) {
-          Actions.login({ type: "replace" });
+         Actions.login({ type: "replace" });
       } else {
         this.isInstalledApp = false;
       }
@@ -159,7 +195,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    zIndex: 0
   },
   img_intro: {
     flex: 2,
@@ -206,5 +241,8 @@ const styles = StyleSheet.create({
         bottom: __d(20),
         right: __d(20),
         backgroundColor: "transparent"
-    }
+    },
+    dotStyle: {
+        backgroundColor: 'rgba(255, 255, 255, 0.48)',
+    },
 });
