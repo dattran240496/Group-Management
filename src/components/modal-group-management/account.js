@@ -10,7 +10,8 @@ import {
   Alert,
   FlatList,
   Image,
-  ScrollView
+  ScrollView,
+    KeyboardAvoidingView
 } from "react-native";
 import Expo from "expo";
 import { Actions, Router, Scene } from "react-native-mobx";
@@ -39,28 +40,8 @@ export default class Account extends Component {
 
   render() {
     return (
+        <KeyboardAvoidingView behavior="padding">
       <View style={styles.container}>
-          <TouchableOpacity
-              onPress={() => {
-                  this.Global.modalGroupManagement = false;
-              }}
-              style={{
-                  width: __d(40),
-                  height: __d(40),
-                  borderRadius: __d(20),
-                  borderWidth: __d(1),
-                  borderColor: "#5DADE2",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  position: "absolute",
-                  right: -__d(10),
-                  top: -__d(20),
-                  backgroundColor: "#fff",
-                  zIndex: 1
-              }}
-          >
-              <Icon name="times" color="#5DADE2" size={15} />
-          </TouchableOpacity>
         {this.User.user &&
           <Image
             style={{
@@ -205,6 +186,7 @@ export default class Account extends Component {
           </TouchableOpacity>
         </View>
       </View>
+        </KeyboardAvoidingView>
     );
   }
 }

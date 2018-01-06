@@ -103,7 +103,7 @@ export default class PostMessage extends Component {
               {
                 fontStyle: this.state.message !== "" ? "normal" : "italic",
                   textAlignVertical: Platform.OS === "android" ?  "top" : null,
-                  paddingTop: Platform.OS === "android" ? __d(10) : null
+                  paddingTop: __d(10)
               }
             ]}
             onChangeText={message => {

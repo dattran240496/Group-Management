@@ -73,12 +73,13 @@ export default class VotePoll extends Component {
   }
   render() {
     let arrOptions = [];
-    if (this.info.email === this.User.user.email) {
+    if (1) {
       for (let i = 1; i <= this.state.numberOptions; i++) {
         arrOptions.push(
           <View key={i} style={styles.option_view}>
             <Icon name="plus" color="#e1e1e1" size={__d(15)} />
             <TextInput
+                underlineColorAndroid="transparent"
               placeholder="Add an option..."
               placeholderStyle={{ color: "#e1e1e1" }}
               style={styles.option_txt_input}
@@ -91,10 +92,13 @@ export default class VotePoll extends Component {
               numberOfLines={1}
               ellipsizeMode="tail"
               onFocus={() => {
-                if (i === this.state.numberOptions) {
+                if (i === this.numberOptions) {
                   let numbers = i;
                   numbers++;
                     this.numberOptions = numbers;
+                    // this.setState({
+                    //     numberOptions: numbers
+                    // });
                   this.arrOptions.push("");
                 }
               }}
@@ -166,10 +170,11 @@ export default class VotePoll extends Component {
               keyExtractor={(item, index) => index}
               renderItem={({ item, index }) => this.renderOptions(item, index)}
               data={this.optionsPoll}
+              extraData={this.state}
             />}
-          {this.info.email === this.User.user.email ? arrOptions : null}
+          {1 ? arrOptions : null}
         </ScrollView>
-        {this.info.email === this.User.user.email
+        {1
           ? <TouchableOpacity
               onPress={() => {
                 this.updatePoll();
@@ -192,6 +197,7 @@ export default class VotePoll extends Component {
       .on("value", dataSnapshot => {
         let options = [];
         dataSnapshot.forEach(child => {
+          let selected = child.child("selectedMems").val();
           options.push({
             option: child.child("option").val(),
             selectedMems: child.child("selectedMems").val()
@@ -203,14 +209,17 @@ export default class VotePoll extends Component {
     // if members and messages got, turn off modal loading
   }
   renderOptions(item, index) {
+      console.log(item.selectedMems);
     let widthTxt = width - __d(110);
     let isChecked = false;
     let indexUser = -1;
+    let lenght = 0;
     item.selectedMems
       ? item.selectedMems.map((v, i) => {
           v === this.User.user.email
             ? ((isChecked = true), (indexUser = i))
             : null;
+          v !== null ? lenght++ : null;
         })
       : null;
     let arrayComponentOption = [];
@@ -220,9 +229,18 @@ export default class VotePoll extends Component {
           <View style={styles.option_exist_vote_check_view}>
             <TouchableOpacity
               onPress={() => {
+
                 let count = 0;
                 let user = item.selectedMems || [];
-                user.push(this.User.user.email);
+                if (isChecked){
+                    for (let i = item.selectedMems.length - 1; i >= 0; i--) {
+                        if (item.selectedMems[i] === this.User.user.email) {
+                            item.selectedMems.splice(i, 1);
+                        }
+                    }
+                }else{
+                    user.push(this.User.user.email);
+                }
                 this.itemRefs
                   .child("Group")
                   .child(this.Global.groupKey)
@@ -258,8 +276,6 @@ export default class VotePoll extends Component {
                 if (count === 1 && isChecked) {
                   voted--;
                 }
-                console.log("vote");
-                console.log(voted);
                 this.itemRefs
                   .child("Group")
                   .child(this.Global.groupKey)
@@ -268,18 +284,28 @@ export default class VotePoll extends Component {
                   .update({
                     voted: voted
                   });
-                isChecked
-                  ? this.itemRefs
-                      .child("Group")
-                      .child(this.Global.groupKey)
-                      .child("postedPoll")
-                      .child(this.state.poll.key)
-                      .child("options")
-                      .child(index)
-                      .child("selectedMems")
-                      .child(indexUser.toString())
-                      .remove()
-                  : this.itemRefs
+                // isChecked
+                //   ? this.itemRefs
+                //       .child("Group")
+                //       .child(this.Global.groupKey)
+                //       .child("postedPoll")
+                //       .child(this.state.poll.key)
+                //       .child("options")
+                //       .child(index)
+                //       .child("selectedMems")
+                //       .child(indexUser.toString())
+                //       .remove()
+                //   : this.itemRefs
+                //       .child("Group")
+                //       .child(this.Global.groupKey)
+                //       .child("postedPoll")
+                //       .child(this.state.poll.key)
+                //       .child("options")
+                //       .child(index)
+                //       .update({
+                //         selectedMems: user
+                //       });
+                  this.itemRefs
                       .child("Group")
                       .child(this.Global.groupKey)
                       .child("postedPoll")
@@ -287,7 +313,7 @@ export default class VotePoll extends Component {
                       .child("options")
                       .child(index)
                       .update({
-                        selectedMems: user
+                          selectedMems: user
                       });
               }}
               style={styles.option_exist_vote_check_btn}
@@ -320,7 +346,7 @@ export default class VotePoll extends Component {
             />
             <View style={styles.option_exist_number_mem_view}>
               <Text style={styles.option_exist_number_mem_txt}>
-                {item.selectedMems ? item.selectedMems.length : 0}
+                {lenght}
               </Text>
             </View>
           </View>
@@ -391,7 +417,7 @@ export default class VotePoll extends Component {
       this.isChangePoll = false;
     }
 
-    this.arrOptions = [""];
+      this.arrOptions = [""];
       this.numberOptions = 1
   }
 }
@@ -424,7 +450,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: __d(5),
-    marginTop: __d(10)
+    marginTop: __d(10),
+      marginBottom: __d(5)
   },
   btn_submit_txt: {
     color: "#fff",

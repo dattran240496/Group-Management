@@ -526,6 +526,7 @@ export default class CheckAttendance extends Component {
   }
   getMembers() {
     let key = {};
+    let _this = this;
     this.itemRefs
       .child("Group")
       .child(this.Global.groupKey)
@@ -535,7 +536,7 @@ export default class CheckAttendance extends Component {
         dataSnapshot.forEach(child => {
           this.FirebaseApi.members[child.key] = {
             email: child.child("email").val(),
-            token: child.child("token").val(),
+            token: _this.FirebaseApi.accountData[child.key].token,
             name: child.child("name").val(),
               key: child.key
           };

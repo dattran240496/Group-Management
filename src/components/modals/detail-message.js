@@ -10,7 +10,8 @@ import {
   Alert,
   FlatList,
   Image,
-  ScrollView
+  ScrollView,
+    Platform
 } from "react-native";
 import Expo from "expo";
 import { Actions, Router, Scene } from "react-native-mobx";
@@ -134,7 +135,9 @@ export default class DetailMessage extends Component {
             value={this.messageEdit ? this.messageEdit.message : null}
             style={{
               fontSize: __d(13),
-              flex: 1
+              flex: 1,
+                textAlignVertical: Platform.OS === "android" ?  "top" : null,
+                paddingTop: __d(10)
             }}
             onChangeText={title => {
               this.messageEdit.message = title;

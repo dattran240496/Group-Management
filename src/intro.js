@@ -58,7 +58,6 @@ export default class Intro extends Component {
   render() {
     let instruction_first = (
       <View
-          key={1}
           style={[styles.container]}>
         <Image
           source={require("./images/intro/page-1.png")}
@@ -92,7 +91,6 @@ export default class Intro extends Component {
     );
     let instruction_second = (
       <View
-          key={2}
           style={[styles.container]}>
         <Image
           source={require("./images/intro/page-2.png")}
@@ -126,7 +124,6 @@ export default class Intro extends Component {
     );
     let instruction_third = (
       <View
-          key={3}
           style={[styles.container]}>
         <Image
           source={require("./images/intro/page-3.png")}
@@ -159,20 +156,100 @@ export default class Intro extends Component {
       </View>
     );
     return (
-
-          <Swiper
-              onIndexChanged={index => {
-                this.indexSwiper = index;
-              }}
-              loop={false}
-              dotStyle={styles.dotStyle}
-              style={{
-                  flex: 1
-              }}
-            >
-              {instruction_first}
-              {instruction_second}
-              {instruction_third}
+          <Swiper>
+              <View
+                  style={[styles.container]}>
+                  <Image
+                      source={require("./images/intro/page-1.png")}
+                      style={styles.img_intro}
+                  />
+                  <View style={styles.intro_info_view}>
+                      <Text style={styles.intro_info_header_txt}>NOTIFICATION</Text>
+                      <Text style={styles.intro_info_body_txt}>
+                          Post every notification quickly
+                      </Text>
+                  </View>
+                  <Image
+                      source={require("./images/intro/heart.png")}
+                      style={styles.intro_img_heart}
+                  />
+                  <TouchableOpacity
+                      style={styles.btn_skip_view}
+                      onPress={() => {
+                          Actions.login({ type: "replace" });
+                      }}
+                  >
+                      <Text
+                          style={{
+                              fontSize: __d(15)
+                          }}
+                      >
+                          Skip
+                      </Text>
+                  </TouchableOpacity>
+              </View>
+              <View
+                  style={[styles.container]}>
+                  <Image
+                      source={require("./images/intro/page-2.png")}
+                      style={styles.img_intro}
+                  />
+                  <View style={styles.intro_info_view}>
+                      <Text style={styles.intro_info_header_txt}>POLL</Text>
+                      <Text style={styles.intro_info_body_txt}>
+                          Easy to create poll neatly
+                      </Text>
+                  </View>
+                  <Image
+                      source={require("./images/intro/heart.png")}
+                      style={styles.intro_img_heart}
+                  />
+                  <TouchableOpacity
+                      style={styles.btn_skip_view}
+                      onPress={() => {
+                          Actions.login({ type: "replace" });
+                      }}
+                  >
+                      <Text
+                          style={{
+                              fontSize: __d(15)
+                          }}
+                      >
+                          Skip
+                      </Text>
+                  </TouchableOpacity>
+              </View>
+              <View
+                  style={[styles.container]}>
+                  <Image
+                      source={require("./images/intro/page-3.png")}
+                      style={styles.img_intro}
+                  />
+                  <View style={styles.intro_info_view}>
+                      <Text style={styles.intro_info_header_txt}>CHECK ATTENDANCE</Text>
+                      <Text style={styles.intro_info_body_txt}>
+                          Check person attendance exactly
+                      </Text>
+                  </View>
+                  <View style={styles.container}>
+                      <Image
+                          source={require("./images/intro/heart.png")}
+                          style={styles.intro_img_heart}
+                      />
+                      <TouchableOpacity
+                          style={styles.btn_started_view}
+                          onPress={() => {
+                              Actions.login({ type: "replace" });
+                          }}
+                      >
+                          <Text
+                              style={styles.btn_started_txt}
+                          >
+                              GET STARTED
+                          </Text>
+                      </TouchableOpacity>
+                  </View>
+              </View>
             </Swiper>
     );
   }
@@ -180,7 +257,7 @@ export default class Intro extends Component {
     try {
       let value = await AsyncStorage.getItem("@isInstallApp:key");
       if (value !== null) {
-         Actions.login({ type: "replace" });
+         //Actions.login({ type: "replace" });
       } else {
         this.isInstalledApp = false;
       }

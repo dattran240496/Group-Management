@@ -137,7 +137,6 @@ export default class Login extends Component {
         let token = "";
         register.then(function(o) {
           token = o;
-          console.log(token);
           token
             ? (
                 itemRefs.child("Account").child(responseJS.id).update({
@@ -188,7 +187,6 @@ export default class Login extends Component {
     try {
       let value = await AsyncStorage.getItem("@user:key");
       value = JSON.parse(value);
-      console.log(value);
       if (value !== null) {
         return Actions.homePage({ user: value, type: "replace" });
       } else {

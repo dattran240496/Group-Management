@@ -174,6 +174,25 @@ export default class CreatePoll extends Component {
                         })
                       : "null"
                 });
+                Object.values(this.FirebaseApi.members).map((v, i) => {
+                    console.log(v);
+                    fetch(this.Global.urlPushNoti, {
+                        method: "POST",
+                        headers: {
+                            Accept: "application/json",
+                            "Content-Type": "application/json",
+                            "accept-encoding": "gzip, deflate"
+                        },
+                        body: JSON.stringify({
+                            to: v.token,
+                            sound: "default",
+                            body: this.state.message
+                        })
+                    })
+                        .then(response => response.json())
+                        .then(response => console.log(response))
+                        .catch(e => console.log(e));
+                });
               this.Global.componentFooter = false;
             } else {
               Alert.alert("Warning!", "Poll is not empty!");

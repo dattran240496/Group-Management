@@ -401,6 +401,7 @@ export default class Homepage extends Component {
         ? (this.Global.modalType = false)
         : null;
     });
+
   }
 
   getUserInfo(id) {
@@ -412,7 +413,8 @@ export default class Homepage extends Component {
         picture: dataSnapshot.child("infoAccount").child("picture").val(),
         token: dataSnapshot.child("token").val()
       };
-      !this.FirebaseApi.myGroup
+        console.log(this.User.user);
+        !this.FirebaseApi.myGroup
         ? this.getMyGroup()
         : (this.Global.modalType = false);
     });

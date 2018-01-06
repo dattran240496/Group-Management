@@ -75,7 +75,8 @@ export default class CheckAttendanceModal extends Component {
                     key: child.key,
                     email: child.child("email").val(),
                     latitude: child.child("latitude").val(),
-                    longitude: child.child("longitude").val()
+                    longitude: child.child("longitude").val(),
+                      name: child.child("name").val()
                   });
                 });
               })
@@ -399,6 +400,7 @@ export default class CheckAttendanceModal extends Component {
         longitude: location["coords"].longitude
       });
       Object.values(this.FirebaseApi.members).map((v, i) => {
+          console.log(v);
           fetch(this.Global.urlPushNoti, {
               method: "POST",
               headers: {
@@ -409,7 +411,7 @@ export default class CheckAttendanceModal extends Component {
               body: JSON.stringify({
                   to: v.token,
                   sound: "default",
-                  body: "Group" + this.Global.groupName + "is checking!"
+                  body: "Group " + this.Global.groupName + "is checking!"
               })
           })
               .then(response => response.json())
