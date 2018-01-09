@@ -209,7 +209,6 @@ export default class VotePoll extends Component {
     // if members and messages got, turn off modal loading
   }
   renderOptions(item, index) {
-      console.log(item.selectedMems);
     let widthTxt = width - __d(110);
     let isChecked = false;
     let indexUser = -1;

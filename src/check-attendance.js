@@ -109,9 +109,8 @@ export default class CheckAttendance extends Component {
           style={{
             marginTop: __d(15),
             marginLeft: __d(10)
-          }}
-        >
-          <Icon name="arrow-left" size={__d(18)} color="#5DADE2" />
+          }}>
+          <Icon name="arrow-left" size={__d(25)} color="#5DADE2"/>
         </TouchableOpacity>
         <View
           style={{

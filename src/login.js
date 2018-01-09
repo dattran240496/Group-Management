@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   AsyncStorage,
   Image,
-  Platform
+  Platform,
+    Alert
 } from "react-native";
 import Expo, { Notifications, Permissions } from "expo";
 import { Actions, Router, Scene } from "react-native-mobx";
@@ -32,7 +33,9 @@ export default class Login extends Component {
     this.Global = this.props.Global;
     this.itemRefs = firebase.database().ref("app_expo");
   }
-  componentWillMount() {}
+  componentWillMount() {
+
+  }
   render() {
     return (
       <View style={[styles.container]}>
@@ -165,11 +168,13 @@ export default class Login extends Component {
     let _this = this;
     try {
       const result = await Expo.Google.logInAsync({
-        androidClientId:
-          "796165831117-gvkmjfc8fo2756b3cascvufksetoh0rk.apps.googleusercontent.com",
+          androidClientId:
+          "796165831117-dqh1l6fq5poog0bgdj5lfh2er3ithkbh.apps.googleusercontent.com",
+          androidStandaloneAppClientId: "796165831117-dqh1l6fq5poog0bgdj5lfh2er3ithkbh.apps.googleusercontent.com",
         iosClientId:
-          "796165831117-gcqiquek4o7a6mh2pbqovt7tnb1diphb.apps.googleusercontent.com",
-        scopes: ["profile", "email"]
+          "796165831117-gvkmjfc8fo2756b3cascvufksetoh0rk.apps.googleusercontent.com",
+        scopes: ["profile", "email"],
+          behavior: 'web'
       });
       if (result.type === "success") {
         return this.getUserInfo(result.accessToken, itemRefs);

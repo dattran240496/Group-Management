@@ -227,6 +227,7 @@ export default class GroupList extends Component {
               onChangeText={txt => {
                 this.setState({ groupPass: txt });
               }}
+              value={this.state.groupPass}
             />
             {!_.isEmpty(this.errors["password"]) &&
               <Text style={styles.error_txt}>
@@ -388,6 +389,7 @@ export default class GroupList extends Component {
               this._modalEnterPas.close(),
               (this.Global.modalType = "loading"),
               (this.Global.groupKey = this.state.groupSelectedToJoin.groupKey),
+              this.Global.modalGroupManagement = false,
               Actions.checkAttendance()
             )
           : (
@@ -461,7 +463,7 @@ const styles = StyleSheet.create({
     width: __d(250),
     height: __d(40),
     paddingLeft: __d(10),
-    borderWidth: __d(1),
+    borderWidth: 1,
     borderColor: "#5DADE2",
     fontSize: __d(13)
   },

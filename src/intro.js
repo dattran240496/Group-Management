@@ -156,7 +156,7 @@ export default class Intro extends Component {
       </View>
     );
     return (
-          <Swiper>
+          <Swiper loop={false}>
               <View
                   style={[styles.container]}>
                   <Image
