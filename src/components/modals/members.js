@@ -51,71 +51,130 @@ export default class Member extends Component {
   }
   render() {
     return (
-      <View style={styles.container}>
+      <View
+        style={{
+          justifyContent: "center",
+          alignItems: "center"
+        }}
+      >
         <View
           style={{
-            flex: 1,
-            zIndex: 0,
-            alignItems: "center"
+            width: width,
+            height: __d(40),
+            alignItems: "flex-end",
+            elevation: 1,
+            backgroundColor: "transparent"
           }}
         >
-          <Text
-            style={{
-              fontSize: __d(15)
-            }}
-          >
-            Member
-          </Text>
           <View
             style={{
-              flexDirection: "row",
-              marginTop: __d(5)
+              width: width - __d(20),
+              height: __d(20)
+            }}
+          />
+          <View
+            style={{
+              width: width,
+              height: __d(20),
+              alignItems: "center"
             }}
           >
-            <Image
-              source={require("./images/group.png")}
+            <View
               style={{
-                width: __d(15),
-                height: __d(15),
-                resizeMode: "center"
+                width: width - __d(20),
+                height: __d(20),
+                backgroundColor: "#fff"
               }}
             />
+          </View>
+
+          <TouchableOpacity
+            onPress={() => {
+              this.Global.modalType = false;
+            }}
+            style={{
+              width: __d(40),
+              height: __d(40),
+              borderRadius: __d(20),
+              borderWidth: __d(1),
+              borderColor: "#5DADE2",
+              justifyContent: "center",
+              alignItems: "center",
+              position: "absolute",
+              backgroundColor: "#fff",
+              zIndex: 100,
+              right: __d(0)
+            }}
+          >
+            <Icon name="times" color="#5DADE2" size={15} />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.container}>
+          <View
+            style={{
+              flex: 1,
+              zIndex: 0,
+              alignItems: "center"
+            }}
+          >
             <Text
               style={{
-                fontSize: __d(13),
-                paddingLeft: __d(5)
+                fontSize: __d(15)
               }}
             >
-              {Object.values(this.FirebaseApi.members).length}
+              Member
             </Text>
+            <View
+              style={{
+                flexDirection: "row",
+                marginTop: __d(5)
+              }}
+            >
+              <Image
+                source={require("./images/group.png")}
+                style={{
+                  width: __d(15),
+                  height: __d(15),
+                  resizeMode: "center"
+                }}
+              />
+              <Text
+                style={{
+                  fontSize: __d(13),
+                  paddingLeft: __d(5)
+                }}
+              >
+                {Object.values(this.FirebaseApi.members).length}
+              </Text>
+            </View>
+            <TextInput
+              underlineColorAndroid="transparent"
+              style={{
+                marginTop: __d(10),
+                width: width - __d(50),
+                height: __d(40),
+                borderColor: "#5DADE2",
+                borderWidth: 2,
+                paddingLeft: __d(5)
+              }}
+              value={this.Global.groupName}
+              editable={false}
+            />
           </View>
-          <TextInput
-            underlineColorAndroid="transparent"
+          <View
             style={{
-              marginTop: __d(10),
-              width: width - __d(50),
-              height: __d(40),
-              borderColor: "#5DADE2",
-              borderWidth: 2,
-              paddingLeft: __d(5)
+              flex: 2
             }}
-            value={this.Global.groupName}
-            editable={false}
-          />
-        </View>
-        <View
-          style={{
-            flex: 2
-          }}
-        >
-          <FlatList
-            style={styles.fl_mem_view}
-            ref={ref => (this.flatListMem = ref)}
-            keyExtractor={(item, index) => index}
-            data={this.members}
-            extraData={this.state}
-            renderItem={({ item, index }) => this._renderItem(item, index)}
-          />
+          >
+            <FlatList
+              style={styles.fl_mem_view}
+              ref={ref => (this.flatListMem = ref)}
+              keyExtractor={(item, index) => index}
+              data={this.members}
+              extraData={this.state}
+              renderItem={({ item, index }) => this._renderItem(item, index)}
+            />
+          </View>
         </View>
       </View>
     );
@@ -144,8 +203,8 @@ export default class Member extends Component {
             .child(this.Global.groupKey)
             .child("groupMember")
             .child(item.key);
-            childMemOnGroup.remove();
-            // delete member on poll
+          childMemOnGroup.remove();
+          // delete member on poll
           this.itemRefs
             .child("Group")
             .child(this.Global.groupKey)
@@ -188,7 +247,11 @@ export default class Member extends Component {
                   });
               });
             });
-          let deleteGroupOnMem = this.itemRefs.child("Account").child(item.key).child("MyGroup").child(this.Global.groupKey);
+          let deleteGroupOnMem = this.itemRefs
+            .child("Account")
+            .child(item.key)
+            .child("MyGroup")
+            .child(this.Global.groupKey);
           deleteGroupOnMem.remove();
         }
       }

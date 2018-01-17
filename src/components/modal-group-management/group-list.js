@@ -52,17 +52,76 @@ export default class GroupList extends Component {
   render() {
     let dataGroupList =
       this.state.groupNameSearch !== "" ? this.groupNameList : [];
-    let heightModal = _.isEmpty(dataGroupList)
-      ? __d(350)
-      : __d(350);
+    let heightModal = _.isEmpty(dataGroupList) ? __d(350) : __d(350);
     return (
-      <KeyboardAvoidingView behavior="padding">
+      <KeyboardAvoidingView
+        style={{
+          justifyContent: "center",
+          alignItems: "center"
+        }}
+        behavior="padding"
+      >
+        <View
+          style={{
+            width: width,
+            height: __d(40),
+            //position: "absolute",
+            //right: -__d(10),
+            //top: -__d(20),
+            alignItems: "flex-end",
+            elevation: 1,
+            backgroundColor: "transparent"
+          }}
+        >
+          <View
+            style={{
+              width: width - __d(20),
+              height: __d(20)
+            }}
+          />
+          <View
+            style={{
+              width: width,
+              height: __d(20),
+              alignItems: "center"
+            }}
+          >
+            <View
+              style={{
+                width: width - __d(20),
+                height: __d(20),
+                backgroundColor: "#fff"
+              }}
+            />
+          </View>
+
+          <TouchableOpacity
+            onPress={() => {
+              this.Global.modalGroupManagement = false;
+            }}
+            style={{
+              width: __d(40),
+              height: __d(40),
+              borderRadius: __d(20),
+              borderWidth: __d(1),
+              borderColor: "#5DADE2",
+              justifyContent: "center",
+              alignItems: "center",
+              position: "absolute",
+              backgroundColor: "#fff",
+              zIndex: 100,
+              right: __d(0)
+            }}
+          >
+            <Icon name="times" color="#5DADE2" size={15} />
+          </TouchableOpacity>
+        </View>
         <View
           style={[
             styles.container,
             {
               height: __d(350),
-                zIndex: 0
+              zIndex: -100
             }
           ]}
         >
@@ -166,82 +225,112 @@ export default class GroupList extends Component {
                   </Text>
                 </TouchableOpacity>}
           </TouchableOpacity>
-          <Modal
-            ref={ref => (this._modalEnterPas = ref)}
-            style={styles.modal_view}
-            position={"center"}
-            swipeToClose={false}
-            coverScreen={true}
-          >
-            <TouchableOpacity
-              onPress={() => {
-                this._modalEnterPas.close();
-                this.errors["password"] = null;
-              }}
-              style={{
-                width: __d(40),
-                height: __d(40),
-                borderRadius: __d(20),
-                borderWidth: __d(1),
-                borderColor: "#5DADE2",
-                justifyContent: "center",
-                alignItems: "center",
-                position: "absolute",
-                right: -__d(10),
-                top: -__d(10),
-                backgroundColor: "#fff"
-              }}
-            >
-              <Icon name="times" color="#5DADE2" size={15} />
-            </TouchableOpacity>
-            <Image
-              source={require("./images/find-group/password.png")}
-              style={{
-                width: __d(70),
-                height: __d(70),
-                resizeMode: "contain"
-              }}
-            />
-            <Text
-              style={{
-                fontSize: __d(15),
-                textAlign: "center",
-                paddingTop: __d(5)
-              }}
-            >
-              Your group password
-            </Text>
-            <TextInput
-              underlineColorAndroid="transparent"
-              secureTextEntry={true}
-              placeholder="Group pass..."
-              placeholderStyle={{
-                color: "#e1e1e1"
-              }}
-              style={[
-                styles.txt_input_pass,
-                {
-                  fontStyle: this.state.groupPass !== "" ? "normal" : "italic"
-                }
-              ]}
-              onChangeText={txt => {
-                this.setState({ groupPass: txt });
-              }}
-              value={this.state.groupPass}
-            />
-            {!_.isEmpty(this.errors["password"]) &&
-              <Text style={styles.error_txt}>
-                {this.errors["password"]}
-              </Text>}
-            <TouchableOpacity
-              onPress={() => {
-                this.joinGroup();
-              }}
-              style={styles.btn_join_view}
-            >
-              <Text style={styles.btn_join_txt}>OK</Text>
-            </TouchableOpacity>
-          </Modal>
+          <KeyboardAvoidingView behavior="padding">
+              <Modal
+                  ref={ref => (this._modalEnterPas = ref)}
+                  style={{
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      backgroundColor: 'transparent'
+                  }}
+                  position={"center"}
+                  swipeToClose={false}
+                  coverScreen={true}
+              >
+                  <View
+                      style={{
+                          width: width,
+                          alignItems: "center",
+                          backgroundColor: "transparent"
+                      }}
+                  >
+                      <View
+                          style={{
+                              width: __d(300),
+                              height: __d(20)
+                          }}
+                      />
+                      <View
+                          style={{
+                              width: __d(300),
+                              height: __d(20),
+                              backgroundColor: "#fff"
+                          }}
+                      />
+
+                      <TouchableOpacity
+                          onPress={() => {
+                              this._modalEnterPas.close();
+                              this.errors["password"] = null;
+                          }}
+                          style={{
+                              width: __d(40),
+                              height: __d(40),
+                              borderRadius: __d(20),
+                              borderWidth: __d(1),
+                              borderColor: "#5DADE2",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              position: "absolute",
+                              backgroundColor: "#fff",
+                              right: __d(20)
+                          }}
+                      >
+                          <Icon name="times" color="#5DADE2" size={15} />
+                      </TouchableOpacity>
+                  </View>
+                  <View style={styles.modal_view}>
+                      <Image
+                          source={require("./images/find-group/password.png")}
+                          style={{
+                              width: __d(70),
+                              height: __d(70),
+                              resizeMode: "contain"
+                          }}
+                      />
+                      <Text
+                          style={{
+                              fontSize: __d(15),
+                              textAlign: "center",
+                              paddingTop: __d(5)
+                          }}
+                      >
+                          Your group password
+                      </Text>
+                      <TextInput
+                          underlineColorAndroid="transparent"
+                          secureTextEntry={true}
+                          placeholder="Group pass..."
+                          placeholderStyle={{
+                              color: "#e1e1e1"
+                          }}
+                          style={[
+                              styles.txt_input_pass,
+                              {
+                                  fontStyle: this.state.groupPass !== "" ? "normal" : "italic"
+                              }
+                          ]}
+                          onChangeText={txt => {
+                              this.setState({ groupPass: txt });
+                          }}
+                          value={this.state.groupPass}
+                      />
+                      {!_.isEmpty(this.errors["password"]) &&
+                      <Text style={styles.error_txt}>
+                          {this.errors["password"]}
+                      </Text>}
+                      <TouchableOpacity
+                          onPress={() => {
+                              this.joinGroup();
+                          }}
+                          style={styles.btn_join_view}
+                      >
+                          <Text style={styles.btn_join_txt}>OK</Text>
+                      </TouchableOpacity>
+                  </View>
+              </Modal>
+          </KeyboardAvoidingView>
         </View>
       </KeyboardAvoidingView>
     );
@@ -389,7 +478,7 @@ export default class GroupList extends Component {
               this._modalEnterPas.close(),
               (this.Global.modalType = "loading"),
               (this.Global.groupKey = this.state.groupSelectedToJoin.groupKey),
-              this.Global.modalGroupManagement = false,
+              (this.Global.modalGroupManagement = false),
               Actions.checkAttendance()
             )
           : (
@@ -453,7 +542,6 @@ const styles = StyleSheet.create({
     width: __d(300),
     height: __d(250),
     backgroundColor: "#fff",
-    borderRadius: __d(8),
     justifyContent: "center",
     alignItems: "center"
     //flexDirection: "row",

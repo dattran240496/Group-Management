@@ -39,12 +39,71 @@ export default class EnterGroupName extends Component {
     this.FirebaseApi = this.props.FirebaseApi;
     this.itemRefs = firebase.database().ref("app_expo");
   }
-  componentWillMount() {
-
-  }
+  componentWillMount() {}
   render() {
     return (
-      <KeyboardAvoidingView behavior="padding">
+      <KeyboardAvoidingView
+        style={{
+          justifyContent: "center",
+          alignItems: "center"
+        }}
+        behavior="padding"
+      >
+        <View
+          style={{
+            width: width,
+            height: __d(40),
+            //position: "absolute",
+            //right: -__d(10),
+            //top: -__d(20),
+            alignItems: "flex-end",
+            elevation: 1,
+            backgroundColor: "transparent"
+          }}
+        >
+          <View
+            style={{
+              width: width - __d(20),
+              height: __d(20)
+            }}
+          />
+          <View
+            style={{
+              width: width,
+              height: __d(20),
+              alignItems: "center"
+            }}
+          >
+            <View
+              style={{
+                width: width - __d(20),
+                height: __d(20),
+                backgroundColor: "#fff"
+              }}
+            />
+          </View>
+
+          <TouchableOpacity
+            onPress={() => {
+              this.Global.modalGroupManagement = false;
+            }}
+            style={{
+              width: __d(40),
+              height: __d(40),
+              borderRadius: __d(20),
+              borderWidth: __d(1),
+              borderColor: "#5DADE2",
+              justifyContent: "center",
+              alignItems: "center",
+              position: "absolute",
+              backgroundColor: "#fff",
+              zIndex: 100,
+              right: __d(0)
+            }}
+          >
+            <Icon name="times" color="#5DADE2" size={15} />
+          </TouchableOpacity>
+        </View>
         <View style={styles.container}>
           <Image
             source={require("./images/create-group/Popup-CreateGroup.png")}
@@ -264,7 +323,8 @@ export default class EnterGroupName extends Component {
           this.itemRefs.child("Group").push().update({
             groupName: groupName,
             createdGroupBy: this.User.user.id,
-            groupPass: this.state.groupPass
+            groupPass: this.state.groupPass,
+              distance: 100
             //groupMember: [this.User.user.email]
           });
           let groupKey = "";

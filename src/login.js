@@ -169,7 +169,7 @@ export default class Login extends Component {
     try {
       const result = await Expo.Google.logInAsync({
           androidClientId:
-          "796165831117-dqh1l6fq5poog0bgdj5lfh2er3ithkbh.apps.googleusercontent.com",
+          "796165831117-gvkmjfc8fo2756b3cascvufksetoh0rk.apps.googleusercontent.com",
           androidStandaloneAppClientId: "796165831117-dqh1l6fq5poog0bgdj5lfh2er3ithkbh.apps.googleusercontent.com",
         iosClientId:
           "796165831117-gvkmjfc8fo2756b3cascvufksetoh0rk.apps.googleusercontent.com",

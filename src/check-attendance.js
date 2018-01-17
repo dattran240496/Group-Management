@@ -47,6 +47,7 @@ export default class CheckAttendance extends Component {
     @observable arrOptions = [""];
     @observable poll = null;
     @observable messages = null;
+    @observable isShowSetting = false;
   constructor(props) {
     super(props);
     this.User = this.props.User;
@@ -74,11 +75,11 @@ export default class CheckAttendance extends Component {
       .on("value", dataSnapshot => {
         dataSnapshot.forEach(child => {
           this.isChecking = child.val();
-          this.isChecking === "true"
-            ? this.info && this.info.email !== this.User.user.email
-              ? (this.Global.modalType = "member-check-attendance")
-              : null
-            : null;
+            this.isChecking === "true"
+                ? this.info && this.info.email !== this.User.user.email
+                ? (this.Global.modalType = "member-check-attendance")
+                : null
+                : null;
         });
       });
     let isAdmin =
@@ -92,6 +93,11 @@ export default class CheckAttendance extends Component {
     this.Global.modalType === "loading"
       ? (this.Global.modalType = false)
       : null;
+      this.isChecking === "true"
+          ? this.info && this.info.email !== this.User.user.email
+          ? (this.Global.modalType = "member-check-attendance")
+          : null
+          : null;
   }
 
   render() {
@@ -214,18 +220,71 @@ export default class CheckAttendance extends Component {
               >
                 <TouchableOpacity
                   onPress={() => {
-                    this.isEdit = true;
+                      this.isShowSetting = !this.isShowSetting;
+                    //this.isEdit = true;
                   }}
                 >
-                  <Image
-                    source={require("./images/check-attendance/pencil.png")}
-                    style={{
-                      width: __d(15),
-                      height: __d(15),
-                      resizeMode: "contain"
-                    }}
-                  />
+                    <Icon
+                        name="cog"
+                        size={__d(15)}
+                        color="#5DADE2"
+                    />
                 </TouchableOpacity>
+                  {
+                      this.isShowSetting ? (
+                          <View style={{
+                              position: "absolute",
+                              width: __d(100),
+                              height: __d(40),
+                              backgroundColor: "#fff",
+                              borderRadius: __d(5),
+                              borderWidth: 1,
+                              borderColor: "#e1e1e1",
+                              top: __d(20)
+                          }}>
+                              <TouchableOpacity
+                                  style={{
+                                      width: __d(100),
+                                      height: __d(20),
+                                      justifyContent: "center",
+                                      paddingLeft: __d(5),
+                                      paddingRight: __d(5),
+                                      borderBottomColor: "#e1e1e1",
+                                      borderBottomWidth: 1
+                                  }}
+                                  onPress={() => {
+                                      this.isEdit = true;
+                                      this.isShowSetting = false;
+                                  }}
+                              >
+                                  <Text style={{
+                                      fontSize: __d(13)
+                                  }}>
+                                      Edit name
+                                  </Text>
+                              </TouchableOpacity>
+                              <TouchableOpacity
+                                  style={{
+                                      width: __d(100),
+                                      height: __d(20),
+                                      justifyContent: "center",
+                                      paddingLeft: __d(5),
+                                      paddingRight: __d(5),
+                                  }}
+                                  onPress={() => {
+                                      this.isShowSetting = false;
+                                      this.Global.modalType = "editDistance";
+                                  }}
+                              >
+                                  <Text style={{
+                                      fontSize: __d(13)
+                                  }}>
+                                      Edit distance
+                                  </Text>
+                              </TouchableOpacity>
+                          </View>
+                      ) : null
+                  }
               </View>
             : null}
         </View>
@@ -948,39 +1007,41 @@ export default class CheckAttendance extends Component {
   changeGroupName() {
     let isNameExisted = false;
     let members = Object.keys(this.FirebaseApi.members);
-    if (this.validate(this.state.groupName)) {
-      this.errors = {};
-      let groupName = this.state.groupName.replace(".", "%");
-      this.FirebaseApi.groupData.map((v, i) => {
-        if (v.groupName === groupName) {
-          isNameExisted = true;
-          this.setState({
-            groupName: this.Global.groupName
-          });
-          return (this.errors = "Group name existed!");
-        }
-      });
-      if (!isNameExisted) {
-        this.itemRefs.child("Group").child(this.Global.groupKey).update({
-          groupName: this.state.groupName
-        });
-        members.map((v, i) => {
-          this.itemRefs
-            .child("Account")
-            .child(v)
-            .child("MyGroup")
-            .child(this.Global.groupKey)
-            .update({
-              groupName: this.state.groupName
+    if (this.state.groupName !== this.Global.groupName){
+        if (this.validate(this.state.groupName)) {
+            this.errors = {};
+            let groupName = this.state.groupName.replace(".", "%");
+            this.FirebaseApi.groupData.map((v, i) => {
+                if (v.groupName === groupName) {
+                    isNameExisted = true;
+                    this.setState({
+                        groupName: this.Global.groupName
+                    });
+                    return (this.errors = "Group name existed!");
+                }
             });
-        });
-        //return Actions.pop({ type: "refresh" });
-      }
-    } else {
-      this.setState({
-        groupName: this.Global.groupName
-      });
-      return (this.errors = "Group names can not have special characters!");
+            if (!isNameExisted) {
+                this.itemRefs.child("Group").child(this.Global.groupKey).update({
+                    groupName: this.state.groupName
+                });
+                members.map((v, i) => {
+                    this.itemRefs
+                        .child("Account")
+                        .child(v)
+                        .child("MyGroup")
+                        .child(this.Global.groupKey)
+                        .update({
+                            groupName: this.state.groupName
+                        });
+                });
+                //return Actions.pop({ type: "refresh" });
+            }
+        } else {
+            this.setState({
+                groupName: this.Global.groupName
+            });
+            return (this.errors = "Group names can not have special characters!");
+        }
     }
   }
   postMessage() {

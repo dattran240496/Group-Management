@@ -11,7 +11,8 @@ import {
   FlatList,
   Image,
   KeyboardAvoidingView,
-    Platform
+  Platform,
+    ScrollView
 } from "react-native";
 import Expo from "expo";
 import { Actions, Router, Scene } from "react-native-mobx";
@@ -40,7 +41,63 @@ export default class PostMessage extends Component {
   }
   render() {
     return (
-      <KeyboardAvoidingView behavior="padding">
+      <KeyboardAvoidingView
+        style={{
+          justifyContent: "center",
+          alignItems: "center"
+        }}
+        behavior="padding">
+        <View
+          style={{
+            width: width,
+            height: __d(40),
+            alignItems: "flex-end",
+            backgroundColor: "transparent"
+          }}
+        >
+          <View
+            style={{
+              width: width - __d(20),
+              height: __d(20)
+            }}
+          />
+          <View
+            style={{
+              width: width,
+              height: __d(20),
+              alignItems: "center"
+            }}
+          >
+            <View
+              style={{
+                width: width - __d(20),
+                  height: __d(20),
+                  backgroundColor: "#fff"
+              }}
+            />
+          </View>
+
+          <TouchableOpacity
+            onPress={() => {
+              this.Global.componentFooter = false;
+            }}
+            style={{
+              width: __d(40),
+              height: __d(40),
+              borderRadius: __d(20),
+              borderWidth: __d(1),
+              borderColor: "#5DADE2",
+              justifyContent: "center",
+              alignItems: "center",
+              position: "absolute",
+              backgroundColor: "#fff",
+              zIndex: 100,
+              right: __d(0)
+            }}
+          >
+            <Icon name="times" color="#5DADE2" size={__d(15)} />
+          </TouchableOpacity>
+        </View>
         <View style={styles.container}>
           <View
             style={{
@@ -74,56 +131,56 @@ export default class PostMessage extends Component {
             dashThickness={1}
             style={{ width: width - __d(21), height: __d(1) }}
           />
-          <TextInput
-            placeholder="Title"
-            placeholderStyle={{ color: "#e1e1e1" }}
-            underlineColorAndroid="transparent"
-            style={[
-              styles.txt_input_mess,
-              {
-                fontStyle: this.state.title !== "" ? "normal" : "italic",
-                height: __d(30),
-                padding: 0,
-                paddingLeft: __d(10)
-              }
-            ]}
-            onChangeText={title => {
-              this.setState({
-                title: title
-              });
-            }}
-            value={this.state.title}
-          />
-          <TextInput
-            placeholder="Message"
-            placeholderStyle={{ color: "#e1e1e1" }}
-            underlineColorAndroid="transparent"
-            style={[
-              styles.txt_input_mess,
-              {
-                fontStyle: this.state.message !== "" ? "normal" : "italic",
-                  textAlignVertical: Platform.OS === "android" ?  "top" : null,
-                  paddingTop: __d(10)
-              }
-            ]}
-            onChangeText={message => {
-              this.setState({
-                message: message
-              });
-            }}
-            value={this.state.message}
-            multiline={true}
-          />
-          <TouchableOpacity
-            onPress={() => {
-              this.state.message !== ""
-                ? this.postMessage()
-                : Alert.alert("Warning!", "Message is not empty!");
-            }}
-            style={styles.btn_post_mess_view}
-          >
-            <Text style={styles.btn_post_mess_txt}>Send</Text>
-          </TouchableOpacity>
+            <TextInput
+                placeholder="Title"
+                placeholderStyle={{ color: "#e1e1e1" }}
+                underlineColorAndroid="transparent"
+                style={[
+                    styles.txt_input_mess,
+                    {
+                        fontStyle: this.state.title !== "" ? "normal" : "italic",
+                        height: __d(30),
+                        padding: 0,
+                        paddingLeft: __d(10)
+                    }
+                ]}
+                onChangeText={title => {
+                    this.setState({
+                        title: title
+                    });
+                }}
+                value={this.state.title}
+            />
+            <TextInput
+                placeholder="Message"
+                placeholderStyle={{ color: "#e1e1e1" }}
+                underlineColorAndroid="transparent"
+                style={[
+                    styles.txt_input_mess,
+                    {
+                        fontStyle: this.state.message !== "" ? "normal" : "italic",
+                        textAlignVertical: Platform.OS === "android" ? "top" : null,
+                        paddingTop: __d(10)
+                    }
+                ]}
+                onChangeText={message => {
+                    this.setState({
+                        message: message
+                    });
+                }}
+                value={this.state.message}
+                multiline={true}
+            />
+            <TouchableOpacity
+                onPress={() => {
+                    this.state.message !== ""
+                        ? this.postMessage()
+                        : Alert.alert("Warning!", "Message is not empty!");
+                }}
+                style={styles.btn_post_mess_view}
+            >
+                <Text style={styles.btn_post_mess_txt}>Send</Text>
+            </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
     );
@@ -151,13 +208,13 @@ export default class PostMessage extends Component {
     let timeAtPost = new Date(); // get time at post
     let month = (timeAtPost.getMonth() + 1).toString().length === 1 ? "0" : ""; // if hour < 10 => add "0" previous
     let day = timeAtPost.getDate().toString().length === 1 ? "0" : ""; // if minute < 10 => add "0" previous
-      let hours = timeAtPost.getHours().toString().length === 1 ? "0" : ""; // if hour < 10 => add "0" previous
-      let minutes = timeAtPost.getMinutes().toString().length === 1 ? "0" : ""; // if minute < 10 => add "0" previous
+    let hours = timeAtPost.getHours().toString().length === 1 ? "0" : ""; // if hour < 10 => add "0" previous
+    let minutes = timeAtPost.getMinutes().toString().length === 1 ? "0" : ""; // if minute < 10 => add "0" previous
     // format time: dd/mm/yyyy - hh:mm
     let mometTimeAtPost = moment(timeAtPost, "YYYY-MM-DDhh:mm:ss");
-      let formatTime = mometTimeAtPost.format("YYYY-MM-DDhh:mm:ss");
+    let formatTime = mometTimeAtPost.format("YYYY-MM-DDhh:mm:ss");
 
-      this.itemRefs
+    this.itemRefs
       .child("Group")
       .child(this.Global.groupKey)
       .child("postedMessages")
@@ -181,7 +238,7 @@ const styles = StyleSheet.create({
     width: width - __d(50),
     height: __d(130),
     paddingLeft: __d(10),
-      paddingRight: __d(10),
+    paddingRight: __d(10),
     fontSize: __d(13),
     borderColor: "#5DADE2",
     borderWidth: 1,

@@ -20,7 +20,7 @@ import Loading from "./loading";
 import GroupList from "./components/modal-group-management/group-list";
 import Homepage from "./home-page";
 import MyGroup from "./components/modal-group-management/my-group";
-import EnterGroupName from "./components/modal-group-management/enter-group-name";
+import EnterGroupName from "./components/modal-group-management/create-group";
 import CheckAttendance from "./check-attendance";
 import PostMessage from "./components/components-footer/post-messages";
 import DetailMessage from "./components/modals/detail-message";

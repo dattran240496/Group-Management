@@ -11,7 +11,7 @@ import {
   FlatList,
   Image,
   ScrollView,
-    KeyboardAvoidingView
+  KeyboardAvoidingView
 } from "react-native";
 import Expo from "expo";
 import { Actions, Router, Scene } from "react-native-mobx";
@@ -40,160 +40,223 @@ export default class Account extends Component {
 
   render() {
     return (
-        <KeyboardAvoidingView behavior="padding">
-      <View style={styles.container}>
-        {this.User.user &&
-          <Image
+      <KeyboardAvoidingView
+        style={{
+          justifyContent: "center",
+          alignItems: "center"
+        }}
+        behavior="padding"
+      >
+        <View
+          style={{
+            width: width,
+            height: __d(40),
+            //position: "absolute",
+            //right: -__d(10),
+            //top: -__d(20),
+            alignItems: "flex-end",
+            elevation: 1,
+            backgroundColor: "transparent"
+          }}
+        >
+          <View
             style={{
               width: width - __d(20),
-              height: __d(150),
-              justifyContent: "center",
-              alignItems: "center",
-                zIndex: 0
-            }}
-            source={{ uri: this.User.user.picture }}
-            blurRadius={5}
-          >
-            <Image
-              style={styles.user_ava}
-              source={{ uri: this.User.user.picture }}
-            />
-            <Text style={styles.user_name}>
-              {this.User.user.name}
-            </Text>
-          </Image>}
-        <View
-          style={{
-            width: width - __d(20),
-            height: __d(45),
-            justifyContent: "center",
-            backgroundColor: "#e1e1e1",
-            paddingLeft: __d(10)
-          }}
-        >
-          <Text
-            style={{
-              fontSize: __d(14),
-              fontWeight: "bold"
-            }}
-          >
-            Personal Information
-          </Text>
-        </View>
-        <View
-          style={{
-            width: width - __d(20),
-            height: __d(45),
-            alignItems: "center",
-            paddingLeft: __d(15),
-            flexDirection: "row",
-            borderBottomColor: "#e1e1e1",
-            borderBottomWidth: __d(1)
-          }}
-        >
-          <Text
-            style={{
-              fontSize: __d(13),
-              width: __d(80)
-            }}
-          >
-            Name
-          </Text>
-          <TextInput
-
-            ref={ref => (this.txtInput = ref)}
-            underlineColorAndroid="transparent"
-            style={{
-              fontSize: __d(13),
-              width: width - __d(150)
-            }}
-            onChangeText={username => {
-              this.setState({ username: username });
-            }}
-            value={this.state.username}
-            editable={this.isEditName}
-            autoFocus={this.isEditName}
-            autoCapitalize="none"
-            onSubmitEditing={()=>{
-              this.isEditName = false;
-              this.state.username !== this.User.user.name ?
-                  this.itemRefs.child("Account").child(this.User.user.id).child("infoAccount").update({
-                      name: this.state.username
-                  })
-                  : null
+              height: __d(20)
             }}
           />
-          <TouchableOpacity
-            onPress={() => {
-              this.isEditName = true;
-              this.txtInput.focus();
-              this.setState({});
-            }}
+          <View
             style={{
-              justifyContent: "center"
+              width: width,
+              height: __d(20),
+              alignItems: "center"
             }}
           >
-            <Icon name="pencil" color="#5DADE2" size={__d(15)} />
-          </TouchableOpacity>
-        </View>
-        <View
-          style={{
-            width: width - __d(20),
-            height: __d(45),
-            alignItems: "center",
-            paddingLeft: __d(15),
-            flexDirection: "row",
-            borderBottomColor: "#e1e1e1",
-            borderBottomWidth: __d(1)
-          }}
-        >
-          <Text
-            style={{
-              fontSize: __d(13),
-              width: __d(80)
-            }}
-          >
-            Email
-          </Text>
-          <Text
-            style={{
-              fontSize: __d(13),
-              width: width - __d(150)
-            }}
-          >
-            {this.User.user.email}
-          </Text>
-        </View>
-        <View style={styles.sign_out_view}>
-          <TouchableOpacity
-            style={styles.sign_out_btn_view}
-            onPress={() => {
-              this.FirebaseApi.groupData = null;
-              this.FirebaseApi.accountData = null;
-              this.FirebaseApi.myGroup = null;
-              AsyncStorage.removeItem("@user:key");
+            <View
+              style={{
+                width: width - __d(20),
+                height: __d(20),
+              }}
+            />
+          </View>
 
-              this.itemRefs.child("Account").child(this.User.user.id).update({
-                token: ""
-              });
-              this.Global.modalType = false;
+          <TouchableOpacity
+            onPress={() => {
               this.Global.modalGroupManagement = false;
-              Actions.login({ type: "replace" });
+            }}
+            style={{
+              width: __d(40),
+              height: __d(40),
+              borderRadius: __d(20),
+              borderWidth: __d(1),
+              borderColor: "#5DADE2",
+              justifyContent: "center",
+              alignItems: "center",
+              position: "absolute",
+              backgroundColor: "#fff",
+              zIndex: 100,
+              right: __d(0),
             }}
           >
-            <Icon name="sign-out" color="#fff" size={__d(20)} />
-            <Text style={styles.sign_out_btn_txt}>Sign Out</Text>
+            <Icon name="times" color="#5DADE2" size={15} />
           </TouchableOpacity>
         </View>
-      </View>
-        </KeyboardAvoidingView>
+        <View style={styles.container}>
+          {this.User.user &&
+            <Image
+              style={{
+                width: width - __d(20),
+                height: __d(150),
+                justifyContent: "center",
+                alignItems: "center",
+                zIndex: 0
+              }}
+              source={{ uri: this.User.user.picture }}
+              blurRadius={5}
+            >
+              <Image
+                style={styles.user_ava}
+                source={{ uri: this.User.user.picture }}
+              />
+              <Text style={styles.user_name}>
+                {this.User.user.name}
+              </Text>
+            </Image>}
+          <View
+            style={{
+              width: width - __d(20),
+              height: __d(45),
+              justifyContent: "center",
+              backgroundColor: "#e1e1e1",
+              paddingLeft: __d(10)
+            }}
+          >
+            <Text
+              style={{
+                fontSize: __d(14),
+                fontWeight: "bold"
+              }}
+            >
+              Personal Information
+            </Text>
+          </View>
+          <View
+            style={{
+              width: width - __d(20),
+              height: __d(45),
+              alignItems: "center",
+              paddingLeft: __d(15),
+              flexDirection: "row",
+              borderBottomColor: "#e1e1e1",
+              borderBottomWidth: __d(1)
+            }}
+          >
+            <Text
+              style={{
+                fontSize: __d(13),
+                width: __d(80)
+              }}
+            >
+              Name
+            </Text>
+            <TextInput
+              ref={ref => (this.txtInput = ref)}
+              underlineColorAndroid="transparent"
+              style={{
+                fontSize: __d(13),
+                width: width - __d(150)
+              }}
+              onChangeText={username => {
+                this.setState({ username: username });
+              }}
+              value={this.state.username}
+              editable={this.isEditName}
+              autoFocus={this.isEditName}
+              autoCapitalize="none"
+              onSubmitEditing={() => {
+                this.isEditName = false;
+                this.state.username !== this.User.user.name
+                  ? this.itemRefs
+                      .child("Account")
+                      .child(this.User.user.id)
+                      .child("infoAccount")
+                      .update({
+                        name: this.state.username
+                      })
+                  : null;
+              }}
+            />
+            <TouchableOpacity
+              onPress={() => {
+                this.isEditName = true;
+                this.txtInput.focus();
+                this.setState({});
+              }}
+              style={{
+                justifyContent: "center"
+              }}
+            >
+              <Icon name="pencil" color="#5DADE2" size={__d(15)} />
+            </TouchableOpacity>
+          </View>
+          <View
+            style={{
+              width: width - __d(20),
+              height: __d(45),
+              alignItems: "center",
+              paddingLeft: __d(15),
+              flexDirection: "row",
+              borderBottomColor: "#e1e1e1",
+              borderBottomWidth: __d(1)
+            }}
+          >
+            <Text
+              style={{
+                fontSize: __d(13),
+                width: __d(80)
+              }}
+            >
+              Email
+            </Text>
+            <Text
+              style={{
+                fontSize: __d(13),
+                width: width - __d(150)
+              }}
+            >
+              {this.User.user.email}
+            </Text>
+          </View>
+          <View style={styles.sign_out_view}>
+            <TouchableOpacity
+              style={styles.sign_out_btn_view}
+              onPress={() => {
+                this.FirebaseApi.groupData = null;
+                this.FirebaseApi.accountData = null;
+                this.FirebaseApi.myGroup = null;
+                AsyncStorage.removeItem("@user:key");
+
+                this.itemRefs.child("Account").child(this.User.user.id).update({
+                  token: ""
+                });
+                this.Global.modalType = false;
+                this.Global.modalGroupManagement = false;
+                Actions.login({ type: "replace" });
+              }}
+            >
+              <Icon name="sign-out" color="#fff" size={__d(20)} />
+              <Text style={styles.sign_out_btn_txt}>Sign Out</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </KeyboardAvoidingView>
     );
   }
 }
 const styles = StyleSheet.create({
   container: {
     width: width - __d(20),
-      height: __d(350),
+    height: __d(350),
     backgroundColor: "#fff",
     alignItems: "center"
   },

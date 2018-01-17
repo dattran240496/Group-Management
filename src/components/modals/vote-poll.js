@@ -10,7 +10,8 @@ import {
   Alert,
   FlatList,
   Image,
-  ScrollView
+  ScrollView,
+    KeyboardAvoidingView
 } from "react-native";
 import Expo from "expo";
 import { Actions, Router, Scene } from "react-native-mobx";
@@ -33,10 +34,10 @@ export default class VotePoll extends Component {
   @observable optionsPoll = [];
   @observable isChangePoll = false;
   @observable voted = 0;
-    @observable poll = null;
-    @observable numberOptions = 1;
-    @observable arrOptions = [""];
-        constructor(props) {
+  @observable poll = null;
+  @observable numberOptions = 1;
+  @observable arrOptions = [""];
+  constructor(props) {
     super(props);
     this.Global = this.props.Global;
     this.User = this.props.User;
@@ -48,7 +49,6 @@ export default class VotePoll extends Component {
       arrOptions: [""]
     };
     this.poll = this.Global.selectedPoll;
-
   }
   componentWillMount() {
     this.getOptionsPoll();
@@ -79,7 +79,7 @@ export default class VotePoll extends Component {
           <View key={i} style={styles.option_view}>
             <Icon name="plus" color="#e1e1e1" size={__d(15)} />
             <TextInput
-                underlineColorAndroid="transparent"
+              underlineColorAndroid="transparent"
               placeholder="Add an option..."
               placeholderStyle={{ color: "#e1e1e1" }}
               style={styles.option_txt_input}
@@ -95,10 +95,10 @@ export default class VotePoll extends Component {
                 if (i === this.numberOptions) {
                   let numbers = i;
                   numbers++;
-                    this.numberOptions = numbers;
-                    // this.setState({
-                    //     numberOptions: numbers
-                    // });
+                  this.numberOptions = numbers;
+                  // this.setState({
+                  //     numberOptions: numbers
+                  // });
                   this.arrOptions.push("");
                 }
               }}
@@ -122,69 +122,135 @@ export default class VotePoll extends Component {
         moment.format("mm")
       : "";
     return (
-      <View style={styles.container}>
-        <Text style={styles.timeAtPost_txt}>
-          {timeAtPost}
-        </Text>
-        <TextInput
-            underlineColorAndroid="transparent"
-          style={styles.txt_input_poll}
-          editable={
-            this.info && this.info.email === this.User.user.email ? true : false
-          }
-          value={this.state.poll.message}
-          onChangeText={txt => {
-            let mess = this.state.poll;
-            mess.message = txt;
-              this.poll = mess
-            this.isChangePoll = true;
-          }}
-        />
-        <Text
-          style={[
-            styles.timeAtPost_txt,
-            {
-              fontStyle: "italic",
-              marginBottom: __d(5),
-              paddingTop: 0
-            }
-          ]}
-        >
-          {this.voted} voted
-        </Text>
-        <Dash
-          dashGap={5}
-          dashLength={7}
-          dashThickness={1}
-          style={{ width: width - __d(21), height: __d(1) }}
-        />
-        <ScrollView
+      <KeyboardAvoidingView
+        style={{
+          justifyContent: "center",
+          alignItems: "center"
+        }}
+        behavior="padding"
+      >
+        <View
           style={{
-            height: __d(160),
-            width: width - __d(20)
+            width: width,
+            height: __d(40),
+            //position: "absolute",
+            //right: -__d(10),
+            //top: -__d(20),
+            alignItems: "flex-end",
+            elevation: 1,
+            backgroundColor: "transparent"
           }}
         >
-          {!_.isEmpty(this.optionsPoll) &&
-            <FlatList
-              style={styles.fl_view}
-              keyExtractor={(item, index) => index}
-              renderItem={({ item, index }) => this.renderOptions(item, index)}
-              data={this.optionsPoll}
-              extraData={this.state}
-            />}
-          {1 ? arrOptions : null}
-        </ScrollView>
-        {1
-          ? <TouchableOpacity
-              onPress={() => {
-                this.updatePoll();
+          <View
+            style={{
+              width: width - __d(20),
+              height: __d(20)
+            }}
+          />
+          <View
+            style={{
+              width: width,
+              height: __d(20),
+              alignItems: "center"
+            }}
+          >
+            <View
+              style={{
+                width: width - __d(20),
+                height: __d(20),
+                backgroundColor: "#fff"
               }}
-              style={styles.btn_submit_view}
-            >
-              <Text style={styles.btn_submit_txt}>Send</Text>
-            </TouchableOpacity>
-          : null}
-      </View>
+            />
+          </View>
+
+          <TouchableOpacity
+            onPress={() => {
+              this.Global.modalType = false;
+            }}
+            style={{
+              width: __d(40),
+              height: __d(40),
+              borderRadius: __d(20),
+              borderWidth: __d(1),
+              borderColor: "#5DADE2",
+              justifyContent: "center",
+              alignItems: "center",
+              position: "absolute",
+              backgroundColor: "#fff",
+              zIndex: 100,
+              right: __d(0)
+            }}
+          >
+            <Icon name="times" color="#5DADE2" size={15} />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.container}>
+          <Text style={styles.timeAtPost_txt}>
+            {timeAtPost}
+          </Text>
+          <TextInput
+            underlineColorAndroid="transparent"
+            style={styles.txt_input_poll}
+            editable={
+              this.info && this.info.email === this.User.user.email
+                ? true
+                : false
+            }
+            value={this.state.poll.message}
+            onChangeText={txt => {
+              let mess = this.state.poll;
+              mess.message = txt;
+              this.poll = mess;
+              this.isChangePoll = true;
+            }}
+          />
+          <Text
+            style={[
+              styles.timeAtPost_txt,
+              {
+                fontStyle: "italic",
+                marginBottom: __d(5),
+                paddingTop: 0
+              }
+            ]}
+          >
+            {this.voted} voted
+          </Text>
+          <Dash
+            dashGap={5}
+            dashLength={7}
+            dashThickness={1}
+            style={{ width: width - __d(21), height: __d(1) }}
+          />
+          <ScrollView
+            style={{
+              height: __d(160),
+              width: width - __d(20)
+            }}
+          >
+            {!_.isEmpty(this.optionsPoll) &&
+              <FlatList
+                style={styles.fl_view}
+                keyExtractor={(item, index) => index}
+                renderItem={({ item, index }) =>
+                  this.renderOptions(item, index)}
+                data={this.optionsPoll}
+                extraData={this.state}
+              />}
+            {1 ? arrOptions : null}
+          </ScrollView>
+          {1
+            ? <TouchableOpacity
+                onPress={() => {
+                  this.updatePoll();
+                }}
+                style={styles.btn_submit_view}
+              >
+                <Text style={styles.btn_submit_txt}>Send</Text>
+              </TouchableOpacity>
+            : null}
+        </View>
+      </KeyboardAvoidingView>
     );
   }
   getOptionsPoll() {
@@ -228,17 +294,16 @@ export default class VotePoll extends Component {
           <View style={styles.option_exist_vote_check_view}>
             <TouchableOpacity
               onPress={() => {
-
                 let count = 0;
                 let user = item.selectedMems || [];
-                if (isChecked){
-                    for (let i = item.selectedMems.length - 1; i >= 0; i--) {
-                        if (item.selectedMems[i] === this.User.user.email) {
-                            item.selectedMems.splice(i, 1);
-                        }
+                if (isChecked) {
+                  for (let i = item.selectedMems.length - 1; i >= 0; i--) {
+                    if (item.selectedMems[i] === this.User.user.email) {
+                      item.selectedMems.splice(i, 1);
                     }
-                }else{
-                    user.push(this.User.user.email);
+                  }
+                } else {
+                  user.push(this.User.user.email);
                 }
                 this.itemRefs
                   .child("Group")
@@ -304,16 +369,16 @@ export default class VotePoll extends Component {
                 //       .update({
                 //         selectedMems: user
                 //       });
-                  this.itemRefs
-                      .child("Group")
-                      .child(this.Global.groupKey)
-                      .child("postedPoll")
-                      .child(this.state.poll.key)
-                      .child("options")
-                      .child(index)
-                      .update({
-                          selectedMems: user
-                      });
+                this.itemRefs
+                  .child("Group")
+                  .child(this.Global.groupKey)
+                  .child("postedPoll")
+                  .child(this.state.poll.key)
+                  .child("options")
+                  .child(index)
+                  .update({
+                    selectedMems: user
+                  });
               }}
               style={styles.option_exist_vote_check_btn}
             >
@@ -330,7 +395,7 @@ export default class VotePoll extends Component {
             }}
           >
             <TextInput
-                underlineColorAndroid="transparent"
+              underlineColorAndroid="transparent"
               editable={this.info.email === this.User.user.email ? true : false}
               style={[
                 styles.option_exist_vote_txt,
@@ -385,7 +450,7 @@ export default class VotePoll extends Component {
       let formatTime = mometTimeAtPost.format("YYYY-MM-DDhh:mm:ss");
       let mess = this.state.poll;
       mess.timeAtPost = formatTime;
-        this.poll = mess;
+      this.poll = mess;
       Object.values(this.FirebaseApi.members).map((v, i) => {
         fetch(this.Global.urlPushNoti, {
           method: "POST",
@@ -416,8 +481,8 @@ export default class VotePoll extends Component {
       this.isChangePoll = false;
     }
 
-      this.arrOptions = [""];
-      this.numberOptions = 1
+    this.arrOptions = [""];
+    this.numberOptions = 1;
   }
 }
 const styles = StyleSheet.create({
@@ -450,7 +515,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: __d(5),
     marginTop: __d(10),
-      marginBottom: __d(5)
+    marginBottom: __d(5)
   },
   btn_submit_txt: {
     color: "#fff",

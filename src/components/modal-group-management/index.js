@@ -19,8 +19,9 @@ import { observer } from "mobx-react/native";
 import { Actions } from "react-native-mobx";
 import GroupList from "./group-list";
 import MyGroup from "./my-group";
-import CreateGroup from "./enter-group-name";
+import CreateGroup from "./create-group";
 import Account from "./account";
+
 import Icon from "react-native-vector-icons/FontAwesome";
 const { width, height } = Dimensions.get("window");
 import Modal from "react-native-modalbox";
@@ -108,65 +109,52 @@ export default class ModalBox extends Component {
         break;
     }
     return (
-      <View
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: width,
-          height: height
-          //backgroundColor: "transparent"
-        }}
-        pointerEvents={this.Global.modalGroupManagement ? "auto" : "none"}
-      >
-        <Modal
+      <KeyboardAvoidingView
+          style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: width,
+              height: height
+              //backgroundColor: "transparent"
+          }}
           pointerEvents={this.Global.modalGroupManagement ? "auto" : "none"}
-          isOpen={this.Global.modalGroupManagement ? true : false}
-          style={[
-            {
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              backgroundColor: "transparent",
-              zIndex: 0
-            }
-          ]}
-          ref={ref => (this.modal = ref)}
-          swipeToClose={false}
-          backdropPressToClose={false}
-          position={"center"}
-          onClosed={this._onClose}
-          onOpened={this._onOpen}
-          onClosingState={this._onClosingState}
-        >
-            {
-              this.Global.modalGroupManagement !== false ?  (
-                  <TouchableOpacity
-                      onPress={() => {
-                          this.Global.modalGroupManagement = false;
-                      }}
-                      style={{
-                          width: __d(40),
-                          height: __d(40),
-                          borderRadius: __d(20),
-                          borderWidth: __d(1),
-                          borderColor: "#5DADE2",
-                          justifyContent: "center",
+          behavior="padding">
+          <View
+              style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: width,
+                  height: height
+                  //backgroundColor: "transparent"
+              }}
+              pointerEvents={this.Global.modalGroupManagement ? "auto" : "none"}
+          >
+              <Modal
+                  pointerEvents={this.Global.modalGroupManagement ? "auto" : "none"}
+                  isOpen={this.Global.modalGroupManagement ? true : false}
+                  style={[
+                      {
+                          flexDirection: "column",
                           alignItems: "center",
-                          position: "absolute",
-                          right: -__d(0),
-                          top: (height - this.Global.heightPopUp) / 2 - __d(20),
-                          backgroundColor: "#fff",
-                          zIndex: 1
-                      }}
-                  >
-                    <Icon name="times" color="#5DADE2" size={15} />
-                  </TouchableOpacity>
-              ) : null
-            }
-          {component}
-        </Modal>
-      </View>
+                          justifyContent: "center",
+                          backgroundColor: "transparent",
+                          zIndex: 0
+                      }
+                  ]}
+                  ref={ref => (this.modal = ref)}
+                  swipeToClose={false}
+                  backdropPressToClose={false}
+                  position={"center"}
+                  onClosed={this._onClose}
+                  onOpened={this._onOpen}
+                  onClosingState={this._onClosingState}
+              >
+                  {component}
+              </Modal>
+          </View>
+      </KeyboardAvoidingView>
     );
   }
 }

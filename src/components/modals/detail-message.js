@@ -11,7 +11,8 @@ import {
   FlatList,
   Image,
   ScrollView,
-    Platform
+  Platform,
+  KeyboardAvoidingView
 } from "react-native";
 import Expo from "expo";
 import { Actions, Router, Scene } from "react-native-mobx";
@@ -65,118 +66,181 @@ export default class DetailMessage extends Component {
         moment.format("mm")
       : "";
     return (
-      <View
+      <KeyboardAvoidingView
         style={{
-          width: width - __d(20),
-          height: __d(350),
-          backgroundColor: "#fff"
+          justifyContent: "center",
+          alignItems: "center"
         }}
+        behavior="padding"
       >
         <View
           style={{
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center"
+            width: width,
+            height: __d(40),
+            //position: "absolute",
+            //right: -__d(10),
+            //top: -__d(20),
+            alignItems: "flex-end",
+            elevation: 1,
+            backgroundColor: "transparent"
+          }}
+        >
+          <View
+            style={{
+              width: width - __d(20),
+              height: __d(20)
+            }}
+          />
+          <View
+            style={{
+              width: width,
+              height: __d(20),
+              alignItems: "center"
+            }}
+          >
+            <View
+              style={{
+                width: width - __d(20),
+                height: __d(20),
+                backgroundColor: "#fff"
+              }}
+            />
+          </View>
+
+          <TouchableOpacity
+            onPress={() => {
+              this.Global.modalType = false;
+            }}
+            style={{
+              width: __d(40),
+              height: __d(40),
+              borderRadius: __d(20),
+              borderWidth: __d(1),
+              borderColor: "#5DADE2",
+              justifyContent: "center",
+              alignItems: "center",
+              position: "absolute",
+              backgroundColor: "#fff",
+              zIndex: 100,
+              right: __d(0)
+            }}
+          >
+            <Icon name="times" color="#5DADE2" size={15} />
+          </TouchableOpacity>
+        </View>
+        <View
+          style={{
+            width: width - __d(20),
+            height: __d(300),
+            backgroundColor: "#fff"
           }}
         >
           <View
             style={{
               flex: 1,
-              justifyContent: "flex-end"
+              justifyContent: "center",
+              alignItems: "center"
             }}
           >
-            <Text
+            <View
               style={{
-                fontSize: __d(15)
+                flex: 1,
+                justifyContent: "flex-end"
               }}
             >
-              {timeAtPost}
-            </Text>
+              <Text
+                style={{
+                  fontSize: __d(15)
+                }}
+              >
+                {timeAtPost}
+              </Text>
+            </View>
+            <View
+              style={{
+                flex: 1
+              }}
+            >
+              <TextInput
+                underlineColorAndroid="transparent"
+                style={{
+                  fontSize: __d(15),
+                  width: width - __d(30),
+                  height: __d(30),
+                  textAlign: "center"
+                }}
+                editable={
+                  this.info && this.info.email === this.User.user.email
+                    ? true
+                    : false
+                }
+                value={this.messageEdit ? this.messageEdit.title : null}
+                onChangeText={title => {
+                  this.messageEdit.title = title;
+                }}
+              />
+            </View>
           </View>
+          <Dash
+            dashGap={5}
+            dashLength={7}
+            dashThickness={1}
+            style={{ width: width - __d(21), height: __d(1) }}
+          />
           <View
             style={{
-              flex: 1
+              flex: 2,
+              padding: __d(10)
             }}
           >
             <TextInput
-                underlineColorAndroid="transparent"
+              underlineColorAndroid="transparent"
+              value={this.messageEdit ? this.messageEdit.message : null}
               style={{
-                fontSize: __d(15),
-                width: width - __d(30),
-                height: __d(30),
-                textAlign: "center"
+                fontSize: __d(13),
+                flex: 1,
+                textAlignVertical: Platform.OS === "android" ? "top" : null,
+                paddingTop: __d(10)
               }}
+              onChangeText={title => {
+                this.messageEdit.message = title;
+              }}
+              multiline={true}
               editable={
                 this.info && this.info.email === this.User.user.email
                   ? true
                   : false
               }
-              value={this.messageEdit ? this.messageEdit.title : null}
-              onChangeText={title => {
-                this.messageEdit.title = title;
-              }}
             />
           </View>
-        </View>
-        <Dash
-          dashGap={5}
-          dashLength={7}
-          dashThickness={1}
-          style={{ width: width - __d(21), height: __d(1) }}
-        />
-        <View
-          style={{
-            flex: 1,
-            padding: __d(10)
-          }}
-        >
-          <TextInput
-              underlineColorAndroid="transparent"
-            value={this.messageEdit ? this.messageEdit.message : null}
-            style={{
-              fontSize: __d(13),
-              flex: 1,
-                textAlignVertical: Platform.OS === "android" ?  "top" : null,
-                paddingTop: __d(10)
-            }}
-            onChangeText={title => {
-              this.messageEdit.message = title;
-            }}
-            multiline={true}
-            editable={
-              this.info && this.info.email === this.User.user.email
-                ? true
-                : false
-            }
-          />
-        </View>
-        {this.info && this.info.email === this.User.user.email
-          ? <TouchableOpacity
-              onPress={() => {
-                this.postMessage();
-              }}
-              style={{
-                width: __d(80),
-                height: __d(30),
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: __d(5),
-                backgroundColor: "#5DADE2",
-                marginLeft: (width - __d(20)) / 2 - __d(40),
-                marginBottom: __d(5)
-              }}
-            >
-              <Text
+          {this.info && this.info.email === this.User.user.email
+            ? <TouchableOpacity
+                onPress={() => {
+                  this.postMessage();
+                }}
                 style={{
-                  fontSize: __d(13),
-                  color: "#fff"
+                  width: __d(80),
+                  height: __d(30),
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderRadius: __d(5),
+                  backgroundColor: "#5DADE2",
+                  marginLeft: (width - __d(20)) / 2 - __d(40),
+                  marginBottom: __d(5)
                 }}
               >
-                Send
-              </Text>
-            </TouchableOpacity>
-          : null}
-      </View>
+                <Text
+                  style={{
+                    fontSize: __d(13),
+                    color: "#fff"
+                  }}
+                >
+                  Send
+                </Text>
+              </TouchableOpacity>
+            : null}
+        </View>
+      </KeyboardAvoidingView>
     );
   }
   convertDate(date) {
